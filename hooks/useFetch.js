@@ -1,49 +1,40 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { getPokemonPage } from '../utils/axios'
 
-const useFetch = (url, offset) => {
-	const [pokemon, setPokemon] = useState([])
+const useFetch = (offset = 0) => {
+	const [results, setResults] = useState([])
+	const [isLoading, setIsLoading] = useState(false)
+	const [isError, setIsError] = useState(false)
+	const [error, setError] = useState({})
+	const [hasNextPage, setHasNextPage] = useState(false)
 
 	useEffect(() => {
-		const getData = async () => {
-			try {
-				const res = await axios.get(url + offset)
-				const {
-					data: { results }
-				} = res
+		setIsLoading(true)
+		setIsError(false)
+		setError({})
 
-				const arr = []
-				await Promise.all(
-					results.map(async ({ name }) => {
-						const { data } = await axios.get(
-							`https://pokeapi.co/api/v2/pokemon/${name}`
-						)
-						const reviews = {
-							reviewCount: 34,
-							rating: 4
-						}
-						const { id, types } = data
+		const controller = new AbortController() //cancel request when the component unmount
+		const { signal } = controller
 
-						let idString = id.toString().padStart(3, '0')
+		getPokemonPage(offset, { signal })
+			.then(data => {
+				setResults(prev => [...prev, ...data])
+				setHasNextPage(Boolean(data.length))
+				setIsLoading(false)
+			})
+			.catch(e => {
+				setIsLoading(false)
+				if (signal.aborted) {
+					return
+				}
+				setIsError(true)
+				setError({ message: e.message })
+			})
 
-						const imageData = {
-							imageUrl: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${idString}.png`,
-							imageAlt: name
-						}
-						arr[data.id] = { name, id, types, ...reviews, ...imageData }
-					})
-				)
-				arr.shift() //remove first element (undefined) from array
-				setPokemon(arr)
-			} catch (error) {
-				console.log(error)
-			}
-		}
+		return () => controller.abort()
+	}, [offset])
 
-		getData()
-	}, [])
-
-	return pokemon
+	return { isLoading, isError, error, results, hasNextPage }
 }
 
 export default useFetch

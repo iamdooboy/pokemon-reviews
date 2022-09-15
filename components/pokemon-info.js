@@ -1,12 +1,22 @@
 import React from 'react'
-import { Box, Grid, Text, Image } from '@chakra-ui/react'
+import { Box, Text, Image } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 
-const PokemonInfo = ({ imageUrl, imageAlt, name, rating, reviewCount }) => {
+const PokemonInfo = ({ id, imageUrl, imageAlt, name, rating, reviewCount }) => {
 	const formatName = name.charAt(0).toUpperCase() + name.slice(1)
 	return (
 		<>
-			<Image src={imageUrl} alt={imageAlt} roundedTop='lg' my='-5px' />
+			<Box as='span' ml={1} color='gray.600' opacity='0.5'>
+				{id.toString().padStart(3, '0')}
+			</Box>
+			<Box align='center'>
+				<Image
+					boxSize='100px'
+					src={imageUrl}
+					alt={imageAlt}
+					fallbackSrc='/fallback.png'
+				/>
+			</Box>
 			<Box>
 				<Text
 					fontWeight='bold'
