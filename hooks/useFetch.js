@@ -13,7 +13,7 @@ const useFetch = (offset = 0) => {
 		setIsError(false)
 		setError({})
 
-		const controller = new AbortController() //cancel request when the component unmount
+		const controller = new AbortController()
 		const { signal } = controller
 
 		getPokemonPage(offset, { signal })
@@ -31,7 +31,7 @@ const useFetch = (offset = 0) => {
 				setError({ message: e.message })
 			})
 
-		return () => controller.abort()
+		return () => controller.abort() //cancel request when the component unmount
 	}, [offset])
 
 	return { isLoading, isError, error, results, hasNextPage }
