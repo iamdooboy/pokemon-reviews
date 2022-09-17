@@ -20,7 +20,7 @@ const Page = () => {
 				>
 					Pokemon Reviews
 				</Heading>
-				<Heading as='h1' size='md' noOfLines={1} align='center' py={4}>
+				<Heading as='h1' size='md' align='center' py={4}>
 					Nintendo have been creating a lot of questionable pokemon. Luckily
 					they are looking for your feedback.
 				</Heading>
