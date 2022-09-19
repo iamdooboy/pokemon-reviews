@@ -9,12 +9,11 @@ const Page = () => {
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<title>Duy Le - Homepage</title>
 			</Head>
-			<Container maxW='7xl' bg='white'>
+			<Container maxW='7xl'>
 				<Heading
 					as='h1'
 					size='xl'
 					variant='section-title'
-					bg='gray.100'
 					align='center'
 					py={4}
 				>
