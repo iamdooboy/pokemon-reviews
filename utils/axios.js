@@ -11,6 +11,22 @@ export const getPokemonName = async () => {
 	return names
 }
 
+export const getPokemon = async pokemon => {
+	const { data } = await api.get(`/pokemon/${pokemon}`)
+
+	const { id, types } = data
+	const typesArr = types.map(el => el.type.name)
+
+	let paddedId = id.toString().padStart(3, '0')
+
+	const imageData = {
+		imageUrl: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${paddedId}.png`,
+		imageAlt: pokemon
+	}
+
+	return { id, typesArr, ...imageData }
+}
+
 export const getPokemonPage = async (offset = 0, options = {}) => {
 	const response = await api.get(`/pokemon?limit=24&offset=${offset}`, options)
 
