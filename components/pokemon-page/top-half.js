@@ -23,7 +23,7 @@ const TopHalf = ({ data }) => {
 			</Heading>
 			<HStack align='center' justify='center' py={1}>
 				{typesArr.map((type, index) => (
-					<Badge key={index} colorScheme='green'>
+					<Badge variant={type} key={index}>
 						{type}
 					</Badge>
 				))}

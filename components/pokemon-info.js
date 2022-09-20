@@ -28,7 +28,7 @@ const PokemonInfo = ({ id, imageUrl, imageAlt, name, rating, reviewCount }) => {
 					{formatName}
 				</Text>
 
-				<Box display='flex' mt='2' justifyContent='center'>
+				<Box display='flex' my={1} justifyContent='center'>
 					{Array(5)
 						.fill('')
 						.map((_, i) => (
