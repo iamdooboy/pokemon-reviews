@@ -2,6 +2,8 @@ import React from 'react'
 import { getPokemon, getPokemonName } from '../utils/axios'
 import PokemonCardLarge from '../components/pokemon-page/pokemon-card-lg'
 import { Container, Button } from '@chakra-ui/react'
+import CommentBox from '../components/pokemon-page/comments/comment-box'
+import CommentModal from '../components/pokemon-page/comments/add-comment-modal'
 
 const Pokemon = ({ data }) => {
 	return (
@@ -12,9 +14,9 @@ const Pokemon = ({ data }) => {
 			align='center'
 		>
 			<PokemonCardLarge data={data} />
-			<Button w='xs' mt={2}>
-				Write a review
-			</Button>
+			<CommentModal />
+			<CommentBox />
+			<CommentBox />
 		</Container>
 	)
 }

@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react'
-import theme from '../theme'
+import theme from '../lib/theme'
 
 const Website = ({ Component, pageProps, router }) => {
 	return (
