@@ -6,9 +6,9 @@ const PokemonInfo = ({ id, imageUrl, imageAlt, name, rating, reviewCount }) => {
 	const formatName = name.charAt(0).toUpperCase() + name.slice(1)
 	return (
 		<>
-			<Box as='span' ml={1} color='gray.600' opacity='0.5'>
+			<Text pr={1} align='right' color='gray.600'>
 				{id.toString().padStart(3, '0')}
-			</Box>
+			</Text>
 			<Box align='center'>
 				<Image
 					boxSize='100px'
@@ -28,14 +28,11 @@ const PokemonInfo = ({ id, imageUrl, imageAlt, name, rating, reviewCount }) => {
 					{formatName}
 				</Text>
 
-				<Box display='flex' mt='2' justifyContent='center'>
+				<Box display='flex' my={1} justifyContent='center'>
 					{Array(5)
 						.fill('')
 						.map((_, i) => (
-							<StarIcon
-								key={i}
-								color={i < rating ? 'yellow.400' : 'gray.300'}
-							/>
+							<StarIcon key={i} color={i < rating ? '#FBBC05' : 'gray.300'} />
 						))}
 				</Box>
 				<Box color='gray.600' fontSize='sm' align='center'>

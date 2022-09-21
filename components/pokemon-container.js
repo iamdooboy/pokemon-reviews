@@ -7,7 +7,6 @@ import { Link } from '@chakra-ui/react'
 
 const PokemonContainer = () => {
 	const [offset, setOffset] = useState(0)
-
 	const { isLoading, isError, error, results, hasNextPage } = useFetch(offset)
 
 	const intObserver = useRef()
@@ -34,24 +33,48 @@ const PokemonContainer = () => {
 		return <p>Error: {error.message}</p>
 	}
 
+	const LinkOverlay = ({ href, as, children }) => {
+		return (
+			<NextLink href={href} as={as} passHref>
+				<Link _hover={{ textDecoration: 'none' }}>{children}</Link>
+			</NextLink>
+		)
+	}
+
 	const content = results.map((pokemon, index) => {
 		if (results.length === index + 1) {
 			return (
-				<NextLink href={`/${pokemon.name}`} passHref>
-					<Link _hover={{ textDecoration: 'none' }}>
-						<PokemonCard ref={lastPageRef} key={index} pokemon={pokemon} />
-					</Link>
-				</NextLink>
+				<LinkOverlay
+					href={{
+						pathname: `/[pokemonid]`,
+						query: {
+							pokemonid: pokemon.name
+						}
+					}}
+					as={`/${pokemon.name}`}
+					key={index}
+				>
+					<PokemonCard ref={lastPageRef} pokemon={pokemon} />
+				</LinkOverlay>
 			)
 		}
+
 		return (
-			<NextLink href={`/${pokemon.name}`} passref>
-				<Link _hover={{ textDecoration: 'none' }}>
-					<PokemonCard key={index} pokemon={pokemon} />
-				</Link>
-			</NextLink>
+			<LinkOverlay
+				href={{
+					pathname: `/[pokemonid]`,
+					query: {
+						pokemonid: pokemon.name
+					}
+				}}
+				as={`/${pokemon.name}`}
+				key={index}
+			>
+				<PokemonCard pokemon={pokemon} />
+			</LinkOverlay>
 		)
 	})
+
 	return (
 		<SimpleGrid columns={[2, 3, 6]} spacing={6} py={4}>
 			{isLoading && (
