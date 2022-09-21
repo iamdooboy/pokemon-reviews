@@ -18,7 +18,9 @@ const Star = ({ fillColor }) => {
 	)
 }
 
-const CommentBox = () => {
+const CommentBox = ({ review }) => {
+	const { description, rating } = review
+
 	return (
 		<Box
 			maxW='xs'
@@ -41,20 +43,17 @@ const CommentBox = () => {
 						<Text color='gray.500'>Dan Abrahmov</Text>
 						<Spacer />
 						<Flex justifyContent='right'>
-							{Array.from(Array(4).keys()).map(id => {
+							{Array.from(Array(rating).keys()).map(id => {
 								return <Star key={id} fillColor='#FBBC05' />
 							})}
-							{Array.from(Array(5 - 4).keys()).map(id => {
+							{Array.from(Array(5 - rating).keys()).map(id => {
 								return <Star key={id} fillColor='#E8EAEE' />
 							})}
 						</Flex>
 					</HStack>
 
 					<Text fontSize='sm' noOfLines={4}>
-						Lorem Ipsum is simply dummy text of the printing and typesetting
-						industry. Lorem Ipsum has been the industry's standard dummy text
-						ever since the 1500s, when an unknown printer took a galley of type
-						and scrambled it to make a type specimen book.
+						{description}
 					</Text>
 				</Box>
 			</Flex>
