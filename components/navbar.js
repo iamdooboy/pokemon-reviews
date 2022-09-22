@@ -1,7 +1,4 @@
 import React, { useState } from 'react'
-import NavLink from 'next/link'
-import { useRouter } from 'next/router'
-import { supabaseClient } from '../lib/client'
 import {
 	chakra,
 	Flex,
@@ -34,20 +31,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons'
 import { AiOutlineSearch } from 'react-icons/ai'
 
 const Navbar = () => {
-	const router = useRouter()
-	const [isLogoutLoading, setIsLogoutLoading] = useState(false)
-
-	const logoutHandler = async () => {
-		try {
-			setIsLogoutLoading(true)
-			await supabaseClient.auth.signOut()
-			router.push('/login')
-		} catch (error) {
-			router.push('/login')
-		} finally {
-			setIsLogoutLoading(false)
-		}
-	}
+	const logoutHandler = async () => {}
 
 	return (
 		<>
@@ -69,7 +53,7 @@ const Navbar = () => {
 						</TagLabel>
 					</Tag>
 
-					<HStack spacing={3}>
+					<Flex>
 						<InputGroup>
 							<InputLeftElement pointerEvents='none'>
 								<AiOutlineSearch />
@@ -77,9 +61,10 @@ const Navbar = () => {
 							<Input variant='filled' placeholder='Search...' />
 						</InputGroup>
 						<Menu isLazy>
-							<MenuButton size='sm' px={0} py={0} rounded='full'>
+							<MenuButton>
 								<Flex align='center'>
 									<Avatar
+										ml={2}
 										size='sm'
 										name='Dan Abrahmov'
 										src='https://bit.ly/dan-abramov'
@@ -112,13 +97,11 @@ const Navbar = () => {
 									onClick={logoutHandler}
 									icon={<MdLogout fontSize={21} />}
 								>
-									<Text fontWeight='500'>
-										{isLogoutLoading ? <Spinner /> : 'Log out'}
-									</Text>
+									<Text fontWeight='500'>Log out</Text>
 								</MenuItem>
 							</MenuList>
 						</Menu>
-					</HStack>
+					</Flex>
 				</Flex>
 			</chakra.header>
 		</>

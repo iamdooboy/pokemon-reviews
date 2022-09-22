@@ -7,7 +7,6 @@ import {
 	ModalFooter,
 	ModalBody,
 	ModalCloseButton,
-	useDisclosure,
 	Button,
 	FormControl,
 	Flex,
@@ -17,9 +16,15 @@ import {
 	Heading
 } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
+import axios from 'axios'
 
-const CommentModal = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure()
+const CommentModal = ({
+	isOpen,
+	onOpen,
+	onClose,
+	initialRef,
+	setAllReviews
+}) => {
 	const [rating, setRating] = useState(0)
 	const [hover, setHover] = useState(0)
 	const [description, setDescription] = useState('')
@@ -32,8 +37,22 @@ const CommentModal = () => {
 		onClose()
 	}
 
-	const submitHandler = async e => {
+	const saveReview = async review => {
+		const response = await axios.post('/api/reviews', review)
+
+		if (!response) {
+			throw new Error('error')
+		}
+		setAllReviews(prev => [...prev, response.data])
+		return response
+	}
+
+	const submitHandler = e => {
 		e.preventDefault()
+		setIsLoading(true)
+		saveReview({ description, rating })
+		setisLoading(false)
+		onCloseHandler()
 	}
 
 	return (
@@ -41,7 +60,12 @@ const CommentModal = () => {
 			<Button mt={2} onClick={onOpen}>
 				Leave a review
 			</Button>
-			<Modal isCentered isOpen={isOpen} onClose={onCloseHandler}>
+			<Modal
+				isCentered
+				isOpen={isOpen}
+				onClose={onCloseHandler}
+				initialFocusRef={initialRef}
+			>
 				<ModalOverlay />
 				<form onSubmit={submitHandler}>
 					<ModalContent>

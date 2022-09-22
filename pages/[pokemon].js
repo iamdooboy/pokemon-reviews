@@ -1,11 +1,17 @@
-import React from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getPokemon, getPokemonName } from '../utils/axios'
 import PokemonCardLarge from '../components/pokemon-page/pokemon-card-lg'
 import { Container, Button } from '@chakra-ui/react'
 import CommentBox from '../components/pokemon-page/comments/comment-box'
 import CommentModal from '../components/pokemon-page/comments/add-comment-modal'
+import { useDisclosure } from '@chakra-ui/react'
+import { PrismaClient } from '@prisma/client'
 
-const Pokemon = ({ data }) => {
+const Pokemon = ({ reviews = [], data }) => {
+	const initialRef = useRef()
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	const [allReviews, setAllReviews] = useState(reviews)
+
 	return (
 		<Container
 			maxW='container.md'
@@ -14,14 +20,24 @@ const Pokemon = ({ data }) => {
 			align='center'
 		>
 			<PokemonCardLarge data={data} />
-			<CommentModal />
-			<CommentBox />
-			<CommentBox />
+			<CommentModal
+				isOpen={isOpen}
+				onClose={onClose}
+				initialRef={initialRef}
+				onOpen={onOpen}
+				setAllReviews={setAllReviews}
+			/>
+			{allReviews.map((review, index) => (
+				<CommentBox review={review} key={index} />
+			))}
 		</Container>
 	)
 }
 
 export const getServerSideProps = async ({ params }) => {
+	const prisma = new PrismaClient()
+	const reviews = await prisma.review.findMany()
+
 	const { pokemon } = params
 	const allPokemon = await getPokemonName()
 
@@ -40,7 +56,8 @@ export const getServerSideProps = async ({ params }) => {
 
 	return {
 		props: {
-			data: pokemonData
+			data: pokemonData,
+			reviews: JSON.parse(JSON.stringify(reviews))
 		}
 	}
 }
