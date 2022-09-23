@@ -1,4 +1,4 @@
-import { Heading } from '@chakra-ui/react'
+import { Heading, Button } from '@chakra-ui/react'
 import PokemonContainer from '../components/pokemon-container'
 import Layout from '../components/layout'
 
@@ -12,7 +12,7 @@ const Page = () => {
 				Nintendo has been creating a lot of questionable Pokemon. Luckily they
 				are looking for your feedback.
 			</Heading>
-			<PokemonContainer />
+			{/* <PokemonContainer /> */}
 		</Layout>
 	)
 }
