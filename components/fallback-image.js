@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { chakra } from '@chakra-ui/react'
 
-const FallbackImage = ({ src, ...rest }) => {
+const FallbackImage = ({ src, fallback, ...rest }) => {
 	const [imgSrc, setImgSrc] = useState(src)
 
 	useEffect(() => {
@@ -11,12 +12,16 @@ const FallbackImage = ({ src, ...rest }) => {
 	return (
 		<Image
 			{...rest}
-			src={imgSrc ? imgSrc : '/bug.svg'}
+			src={imgSrc ? imgSrc : fallback}
 			onError={() => {
-				setImgSrc('/bug.svg')
+				setImgSrc(fallback)
 			}}
 		/>
 	)
 }
 
-export default FallbackImage
+export const FallbackAvatar = chakra(FallbackImage, {
+	baseStyle: { borderRadius: 9999 },
+	shouldForwardProp: prop =>
+		['width', 'height', 'src', 'alt', 'fallback'].includes(prop)
+})

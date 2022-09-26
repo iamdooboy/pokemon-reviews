@@ -1,5 +1,4 @@
-import React, { useState, useRef } from 'react'
-import Image from 'next/image'
+import React, { useRef } from 'react'
 import {
 	chakra,
 	Flex,
@@ -7,7 +6,6 @@ import {
 	InputGroup,
 	InputLeftElement,
 	Input,
-	Avatar,
 	Tag,
 	TagLabel,
 	TagLeftIcon,
@@ -32,12 +30,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import LoginModal from './login-modal'
-import FallbackImage from './fallback-image'
-
-const ProductImage = chakra(FallbackImage, {
-	baseStyle: { borderRadius: 9999 },
-	shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop)
-})
+import { FallbackAvatar } from './fallback-image'
 
 const LoadingButton = (
 	<Button isLoading colorScheme='gray' variant='solid'>
@@ -56,11 +49,12 @@ const Navbar = () => {
 		<Menu isLazy>
 			<MenuButton>
 				<Flex align='center'>
-					<ProductImage
+					<FallbackAvatar
 						width={52}
 						height={52}
 						name={user?.name}
 						src={user?.image}
+						fallback='/bug.svg'
 					/>
 					<Icon as={ChevronDownIcon} w={6} h={6} />
 				</Flex>

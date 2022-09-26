@@ -18,9 +18,9 @@ import {
 import { StarIcon } from '@chakra-ui/icons'
 import axios from 'axios'
 
-const CommentModal = ({
+const ReviewModal = ({
+	pokemon,
 	isOpen,
-	onOpen,
 	onClose,
 	initialRef,
 	setAllReviews
@@ -29,6 +29,7 @@ const CommentModal = ({
 	const [hover, setHover] = useState(0)
 	const [description, setDescription] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
+	const formatName = pokemon.charAt(0).toUpperCase() + pokemon.slice(1)
 
 	const onCloseHandler = () => {
 		setRating(0)
@@ -57,9 +58,6 @@ const CommentModal = ({
 
 	return (
 		<>
-			<Button mt={2} onClick={onOpen}>
-				Leave a review
-			</Button>
 			<Modal
 				isCentered
 				isOpen={isOpen}
@@ -71,7 +69,7 @@ const CommentModal = ({
 					<ModalContent>
 						<ModalHeader>
 							<Heading as='h3' size='lg'>
-								Review Pikachu
+								Review {formatName}
 							</Heading>
 						</ModalHeader>
 						<ModalCloseButton />
@@ -129,4 +127,4 @@ const CommentModal = ({
 	)
 }
 
-export default CommentModal
+export default ReviewModal
