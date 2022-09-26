@@ -1,16 +1,24 @@
 import { useRef, useState } from 'react'
 import { getPokemon, getPokemonName } from '../utils/axios'
-import PokemonCardLarge from '../components/pokemon-page/pokemon-card-lg'
-import { Container } from '@chakra-ui/react'
-import CommentBox from '../components/pokemon-page/comments/comment-box'
-import CommentModal from '../components/pokemon-page/comments/add-comment-modal'
+import { Container, Button, HStack } from '@chakra-ui/react'
+import CommentBox from '../components/review-page/reviews/review-box'
+import ReviewModal from '../components/review-page/reviews/add-review-modal'
 import { useDisclosure } from '@chakra-ui/react'
 import { PrismaClient } from '@prisma/client'
+import PokemonCardLarge from '../components/review-page/pokemon-card-large'
+import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
 
 const Pokemon = ({ reviews = [], data }) => {
 	const initialRef = useRef()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [allReviews, setAllReviews] = useState(reviews)
+	const [favorite, setFavorite] = useState(false)
+
+	const favoriteIcon = favorite ? (
+		<MdFavorite color='#E53E3E' />
+	) : (
+		<MdFavoriteBorder />
+	)
 
 	return (
 		<Container
@@ -18,13 +26,34 @@ const Pokemon = ({ reviews = [], data }) => {
 			p={{ base: 5, md: 12 }}
 			margin='0 auto'
 			align='center'
+			justify='center'
 		>
 			<PokemonCardLarge data={data} />
-			<CommentModal
+			<HStack align='center' justify='center' mt={3} maxW='xs'>
+				<Button
+					leftIcon={favoriteIcon}
+					variant='outline'
+					w='40%'
+					onClick={() => setFavorite(!favorite)}
+					colorScheme='blue'
+				>
+					Favorite
+				</Button>
+				<Button
+					leftIcon={<MdOutlineEdit />}
+					onClick={onOpen}
+					colorScheme='blue'
+					w='60%'
+				>
+					Leave a review
+				</Button>
+			</HStack>
+
+			<ReviewModal
+				pokemon={data.name}
 				isOpen={isOpen}
 				onClose={onClose}
 				initialRef={initialRef}
-				onOpen={onOpen}
 				setAllReviews={setAllReviews}
 			/>
 			{allReviews.map((review, index) => (
