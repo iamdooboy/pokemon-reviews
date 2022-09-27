@@ -7,8 +7,10 @@ import { useDisclosure } from '@chakra-ui/react'
 import { PrismaClient } from '@prisma/client'
 import PokemonCardLarge from '../components/review-page/pokemon-card-large'
 import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
+import prisma from '../lib/prisma'
+// const prisma = new PrismaClient()
 
-const Pokemon = ({ reviews = [], data }) => {
+const Pokemon = ({ reviews = [], data, pokemonName }) => {
 	const initialRef = useRef()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [allReviews, setAllReviews] = useState(reviews)
@@ -33,24 +35,24 @@ const Pokemon = ({ reviews = [], data }) => {
 				<Button
 					leftIcon={favoriteIcon}
 					variant='outline'
-					w='40%'
+					w='20%'
 					onClick={() => setFavorite(!favorite)}
 					colorScheme='blue'
 				>
-					Favorite
+					4
 				</Button>
 				<Button
 					leftIcon={<MdOutlineEdit />}
 					onClick={onOpen}
 					colorScheme='blue'
-					w='60%'
+					w='80%'
 				>
 					Leave a review
 				</Button>
 			</HStack>
 
 			<ReviewModal
-				pokemon={data.name}
+				pokemonName={pokemonName}
 				isOpen={isOpen}
 				onClose={onClose}
 				initialRef={initialRef}
@@ -64,10 +66,15 @@ const Pokemon = ({ reviews = [], data }) => {
 }
 
 export const getServerSideProps = async ({ params }) => {
-	const prisma = new PrismaClient()
-	const reviews = await prisma.review.findMany()
-
 	const { pokemon } = params
+
+	const reviews = await prisma.review.findMany({
+		where: {
+			pokemon: pokemon
+		},
+		orderBy: { createdAt: 'desc' }
+	})
+
 	const allPokemon = await getPokemonName()
 
 	if (!allPokemon.includes(pokemon)) {
@@ -86,6 +93,7 @@ export const getServerSideProps = async ({ params }) => {
 	return {
 		props: {
 			data: pokemonData,
+			pokemonName: pokemon,
 			reviews: JSON.parse(JSON.stringify(reviews))
 		}
 	}

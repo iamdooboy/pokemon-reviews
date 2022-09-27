@@ -1,10 +1,9 @@
-import { Heading, Button, Flex, Box } from '@chakra-ui/react'
+import { Heading } from '@chakra-ui/react'
 import PokemonContainer from '../components/pokemon-container'
-import Layout from '../components/layout'
 
 const Page = () => {
 	return (
-		<Layout>
+		<>
 			<Heading as='h1' size='xl' align='center' py={4}>
 				Pokemon Reviews
 			</Heading>
@@ -13,7 +12,7 @@ const Page = () => {
 				are looking for your feedback.
 			</Heading>
 			<PokemonContainer />
-		</Layout>
+		</>
 	)
 }
 

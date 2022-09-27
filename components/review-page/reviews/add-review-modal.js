@@ -19,7 +19,7 @@ import { StarIcon } from '@chakra-ui/icons'
 import axios from 'axios'
 
 const ReviewModal = ({
-	pokemon,
+	pokemonName,
 	isOpen,
 	onClose,
 	initialRef,
@@ -29,7 +29,7 @@ const ReviewModal = ({
 	const [hover, setHover] = useState(0)
 	const [description, setDescription] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
-	const formatName = pokemon.charAt(0).toUpperCase() + pokemon.slice(1)
+	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
 
 	const onCloseHandler = () => {
 		setRating(0)
@@ -51,8 +51,8 @@ const ReviewModal = ({
 	const submitHandler = e => {
 		e.preventDefault()
 		setIsLoading(true)
-		saveReview({ description, rating })
-		setisLoading(false)
+		saveReview({ description, rating, pokemon: pokemonName })
+		setIsLoading(false)
 		onCloseHandler()
 	}
 
