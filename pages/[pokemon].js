@@ -6,7 +6,7 @@ import ReviewModal from '../components/review-page/reviews/add-review-modal'
 import { useDisclosure } from '@chakra-ui/react'
 import PokemonCardLarge from '../components/review-page/pokemon-card-large'
 import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
-import prisma from '../lib/prisma'
+import { prisma } from '../lib/prisma'
 import axios from 'axios'
 import { getSession, useSession } from 'next-auth/react'
 

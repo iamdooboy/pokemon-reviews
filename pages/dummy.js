@@ -1,6 +1,6 @@
 import React from 'react'
 import CreateDummyData from '../components/create-dummy-data'
-//import prisma from '../lib/prisma'
+//import { prisma } from '../lib/prisma'
 import { getDummyPokemon } from '../utils/axios'
 
 const Dummy = ({ allPokemon }) => {
