@@ -100,7 +100,7 @@ const Navbar = () => {
 				shadow='md'
 				bg='#171923e6'
 				css={{ backdropFilter: 'blur(10px)' }}
-				zIndex={100}
+				zIndex={100000}
 			>
 				<Flex alignItems='center' justifyContent='space-between' mx='auto'>
 					<Tag size='lg' variant='ghost' colorScheme='blue'>

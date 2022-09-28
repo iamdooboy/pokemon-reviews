@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, HStack, Text, Image, Heading, Flex } from '@chakra-ui/react'
-import { motion, useMotionValue, useTransform } from 'framer-motion'
 
 const Star = ({ fillColor }) => {
 	return (
@@ -24,11 +23,6 @@ const PokemonCardLarge = ({ data }) => {
 	const formatName = name.charAt(0).toUpperCase() + name.slice(1)
 	let paddedId = id.toString().padStart(3, '0')
 
-	const x = useMotionValue(0)
-	const y = useMotionValue(0)
-	const rotateX = useTransform(y, [-100, 100], [30, -30])
-	const rotateY = useTransform(x, [-100, 100], [-30, 30])
-
 	return (
 		<Box
 			bgGradient={`linear(to-tl, ${typesArr[0]}.default, ${
@@ -37,13 +31,6 @@ const PokemonCardLarge = ({ data }) => {
 			p='2px'
 			rounded={8}
 			maxW='xs'
-			as={motion.div}
-			perspective={2000}
-			style={{ x, y, rotateX, rotateY, z: 1 }}
-			drag
-			dragElastic={0.16}
-			dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
-			whileHover={{ cursor: 'grabbing' }}
 		>
 			<Box maxW='xs' rounded={8} mx='auto' bg='rgba(17, 25, 40, 0.6)'>
 				<Box p={3} color='gray.100'>
@@ -52,10 +39,6 @@ const PokemonCardLarge = ({ data }) => {
 						rounded={4}
 						bg='#282d359e'
 						borderColor='whiteAlpha.600'
-						as={motion.div}
-						style={{ x, y, rotateX, rotateY, z: 10 }}
-						drag
-						dragElastic={0.12}
 					>
 						<Text position='absolute' opacity={0.4} px={1}>
 							{paddedId}
