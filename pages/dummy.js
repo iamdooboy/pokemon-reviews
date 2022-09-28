@@ -8,7 +8,7 @@ const Dummy = ({ allPokemon }) => {
 }
 
 export const getServerSideProps = async context => {
-	const allPokemon = await getDummyPokemon(905, 0)
+	const allPokemon = await getDummyPokemon(151, 0)
 
 	allPokemon.map(async pokemon => {
 		await prisma.pokemon.create({
