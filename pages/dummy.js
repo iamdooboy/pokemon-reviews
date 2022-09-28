@@ -1,6 +1,6 @@
 import React from 'react'
 import CreateDummyData from '../components/create-dummy-data'
-//import { prisma } from '../lib/prisma'
+import { prisma } from '../lib/prisma'
 import { getDummyPokemon } from '../utils/axios'
 
 const Dummy = ({ allPokemon }) => {
@@ -8,7 +8,7 @@ const Dummy = ({ allPokemon }) => {
 }
 
 export const getServerSideProps = async context => {
-	const allPokemon = await getDummyPokemon(800, 60)
+	const allPokemon = await getDummyPokemon(905, 0)
 
 	allPokemon.map(async pokemon => {
 		await prisma.pokemon.create({
