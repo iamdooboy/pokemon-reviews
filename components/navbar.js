@@ -45,6 +45,10 @@ const Navbar = () => {
 	const isLoadingUser = status === 'loading'
 	const finalRef = useRef(null)
 
+	const signOutHandler = () => {
+		signOut({ redirect: false })
+	}
+
 	const CustomMenu = (
 		<Menu isLazy>
 			<MenuButton>
@@ -80,7 +84,7 @@ const Navbar = () => {
 					<Text fontWeight='500'>Settings</Text>
 				</MenuItem>
 				<MenuDivider />
-				<MenuItem onClick={() => signOut()} icon={<MdLogout fontSize={21} />}>
+				<MenuItem onClick={signOutHandler} icon={<MdLogout fontSize={21} />}>
 					<Text fontWeight='500'>Log out</Text>
 				</MenuItem>
 			</MenuList>
