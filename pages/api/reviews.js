@@ -1,7 +1,5 @@
 import { getSession } from 'next-auth/react'
-import { PrismaClient } from '@prisma/client'
 import prisma from '../../lib/prisma'
-//const prisma = new PrismaClient()
 
 export default async function handler(req, res) {
 	// Check if user is authenticated
@@ -25,7 +23,11 @@ export default async function handler(req, res) {
 		const reviewData = req.body
 
 		const savedReview = await prisma.review.create({
-			data: { ...reviewData, authorId: user.id }
+			data: { ...reviewData, authorId: user.id },
+			include: {
+				//return all fields from user model
+				author: true
+			}
 		})
 		res.status(200).json(savedReview)
 	} catch (e) {

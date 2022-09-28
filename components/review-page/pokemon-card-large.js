@@ -39,7 +39,7 @@ const PokemonCardLarge = ({ data }) => {
 			maxW='xs'
 			as={motion.div}
 			perspective={2000}
-			style={{ x, y, rotateX, rotateY, z: 100 }}
+			style={{ x, y, rotateX, rotateY, z: 1 }}
 			drag
 			dragElastic={0.16}
 			dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
@@ -53,7 +53,7 @@ const PokemonCardLarge = ({ data }) => {
 						bg='#282d359e'
 						borderColor='whiteAlpha.600'
 						as={motion.div}
-						style={{ x, y, rotateX, rotateY, z: 1000 }}
+						style={{ x, y, rotateX, rotateY, z: 10 }}
 						drag
 						dragElastic={0.12}
 					>

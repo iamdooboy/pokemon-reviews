@@ -1,26 +1,99 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { getPokemon, getPokemonName } from '../utils/axios'
-import { Container, Button, HStack } from '@chakra-ui/react'
+import { Container, Button, HStack, Box } from '@chakra-ui/react'
 import CommentBox from '../components/review-page/reviews/review-box'
 import ReviewModal from '../components/review-page/reviews/add-review-modal'
 import { useDisclosure } from '@chakra-ui/react'
-import { PrismaClient } from '@prisma/client'
 import PokemonCardLarge from '../components/review-page/pokemon-card-large'
 import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
 import prisma from '../lib/prisma'
-// const prisma = new PrismaClient()
+import axios from 'axios'
+import { useSession } from 'next-auth/react'
 
-const Pokemon = ({ reviews = [], data, pokemonName }) => {
+const Empty = ({ pokemonName }) => {
+	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+	return (
+		<Box
+			fontWeight='600'
+			maxW='xs'
+			rounded={8}
+			borderWidth={1}
+			align='center'
+			mt={3}
+			mx='auto'
+			p={3}
+			bg='rgba(17, 25, 40, 0.75)'
+		>
+			Be the first to review {formatName}!
+		</Box>
+	)
+}
+const Pokemon = ({
+	reviews = [],
+	data,
+	pokemonName,
+	numOfFavorite = 0,
+	pokemonId,
+	favoritedBy
+}) => {
+	const { data: session, status } = useSession()
+
 	const initialRef = useRef()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [allReviews, setAllReviews] = useState(reviews)
-	const [favorite, setFavorite] = useState(false)
+	const [numberOfFavorites, setNumberOfFavorites] = useState(numOfFavorite)
+	const [favorite, setFavorite] = useState()
+	const [loading, setLoading] = useState(false)
+
+	useEffect(() => {
+		if (!session) {
+			setFavorite(false)
+		} else {
+			setLoading(true)
+			axios
+				.get('/api/session')
+				.then(({ data }) => {
+					const didUserFavoriteThisPokemon = favoritedBy.some(
+						el => el.id === data
+					)
+					setFavorite(didUserFavoriteThisPokemon)
+				})
+				.catch(e => alert(`Getting data failed: ${e.message}`))
+				.finally(() => setLoading(false))
+		}
+
+		// const getData = async () => {
+		// 	const { data } = await axios.get('/api/session')
+		// 	const didUserFavoriteThisPokemon = favoritedBy.some(el => el.id === data)
+		// 	setFavorite(didUserFavoriteThisPokemon)
+		// }
+		// setLoading(true)
+		// getData()
+		// setLoading(false)
+	}, [])
 
 	const favoriteIcon = favorite ? (
 		<MdFavorite color='#E53E3E' />
 	) : (
 		<MdFavoriteBorder />
 	)
+
+	const favoriteClickHandler = async () => {
+		if (!session) {
+			alert('please login to like')
+			return
+		}
+		setFavorite(!favorite)
+
+		const data = {
+			fav: favorite ? numberOfFavorites - 1 : numberOfFavorites + 1,
+			pokemonId,
+			toggle: favorite
+		}
+
+		setNumberOfFavorites(data.fav)
+		await axios.put('/api/pokemon', data)
+	}
 
 	return (
 		<Container
@@ -33,17 +106,18 @@ const Pokemon = ({ reviews = [], data, pokemonName }) => {
 			<PokemonCardLarge data={data} />
 			<HStack align='center' justify='center' mt={3} maxW='xs'>
 				<Button
+					isLoading={loading}
 					leftIcon={favoriteIcon}
 					variant='outline'
 					w='20%'
-					onClick={() => setFavorite(!favorite)}
+					onClick={favoriteClickHandler}
 					colorScheme='blue'
 				>
-					4
+					{numberOfFavorites}
 				</Button>
 				<Button
 					leftIcon={<MdOutlineEdit />}
-					onClick={onOpen}
+					onClick={session ? onOpen : () => alert('please login to review')}
 					colorScheme='blue'
 					w='80%'
 				>
@@ -58,6 +132,7 @@ const Pokemon = ({ reviews = [], data, pokemonName }) => {
 				initialRef={initialRef}
 				setAllReviews={setAllReviews}
 			/>
+			{allReviews.length === 0 && <Empty pokemonName={pokemonName} />}
 			{allReviews.map((review, index) => (
 				<CommentBox review={review} key={index} />
 			))}
@@ -65,14 +140,38 @@ const Pokemon = ({ reviews = [], data, pokemonName }) => {
 	)
 }
 
-export const getServerSideProps = async ({ params }) => {
-	const { pokemon } = params
+export const getServerSideProps = async context => {
+	const { pokemon } = context.params
 
-	const reviews = await prisma.review.findMany({
+	// const savedPokemon = await prisma.pokemon.create({
+	// 	data: {
+	// 		pokemon: pokemon,
+	// 		favoritedBy: {}
+	// 	}
+	// })
+
+	const savedPokemon = await prisma.pokemon.findFirst({
 		where: {
 			pokemon: pokemon
 		},
-		orderBy: { createdAt: 'desc' }
+		include: {
+			favoritedBy: true
+		}
+	})
+
+	console.log(savedPokemon)
+
+	const { id, favorite, favoritedBy } = savedPokemon
+
+	const reviews = await prisma.review.findMany({
+		//return all reviews for the selected pokemond
+		where: {
+			pokemon: pokemon
+		},
+		include: {
+			//return all fields from user model
+			author: true
+		}
 	})
 
 	const allPokemon = await getPokemonName()
@@ -94,7 +193,10 @@ export const getServerSideProps = async ({ params }) => {
 		props: {
 			data: pokemonData,
 			pokemonName: pokemon,
-			reviews: JSON.parse(JSON.stringify(reviews))
+			reviews: JSON.parse(JSON.stringify(reviews)),
+			numOfFavorite: favorite,
+			pokemonId: id,
+			favoritedBy: favoritedBy
 		}
 	}
 }

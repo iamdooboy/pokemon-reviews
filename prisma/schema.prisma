@@ -34,17 +34,6 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-  id             String    @id @default(cuid())
-  name           String?
-  email          String?   @unique
-  emailVerified  DateTime?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
-  writtenReviews Review[]  @relation("WrittenPost")
-}
-
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -53,14 +42,31 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model User {
+  id              String    @id @default(cuid())
+  name            String?
+  email           String?   @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  writtenReviews  Review[]  @relation("WrittenReviews")
+  favoritePokemon Pokemon[]
+}
+
 model Review {
   id          String   @id @default(cuid())
   description String
   rating      Int
   createdAt   DateTime @default(now())
-  author      User?    @relation("WrittenPost", fields: [authorId], references: [id])
+  author      User?    @relation("WrittenReviews", fields: [authorId], references: [id])
   authorId    String?
-  pokemon     String   @unique
+  pokemon     String
+}
 
-  @@unique([authorId, pokemon])
+model Pokemon {
+  id          String @id @default(cuid())
+  pokemon     String @unique
+  favorite    Int?   @default(0)
+  favoritedBy User[]
 }
