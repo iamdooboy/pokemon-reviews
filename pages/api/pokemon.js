@@ -45,7 +45,6 @@ export default async function handler(req, res) {
 				},
 				select: { id: true, pokemon: true, favoritedBy: true }
 			})
-			console.dir(savedPokemon, { depth: null })
 			res.status(200).json(savedPokemon)
 		} catch (e) {
 			console.log(e)

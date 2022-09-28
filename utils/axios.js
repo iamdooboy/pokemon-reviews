@@ -48,3 +48,10 @@ export const getPokemonPage = async (offset = 0, options = {}) => {
 	)
 	return arr
 }
+
+export const getDummyPokemon = async (limit, offset) => {
+	const res = await api.get(`/pokemon?limit=${limit}&offset=${offset}`)
+
+	const names = res.data.results.map(el => el.name)
+	return names
+}

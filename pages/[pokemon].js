@@ -8,7 +8,7 @@ import PokemonCardLarge from '../components/review-page/pokemon-card-large'
 import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
 import prisma from '../lib/prisma'
 import axios from 'axios'
-import { useSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 
 const Empty = ({ pokemonName }) => {
 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -28,49 +28,21 @@ const Empty = ({ pokemonName }) => {
 		</Box>
 	)
 }
+
 const Pokemon = ({
 	reviews = [],
 	data,
 	pokemonName,
 	numOfFavorite = 0,
-	pokemonId,
-	favoritedBy
+	didUserFavoriteThisPokemon = false,
+	pokemonId
 }) => {
-	const { data: session, status } = useSession()
-
 	const initialRef = useRef()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [allReviews, setAllReviews] = useState(reviews)
 	const [numberOfFavorites, setNumberOfFavorites] = useState(numOfFavorite)
-	const [favorite, setFavorite] = useState()
-	const [loading, setLoading] = useState(false)
-
-	useEffect(() => {
-		if (!session) {
-			setFavorite(false)
-		} else {
-			setLoading(true)
-			axios
-				.get('/api/session')
-				.then(({ data }) => {
-					const didUserFavoriteThisPokemon = favoritedBy.some(
-						el => el.id === data
-					)
-					setFavorite(didUserFavoriteThisPokemon)
-				})
-				.catch(e => alert(`Getting data failed: ${e.message}`))
-				.finally(() => setLoading(false))
-		}
-
-		// const getData = async () => {
-		// 	const { data } = await axios.get('/api/session')
-		// 	const didUserFavoriteThisPokemon = favoritedBy.some(el => el.id === data)
-		// 	setFavorite(didUserFavoriteThisPokemon)
-		// }
-		// setLoading(true)
-		// getData()
-		// setLoading(false)
-	}, [])
+	const [favorite, setFavorite] = useState(didUserFavoriteThisPokemon)
+	const { data: session, status } = useSession()
 
 	const favoriteIcon = favorite ? (
 		<MdFavorite color='#E53E3E' />
@@ -106,7 +78,6 @@ const Pokemon = ({
 			<PokemonCardLarge data={data} />
 			<HStack align='center' justify='center' mt={3} maxW='xs'>
 				<Button
-					isLoading={loading}
 					leftIcon={favoriteIcon}
 					variant='outline'
 					w='20%'
@@ -142,26 +113,37 @@ const Pokemon = ({
 
 export const getServerSideProps = async context => {
 	const { pokemon } = context.params
+	const allPokemon = await getPokemonName()
 
-	// const savedPokemon = await prisma.pokemon.create({
-	// 	data: {
-	// 		pokemon: pokemon,
-	// 		favoritedBy: {}
-	// 	}
-	// })
+	if (!allPokemon.includes(pokemon)) {
+		return {
+			notFound: true
+		}
+	}
 
-	const savedPokemon = await prisma.pokemon.findFirst({
+	///////////////////////////////////////////////
+
+	const response = await getPokemon(pokemon)
+
+	const pokemonData = {
+		name: pokemon,
+		...response
+	}
+
+	///////////////////////////////////////////////
+
+	const session = await getSession(context)
+
+	const savedPokemon = await prisma.pokemon.findUnique({
 		where: {
 			pokemon: pokemon
 		},
-		include: {
+		select: {
+			id: true,
+			favorite: true,
 			favoritedBy: true
 		}
 	})
-
-	console.log(savedPokemon)
-
-	const { id, favorite, favoritedBy } = savedPokemon
 
 	const reviews = await prisma.review.findMany({
 		//return all reviews for the selected pokemond
@@ -174,20 +156,24 @@ export const getServerSideProps = async context => {
 		}
 	})
 
-	const allPokemon = await getPokemonName()
+	const { id, favorite, favoritedBy } = savedPokemon
 
-	if (!allPokemon.includes(pokemon)) {
+	if (!session) {
 		return {
-			notFound: true
+			props: {
+				data: pokemonData,
+				pokemonName: pokemon,
+				numOfFavorite: favorite,
+				reviews: JSON.parse(JSON.stringify(reviews))
+			}
 		}
 	}
 
-	const response = await getPokemon(pokemon)
+	const user = await prisma.user.findUnique({
+		where: { email: session.user.email }
+	})
 
-	const pokemonData = {
-		name: pokemon,
-		...response
-	}
+	const didUserFavoriteThisPokemon = favoritedBy.some(el => el.id === user.id)
 
 	return {
 		props: {
@@ -195,8 +181,8 @@ export const getServerSideProps = async context => {
 			pokemonName: pokemon,
 			reviews: JSON.parse(JSON.stringify(reviews)),
 			numOfFavorite: favorite,
-			pokemonId: id,
-			favoritedBy: favoritedBy
+			didUserFavoriteThisPokemon,
+			pokemonId: id
 		}
 	}
 }
