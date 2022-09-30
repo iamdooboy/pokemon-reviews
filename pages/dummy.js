@@ -7,8 +7,8 @@ const Dummy = ({ allPokemon }) => {
 	return <CreateDummyData />
 }
 
-export const getServerSideProps = async context => {
-	const allPokemon = await getDummyPokemon(151, 0)
+export const getServerSideProps = async () => {
+	const allPokemon = await getDummyPokemon(96, 809)
 
 	allPokemon.map(async pokemon => {
 		await prisma.pokemon.create({

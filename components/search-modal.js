@@ -43,7 +43,7 @@ const SearchModal = ({ isOpen, onClose }) => {
 
 	const onChangeHandler = e => {
 		setActiveIndex(0)
-		const searchItem = e.target.value
+		const searchItem = e.target.value.toLowerCase()
 		if (searchItem.length === 0) {
 			setFilteredList([])
 			return
@@ -77,8 +77,8 @@ const SearchModal = ({ isOpen, onClose }) => {
 				isOpen={isOpen}
 				size={{ base: 'xs', md: 'md' }}
 			>
-				<ModalOverlay />
-				<ModalContent top='5rem' maxHeight='30rem'>
+				<ModalOverlay backdropFilter='blur(2px)' />
+				<ModalContent maxHeight='30rem'>
 					<ModalBody m={2} px={3}>
 						<InputGroup>
 							<InputLeftElement pointerEvents='none' position='relative'>
