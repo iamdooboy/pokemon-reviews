@@ -3,9 +3,6 @@ import {
 	chakra,
 	Flex,
 	VStack,
-	InputGroup,
-	InputLeftElement,
-	Input,
 	Tag,
 	TagLabel,
 	TagLeftIcon,
@@ -17,7 +14,8 @@ import {
 	MenuDivider,
 	Text,
 	useDisclosure,
-	Button
+	Button,
+	HStack
 } from '@chakra-ui/react'
 import {
 	MdCatchingPokemon,
@@ -27,10 +25,11 @@ import {
 	MdOutlineRateReview
 } from 'react-icons/md'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { AiOutlineSearch } from 'react-icons/ai'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import LoginModal from './login-modal'
 import { FallbackAvatar } from './fallback-image'
+import { SearchIcon } from '@chakra-ui/icons'
+import SearchModal from './search-modal'
 
 const LoadingButton = (
 	<Button isLoading colorScheme='gray' variant='solid'>
@@ -41,6 +40,11 @@ const LoadingButton = (
 const Navbar = () => {
 	const { data: session, status } = useSession()
 	const { isOpen, onOpen, onClose } = useDisclosure()
+	const {
+		isOpen: isOpenSearch,
+		onOpen: onOpenSearch,
+		onClose: onCloseSearch
+	} = useDisclosure()
 	const user = session?.user
 	const isLoadingUser = status === 'loading'
 	const finalRef = useRef(null)
@@ -100,7 +104,7 @@ const Navbar = () => {
 				shadow='md'
 				bg='#171923e6'
 				css={{ backdropFilter: 'blur(10px)' }}
-				zIndex={100000}
+				zIndex={2}
 			>
 				<Flex alignItems='center' justifyContent='space-between' mx='auto'>
 					<Tag size='lg' variant='ghost' colorScheme='blue'>
@@ -111,12 +115,23 @@ const Navbar = () => {
 					</Tag>
 
 					<Flex>
-						<InputGroup mr={3}>
-							<InputLeftElement pointerEvents='none'>
-								<AiOutlineSearch />
-							</InputLeftElement>
-							<Input variant='filled' placeholder='Search...' />
-						</InputGroup>
+						<chakra.button
+							mr={3}
+							type='button'
+							display='flex'
+							alignItems='center'
+							color='gray.400'
+							bg='gray.700'
+							px='4'
+							rounded='md'
+							onClick={onOpenSearch}
+						>
+							<SearchIcon />
+							<Text ml={3} textAlign='left' flex='1'>
+								Search for a Pokemon
+							</Text>
+						</chakra.button>
+
 						{isLoadingUser ? (
 							LoadingButton
 						) : user ? (
@@ -129,6 +144,7 @@ const Navbar = () => {
 					</Flex>
 				</Flex>
 			</chakra.header>
+			<SearchModal isOpen={isOpenSearch} onClose={onCloseSearch} />
 			<LoginModal
 				isOpen={isOpen}
 				onClose={onClose}

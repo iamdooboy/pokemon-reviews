@@ -1,6 +1,14 @@
-import React from 'react'
-import { Box, HStack, Text, Image, Heading, Flex } from '@chakra-ui/react'
-
+import React, { useEffect, useState, useRef } from 'react'
+import {
+	Box,
+	HStack,
+	Text,
+	Image,
+	Heading,
+	Flex,
+	Skeleton
+} from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 const Star = ({ fillColor }) => {
 	return (
 		<svg
@@ -19,9 +27,31 @@ const Star = ({ fillColor }) => {
 }
 
 const PokemonCardLarge = ({ data }) => {
+	const router = useRouter()
 	const { id, imageAlt, imageUrl, name, typesArr } = data
+	const [isLoaded, setIsLoaded] = useState(true)
 	const formatName = name.charAt(0).toUpperCase() + name.slice(1)
 	let paddedId = id.toString().padStart(3, '0')
+	const log = useRef(true)
+
+	useEffect(() => {
+		if (log.current) {
+			const handleStart = () => {
+				setIsLoaded(false)
+			}
+
+			const handleStop = () => {
+				setIsLoaded(true)
+			}
+
+			router.events.on('routeChangeStart', handleStart)
+			router.events.on('routeChangeComplete', handleStop)
+			router.events.on('routeChangeError', handleStop)
+		}
+		return () => {
+			log.current = false
+		}
+	}, [router])
 
 	return (
 		<Box
@@ -34,68 +64,79 @@ const PokemonCardLarge = ({ data }) => {
 		>
 			<Box maxW='xs' rounded={8} mx='auto' bg='rgba(17, 25, 40, 0.6)'>
 				<Box p={3} color='gray.100'>
-					<Box
-						borderWidth={2}
-						rounded={4}
-						bg='#282d359e'
-						borderColor='whiteAlpha.600'
-					>
-						<Text position='absolute' opacity={0.4} px={1}>
-							{paddedId}
-						</Text>
-						<Image src={imageUrl} alt={imageAlt} />
-					</Box>
+					<Skeleton isLoaded={isLoaded}>
+						<Box
+							borderWidth={2}
+							rounded={4}
+							bg='#282d359e'
+							borderColor='whiteAlpha.600'
+						>
+							<Text position='absolute' opacity={0.4} px={1}>
+								{paddedId}
+							</Text>
+							<Image src={imageUrl} alt={imageAlt} />
+						</Box>
+					</Skeleton>
 					<Flex>
 						<Box align='left'>
 							<Flex>
-								<Heading as='h1' size='xl' fontWeight='800' letterSpacing={1}>
-									{formatName}
-								</Heading>
+								<Skeleton isLoaded={isLoaded}>
+									<Heading as='h1' size='lg' fontWeight='800' letterSpacing={1}>
+										{formatName}
+									</Heading>
+								</Skeleton>
 							</Flex>
-							<HStack my={3}>
-								{typesArr.map((type, index) => (
-									<Image
-										key={index}
-										boxSize='30%'
-										src={`/type/${type}.png`}
-										alt={`${type}`}
-									/>
-								))}
-							</HStack>
-							<Flex align='center' mt={4}>
-								{Array.from(Array(4).keys()).map(id => {
-									return <Star key={id} fillColor='#FBBC05' />
-								})}
-								{Array.from(Array(5 - 4).keys()).map(id => {
-									return <Star key={id} fillColor='#E8EAEE' />
-								})}
-								<Text opacity={0.4}>(365)</Text>
-							</Flex>
+							<Skeleton isLoaded={isLoaded}>
+								<HStack my={3}>
+									{typesArr.map((type, index) => (
+										<Image
+											key={index}
+											boxSize='30%'
+											src={`/type/${type}.png`}
+											alt={`${type}`}
+										/>
+									))}
+								</HStack>
+							</Skeleton>
+
+							<Skeleton isLoaded={isLoaded}>
+								<Flex align='center' mt={4}>
+									{Array.from(Array(4).keys()).map(id => {
+										return <Star key={id} fillColor='#FBBC05' />
+									})}
+									{Array.from(Array(5 - 4).keys()).map(id => {
+										return <Star key={id} fillColor='#E8EAEE' />
+									})}
+									<Text opacity={0.4}>(365)</Text>
+								</Flex>
+							</Skeleton>
 						</Box>
 
 						<Box w='full' align='right'>
-							<Heading
-								as='h1'
-								fontWeight='900'
-								fontSize='7xl'
-								mt={6}
-								position='relative'
-								_before={{
-									content: '""',
-									position: 'absolute',
-									top: '100%',
-									width: '100%',
-									left: '0',
-									height: '5px',
-									bgGradient: `linear(to-r, ${typesArr[0]}.default, ${
-										typesArr[1]
-											? typesArr[1] + '.default'
-											: typesArr[0] + '.light'
-									})`
-								}}
-							>
-								4.5
-							</Heading>
+							<Skeleton isLoaded={isLoaded}>
+								<Heading
+									as='h1'
+									fontWeight='900'
+									fontSize='7xl'
+									mt={6}
+									position='relative'
+									_before={{
+										content: '""',
+										position: 'absolute',
+										top: '100%',
+										width: '100%',
+										left: '0',
+										height: '5px',
+										bgGradient: `linear(to-r, ${typesArr[0]}.default, ${
+											typesArr[1]
+												? typesArr[1] + '.default'
+												: typesArr[0] + '.light'
+										})`
+									}}
+								>
+									4.5
+								</Heading>
+							</Skeleton>
 						</Box>
 					</Flex>
 				</Box>
