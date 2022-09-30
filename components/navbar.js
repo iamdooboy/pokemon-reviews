@@ -14,8 +14,7 @@ import {
 	MenuDivider,
 	Text,
 	useDisclosure,
-	Button,
-	HStack
+	Button
 } from '@chakra-ui/react'
 import {
 	MdCatchingPokemon,
@@ -30,6 +29,7 @@ import LoginModal from './login-modal'
 import { FallbackAvatar } from './fallback-image'
 import { SearchIcon } from '@chakra-ui/icons'
 import SearchModal from './search-modal'
+import { useRouter } from 'next/router'
 
 const LoadingButton = (
 	<Button isLoading colorScheme='gray' variant='solid'>
@@ -38,6 +38,7 @@ const LoadingButton = (
 )
 
 const Navbar = () => {
+	const router = useRouter()
 	const { data: session, status } = useSession()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const {
@@ -107,7 +108,13 @@ const Navbar = () => {
 				zIndex={2}
 			>
 				<Flex alignItems='center' justifyContent='space-between' mx='auto'>
-					<Tag size='lg' variant='ghost' colorScheme='blue'>
+					<Tag
+						as='button'
+						size='lg'
+						variant='ghost'
+						colorScheme='blue'
+						onClick={() => router.push('/')}
+					>
 						<TagLeftIcon boxSize='30px' as={MdCatchingPokemon} />
 						<TagLabel display={{ base: 'inline-flex' }}>
 							Pokemon Reviews
@@ -127,7 +134,12 @@ const Navbar = () => {
 							onClick={onOpenSearch}
 						>
 							<SearchIcon />
-							<Text ml={3} textAlign='left' flex='1'>
+							<Text
+								px={{ base: 2, sm: 4 }}
+								textAlign='left'
+								flex='1'
+								noOfLines={1}
+							>
 								Search for a Pokemon
 							</Text>
 						</chakra.button>
