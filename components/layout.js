@@ -1,21 +1,29 @@
 import React from 'react'
 import Head from 'next/head'
-import { Box, Container } from '@chakra-ui/react'
-import NavBar from './navbar'
+import { Flex, chakra } from '@chakra-ui/react'
+import Navbar from './navbar'
+import Sidebar from './sidebar'
 
 const Layout = ({ children }) => {
 	return (
-		<Box as='main' minHeight='100vh'>
+		<React.Fragment>
 			<Head>
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<title>Pokemon Reviews</title>
 			</Head>
-			<NavBar />
-			<Container maxW='7xl' pt={20} pb={4} position='relative'>
-				{children}
-			</Container>
-		</Box>
+			<Navbar />
+			<Flex as='main' className='main-content'>
+				<Sidebar />
+				<chakra.div
+					flex={1}
+					px='5'
+					overflow='auto'
+					maxH='calc(100vh - var(--chakra-sizes-16))'
+				>
+					{children}
+				</chakra.div>
+			</Flex>
+		</React.Fragment>
 	)
 }
-
 export default Layout

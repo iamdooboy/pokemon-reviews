@@ -1,27 +1,28 @@
 import React from 'react'
-import CreateDummyData from '../components/create-dummy-data'
-import { prisma } from '../lib/prisma'
-import { getDummyPokemon } from '../utils/axios'
+// import CreateDummyData from '../components/create-dummy-data'
+// import { prisma } from '../lib/prisma'
+// import { getDummyPokemon } from '../utils/axios'
+import Sidebar from '../components/sidebar'
 
-const Dummy = ({ allPokemon }) => {
-	return <CreateDummyData />
+const Dummy = () => {
+	return <div>hello</div>
 }
 
-export const getServerSideProps = async () => {
-	const allPokemon = await getDummyPokemon(96, 809)
+// export const getServerSideProps = async () => {
+// 	const allPokemon = await getDummyPokemon(96, 809)
 
-	allPokemon.map(async pokemon => {
-		await prisma.pokemon.create({
-			data: {
-				pokemon: pokemon,
-				favoritedBy: {}
-			}
-		})
-	})
-	return {
-		props: {
-			allPokemon
-		}
-	}
-}
+// 	allPokemon.map(async pokemon => {
+// 		await prisma.pokemon.create({
+// 			data: {
+// 				pokemon: pokemon,
+// 				favoritedBy: {}
+// 			}
+// 		})
+// 	})
+// 	return {
+// 		props: {
+// 			allPokemon
+// 		}
+// 	}
+// }
 export default Dummy

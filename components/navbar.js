@@ -14,8 +14,15 @@ import {
 	MenuDivider,
 	Text,
 	useDisclosure,
-	Button
+	Button,
+	Heading,
+	IconButton,
+	Drawer,
+	DrawerContent,
+	DrawerOverlay
 } from '@chakra-ui/react'
+import Link from 'next/link'
+import { FiMenu } from 'react-icons/fi'
 import {
 	MdCatchingPokemon,
 	MdFavoriteBorder,
@@ -30,6 +37,7 @@ import { FallbackAvatar } from './fallback-image'
 import { SearchIcon } from '@chakra-ui/icons'
 import SearchModal from './search-modal'
 import { useRouter } from 'next/router'
+import { SidebarContent } from './sidebar-content'
 
 const LoadingButton = (
 	<Button isLoading colorScheme='gray' variant='solid'>
@@ -46,10 +54,11 @@ const Navbar = () => {
 		onOpen: onOpenSearch,
 		onClose: onCloseSearch
 	} = useDisclosure()
+	const sidebar = useDisclosure()
 	const user = session?.user
 	const isLoadingUser = status === 'loading'
 	const finalRef = useRef(null)
-
+	const ref = useRef(null)
 	const signOutHandler = () => {
 		signOut({ redirect: false })
 	}
@@ -59,8 +68,8 @@ const Navbar = () => {
 			<MenuButton>
 				<Flex align='center'>
 					<FallbackAvatar
-						width={52}
-						height={52}
+						width={45}
+						height={45}
 						name={user?.name}
 						src={user?.image}
 						fallback='/bug.svg'
@@ -95,67 +104,76 @@ const Navbar = () => {
 			</MenuList>
 		</Menu>
 	)
+
 	return (
-		<>
-			<chakra.header
-				position='fixed'
-				w='full'
-				px={{ base: 2, sm: 4 }}
-				py={4}
-				shadow='md'
-				bg='#171923e6'
-				css={{ backdropFilter: 'blur(10px)' }}
-				zIndex={2}
-			>
-				<Flex alignItems='center' justifyContent='space-between' mx='auto'>
+		<chakra.nav
+			ref={ref}
+			h='16'
+			display='flex'
+			alignItems='center'
+			justifyContent='space-between'
+			px='6'
+			bg='#171923e6'
+			css={{ backdropFilter: 'blur(10px)' }}
+			sx={{
+				'& > div': {
+					flex: 1
+				}
+			}}
+		>
+			<Flex>
+				<Link href='/' passHref>
 					<Tag
-						as='button'
+						px={0}
+						as='a'
 						size='lg'
 						variant='ghost'
 						colorScheme='blue'
-						onClick={() => router.push('/')}
+						display={{ base: 'none', md: 'flex' }}
 					>
 						<TagLeftIcon boxSize='30px' as={MdCatchingPokemon} />
 						<TagLabel display={{ base: 'inline-flex' }}>
 							Pokemon Reviews
 						</TagLabel>
 					</Tag>
+				</Link>
+				<IconButton
+					onClick={sidebar.onOpen}
+					aria-label='Menu'
+					display={{ base: 'inline-flex', md: 'none' }}
+					icon={<FiMenu />}
+					size='md'
+				/>
+			</Flex>
 
-					<Flex>
-						<chakra.button
-							mr={3}
-							type='button'
-							display='flex'
-							alignItems='center'
-							color='gray.400'
-							bg='gray.700'
-							px='4'
-							rounded='md'
-							onClick={onOpenSearch}
-						>
-							<SearchIcon />
-							<Text
-								px={{ base: 2, sm: 4 }}
-								textAlign='left'
-								flex='1'
-								noOfLines={1}
-							>
-								Search for a Pokemon
-							</Text>
-						</chakra.button>
+			<Flex justify='right'>
+				<chakra.button
+					mr={3}
+					type='button'
+					display='flex'
+					alignItems='center'
+					color='gray.400'
+					bg='gray.700'
+					px='4'
+					rounded='md'
+					onClick={onOpenSearch}
+				>
+					<SearchIcon />
+					<Text px={{ base: 2, sm: 4 }} textAlign='left' flex='1' noOfLines={1}>
+						Search for a Pokemon
+					</Text>
+				</chakra.button>
 
-						{isLoadingUser ? (
-							LoadingButton
-						) : user ? (
-							CustomMenu
-						) : (
-							<Button colorScheme='blue' onClick={onOpen}>
-								Log in
-							</Button>
-						)}
-					</Flex>
-				</Flex>
-			</chakra.header>
+				{isLoadingUser ? (
+					LoadingButton
+				) : user ? (
+					CustomMenu
+				) : (
+					<Button colorScheme='blue' onClick={onOpen}>
+						Log in
+					</Button>
+				)}
+			</Flex>
 			<SearchModal isOpen={isOpenSearch} onClose={onCloseSearch} />
 			<LoginModal
 				isOpen={isOpen}
@@ -163,7 +181,29 @@ const Navbar = () => {
 				finalRef={finalRef}
 				signIn={signIn}
 			/>
-		</>
+			<Drawer
+				isOpen={sidebar.isOpen}
+				onClose={sidebar.onClose}
+				placement='left'
+			>
+				<DrawerOverlay />
+				<DrawerContent>
+					<Flex
+						px='5'
+						py='5'
+						align='center'
+						bg='#171923e6'
+						borderBottomWidth={1}
+					>
+						<Icon as={MdCatchingPokemon} w={8} h={8} />
+						<Text fontSize='xl' ml='2' color='white' fontWeight='semibold'>
+							Pokemon Reviews
+						</Text>
+					</Flex>
+					<SidebarContent w='full' borderRight='none' />
+				</DrawerContent>
+			</Drawer>
+		</chakra.nav>
 	)
 }
 

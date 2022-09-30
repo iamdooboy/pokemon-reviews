@@ -70,10 +70,12 @@ const Pokemon = ({
 	return (
 		<Container
 			maxW='container.md'
+			maxH='calc(100vh - var(--chakra-sizes-16))'
 			p={{ base: 5, md: 12 }}
 			margin='0 auto'
 			align='center'
 			justify='center'
+			h='100vh'
 		>
 			<PokemonCardLarge data={data} />
 			<HStack align='center' justify='center' mt={3} maxW='xs'>
