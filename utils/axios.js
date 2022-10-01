@@ -27,8 +27,11 @@ export const getPokemon = async pokemon => {
 	return { id, typesArr, ...imageData }
 }
 
-export const getPokemonPage = async (offset = 0, options = {}) => {
-	const response = await api.get(`/pokemon?limit=24&offset=${offset}`, options)
+export const getPokemonPage = async (limit = 24, offset = 0, options = {}) => {
+	const response = await api.get(
+		`/pokemon?limit=${limit}&offset=${offset}`,
+		options
+	)
 
 	const arr = await Promise.all(
 		response.data.results.map(async ({ name }) => {

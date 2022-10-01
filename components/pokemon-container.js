@@ -1,9 +1,8 @@
 import React, { useState, useRef, useCallback } from 'react'
-import { SimpleGrid, Spinner, GridItem } from '@chakra-ui/react'
+import { SimpleGrid, Spinner, GridItem, Link } from '@chakra-ui/react'
+import NextLink from 'next/link'
 import PokemonCard from './pokemon-card'
 import useFetch from '../hooks/useFetch'
-import NextLink from 'next/link'
-import { Link } from '@chakra-ui/react'
 
 const PokemonContainer = () => {
 	const [offset, setOffset] = useState(0)

@@ -39,7 +39,6 @@ const Sidebar = () => {
 				w={isOpen ? '72' : '1'}
 				opacity={isOpen ? '1' : '0'}
 				pos='relative'
-				bg='layout.card'
 				onMouseEnter={setHovered.on}
 				onMouseLeave={setHovered.off}
 			>

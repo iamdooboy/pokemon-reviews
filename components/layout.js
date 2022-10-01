@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
 					flex={1}
 					px='5'
 					overflow='auto'
-					maxH='calc(100vh - var(--chakra-sizes-16))'
+					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
 				>
 					{children}
 				</chakra.div>
