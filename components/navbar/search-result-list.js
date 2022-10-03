@@ -3,17 +3,8 @@ import { Box, Icon, Flex, Spacer, Stack, Link } from '@chakra-ui/react'
 import { BsArrowReturnLeft } from 'react-icons/bs'
 import NextLink from 'next/link'
 import { CgPokemon } from 'react-icons/cg'
-import { useRouter } from 'next/router'
 
-const ResultList = ({
-	pokemon,
-	onClose,
-	index,
-	activeIndex,
-	setActiveIndex
-}) => {
-	const router = useRouter()
-
+const SearchResultList = ({ pokemon, onClose, index, activeIndex }) => {
 	const bgColor = index === activeIndex ? 'blue.600' : 'gray.600'
 
 	return (
@@ -46,4 +37,4 @@ const ResultList = ({
 	)
 }
 
-export default ResultList
+export default SearchResultList

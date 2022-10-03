@@ -1,6 +1,4 @@
 import { IconButton, chakra, useBoolean, useDisclosure } from '@chakra-ui/react'
-import { IoCloseSharp } from 'react-icons/io5'
-import { BiExpand } from 'react-icons/bi'
 import { SidebarContent } from './sidebar-content'
 import { ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons'
 
@@ -11,7 +9,7 @@ const Sidebar = () => {
 
 	return (
 		<chakra.div
-			as='nav'
+			h='calc((100vh - var(--chakra-sizes-16)))'
 			overflowY='auto'
 			borderTopWidth={1}
 			display={{ base: 'none', md: 'unset' }}
@@ -39,6 +37,7 @@ const Sidebar = () => {
 				w={isOpen ? '72' : '1'}
 				opacity={isOpen ? '1' : '0'}
 				pos='relative'
+				bg='layout.card'
 				onMouseEnter={setHovered.on}
 				onMouseLeave={setHovered.off}
 			>

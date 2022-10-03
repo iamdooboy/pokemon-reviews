@@ -8,7 +8,7 @@ const Website = ({ session, Component, pageProps, router }) => {
 		<SessionProvider session={session}>
 			<ChakraProvider theme={theme}>
 				<Layout router={router}>
-					<Component {...pageProps} />
+					<Component {...pageProps} key={router.asPath} />
 				</Layout>
 			</ChakraProvider>
 		</SessionProvider>

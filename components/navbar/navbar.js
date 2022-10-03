@@ -15,7 +15,6 @@ import {
 	Text,
 	useDisclosure,
 	Button,
-	Heading,
 	IconButton,
 	Drawer,
 	DrawerContent,
@@ -33,11 +32,10 @@ import {
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import LoginModal from './login-modal'
-import { FallbackAvatar } from './fallback-image'
+import { FallbackAvatar } from '../../utils/fallback-image'
 import { SearchIcon } from '@chakra-ui/icons'
 import SearchModal from './search-modal'
-import { useRouter } from 'next/router'
-import { SidebarContent } from './sidebar-content'
+import { SidebarContent } from '../sidebar/sidebar-content'
 
 const LoadingButton = (
 	<Button isLoading colorScheme='gray' variant='solid'>
@@ -46,7 +44,6 @@ const LoadingButton = (
 )
 
 const Navbar = () => {
-	const router = useRouter()
 	const { data: session, status } = useSession()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const {
@@ -68,8 +65,8 @@ const Navbar = () => {
 			<MenuButton>
 				<Flex align='center'>
 					<FallbackAvatar
-						width={45}
-						height={45}
+						width={36}
+						height={36}
 						name={user?.name}
 						src={user?.image}
 						fallback='/bug.svg'
@@ -108,7 +105,7 @@ const Navbar = () => {
 	return (
 		<chakra.nav
 			ref={ref}
-			h='16'
+			h={16}
 			display='flex'
 			alignItems='center'
 			justifyContent='space-between'
