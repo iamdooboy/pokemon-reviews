@@ -26,7 +26,7 @@ const Star = ({ fillColor }) => {
 	)
 }
 
-const PokemonCardLarge = ({ data }) => {
+const PokemonCard = ({ data }) => {
 	const router = useRouter()
 	const { id, imageAlt, imageUrl, name, typesArr } = data
 	const [isLoaded, setIsLoaded] = useState(true)
@@ -145,4 +145,4 @@ const PokemonCardLarge = ({ data }) => {
 	)
 }
 
-export default PokemonCardLarge
+export default PokemonCard

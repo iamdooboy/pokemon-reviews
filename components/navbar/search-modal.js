@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { getPokemonName } from '../../utils/axios'
+import { SearchIcon } from '@chakra-ui/icons'
+import SearchResultList from './search-result-list'
+import { useRouter } from 'next/router'
 import {
 	Modal,
 	ModalOverlay,
@@ -8,11 +12,6 @@ import {
 	InputGroup,
 	InputLeftElement
 } from '@chakra-ui/react'
-import { getPokemonName } from '../utils/axios'
-
-import { SearchIcon } from '@chakra-ui/icons'
-import ResultList from './result-list'
-import { useRouter } from 'next/router'
 
 const SearchModal = ({ isOpen, onClose }) => {
 	const [pokemon, setPokemon] = useState([])
@@ -94,7 +93,7 @@ const SearchModal = ({ isOpen, onClose }) => {
 							/>
 						</InputGroup>
 						{filteredList.map((pokemon, index) => (
-							<ResultList
+							<SearchResultList
 								activeIndex={activeIndex}
 								setActiveIndex={setActiveIndex}
 								key={pokemon}
