@@ -1,16 +1,6 @@
 import { Flex, Icon, Link } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { useState } from 'react'
-import {
-	RiNumber1,
-	RiNumber2,
-	RiNumber3,
-	RiNumber4,
-	RiNumber5,
-	RiNumber6,
-	RiNumber7,
-	RiNumber8
-} from 'react-icons/ri'
 import { useRouter } from 'next/router'
 
 export const SidebarContent = props => {
@@ -19,27 +9,15 @@ export const SidebarContent = props => {
 
 	const [activeGen, setActiveGen] = useState(id)
 
-	const generations = [
-		{ icon: RiNumber1, num: 1 },
-		{ icon: RiNumber2, num: 2 },
-		{ icon: RiNumber3, num: 3 },
-		{ icon: RiNumber4, num: 4 },
-		{ icon: RiNumber5, num: 5 },
-		{ icon: RiNumber6, num: 6 },
-		{ icon: RiNumber7, num: 7 },
-		{ icon: RiNumber8, num: 8 }
-	]
-
 	return (
 		<Flex flexDir='column' {...props} bg='#171923e6' h='full'>
-			{generations.map((gen, index) => (
-				<LinkOverlay key={index} href={`/gen/${gen.num}/`}>
+			{[...Array(8)].map((e, index) => (
+				<LinkOverlay key={index} href={`/gen/${index + 1}/`}>
 					<NavItem
-						icon={gen.icon}
-						active={activeGen === gen.num}
-						onClick={() => setActiveGen(gen.num)}
+						active={activeGen === index + 1}
+						onClick={() => setActiveGen(index + 1)}
 					>
-						Gen {gen.num}
+						Gen {index + 1}
 					</NavItem>
 				</LinkOverlay>
 			))}
@@ -50,7 +28,9 @@ export const SidebarContent = props => {
 const LinkOverlay = ({ href, children }) => {
 	return (
 		<NextLink href={href} passHref>
-			<Link _hover={{ textDecoration: 'none' }}>{children}</Link>
+			<Link _hover={{ textDecoration: 'none' }} my={3}>
+				{children}
+			</Link>
 		</NextLink>
 	)
 }
@@ -60,16 +40,13 @@ const NavItem = props => {
 	return (
 		<Flex
 			align='center'
-			px='4'
-			mx='2'
-			rounded='md'
-			py='3'
+			justify='center'
+			py={3}
 			cursor='pointer'
-			bg={active && 'gray.700'}
-			color='whiteAlpha.700'
+			bg={active && 'rgba(48, 140, 122, 0.3)'}
+			color={active ? 'white' : 'whiteAlpha.500'}
 			_hover={{
-				color: 'gray.400',
-				bg: 'gray.700'
+				color: 'white'
 			}}
 			role='group'
 			fontWeight='semibold'

@@ -14,6 +14,7 @@ const Layout = ({ children }) => {
 			<Navbar />
 			<Flex as='main' className='main-content'>
 				<Sidebar />
+
 				<chakra.div
 					flex={1}
 					px='5'

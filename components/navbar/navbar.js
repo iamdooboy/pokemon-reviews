@@ -117,6 +117,8 @@ const Navbar = () => {
 					flex: 1
 				}
 			}}
+			borderBottomWidth={1}
+			borderColor='whiteAlpha.100'
 		>
 			<Flex>
 				<Link href='/' passHref>
