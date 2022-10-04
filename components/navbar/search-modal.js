@@ -47,13 +47,39 @@ const SearchModal = ({ isOpen, onClose }) => {
 			setFilteredList([])
 			return
 		}
-		const results = pokemon.sort().filter(po => po.startsWith(searchItem))
+		const copy = [...pokemon]
+		const results = copy.sort().filter(po => po.startsWith(searchItem))
+
 		setFilteredList(results)
+	}
+
+	const getPokemonGeneration = id => {
+		if (id <= 151) {
+			return 1
+		} else if (id > 151 && id <= 251) {
+			return 2
+		} else if (id > 251 && id <= 386) {
+			return 3
+		} else if (id > 386 && id <= 493) {
+			return 4
+		} else if (id > 493 && id <= 649) {
+			return 5
+		} else if (id > 649 && id <= 721) {
+			return 6
+		} else if (id > 721 && id <= 809) {
+			return 7
+		} else if (id > 809 && id <= 905) {
+			return 8
+		}
 	}
 
 	const onKeyDownHandler = e => {
 		if (e.key === 'Enter') {
-			router.push(`/${filteredList[activeIndex]}`)
+			const highlightedPokemon = filteredList[activeIndex]
+			const pokemonId = pokemon.indexOf(highlightedPokemon) + 1
+			const gen = getPokemonGeneration(pokemonId)
+			console.log(pokemonId)
+			router.push(`/gen/${gen}/${highlightedPokemon}`)
 			onCloseHandler()
 		} else if (e.key === 'ArrowUp') {
 			if (activeIndex === 0) {
