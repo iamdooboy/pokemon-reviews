@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React, { useRef } from 'react'
 import {
 	chakra,
@@ -20,8 +21,6 @@ import {
 	DrawerContent,
 	DrawerOverlay
 } from '@chakra-ui/react'
-import Link from 'next/link'
-import { FiMenu } from 'react-icons/fi'
 import {
 	MdCatchingPokemon,
 	MdFavoriteBorder,
@@ -29,12 +28,12 @@ import {
 	MdLogout,
 	MdOutlineRateReview
 } from 'react-icons/md'
-import { ChevronDownIcon } from '@chakra-ui/icons'
+import { FiMenu } from 'react-icons/fi'
+import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import LoginModal from './login-modal'
-import { FallbackAvatar } from '../../utils/fallback-image'
-import { SearchIcon } from '@chakra-ui/icons'
 import SearchModal from './search-modal'
+import { FallBackImage } from '../../utils/fallback-image'
 import { SidebarContent } from '../sidebar/sidebar-content'
 
 const LoadingButton = (
@@ -63,15 +62,19 @@ const Navbar = () => {
 	const CustomMenu = (
 		<Menu isLazy>
 			<MenuButton>
-				<Flex align='center'>
-					<FallbackAvatar
+				<Flex align='center' pos='relative'>
+					<FallBackImage
+						borderRadius={9999}
 						width={36}
 						height={36}
 						name={user?.name}
 						src={user?.image}
+						alt={user?.name}
 						fallback='/bug.svg'
+						layout='fixed'
 					/>
-					<Icon as={ChevronDownIcon} w={6} h={6} />
+
+					<Icon as={ChevronDownIcon} w={6} h={6} mr={-1} />
 				</Flex>
 			</MenuButton>
 			<MenuList>
@@ -109,7 +112,7 @@ const Navbar = () => {
 			display='flex'
 			alignItems='center'
 			justifyContent='space-between'
-			px='6'
+			px={5}
 			bg='#171923e6'
 			css={{ backdropFilter: 'blur(10px)' }}
 			sx={{
@@ -120,7 +123,7 @@ const Navbar = () => {
 			borderBottomWidth={1}
 			borderColor='whiteAlpha.100'
 		>
-			<Flex>
+			<Flex display={{ base: 'none', md: 'inline' }}>
 				<Link href='/' passHref>
 					<Tag
 						px={0}
@@ -128,7 +131,7 @@ const Navbar = () => {
 						size='lg'
 						variant='ghost'
 						colorScheme='blue'
-						display={{ base: 'none', md: 'flex' }}
+						display='flex'
 					>
 						<TagLeftIcon boxSize='30px' as={MdCatchingPokemon} />
 						<TagLabel display={{ base: 'inline-flex' }}>
@@ -136,30 +139,31 @@ const Navbar = () => {
 						</TagLabel>
 					</Tag>
 				</Link>
+			</Flex>
+
+			<Flex justify={{ base: 'left', md: 'right' }}>
 				<IconButton
 					onClick={sidebar.onOpen}
 					aria-label='Menu'
 					display={{ base: 'inline-flex', md: 'none' }}
 					icon={<FiMenu />}
 					size='md'
+					mr={3}
 				/>
-			</Flex>
-
-			<Flex justify='right'>
 				<chakra.button
 					mr={3}
 					type='button'
 					display='flex'
 					alignItems='center'
-					color='gray.400'
+					color='whiteAlpha.400'
 					bg='gray.700'
 					px='4'
 					rounded='md'
 					onClick={onOpenSearch}
 				>
-					<SearchIcon />
+					<SearchIcon color='white' />
 					<Text px={{ base: 2, sm: 4 }} textAlign='left' flex='1' noOfLines={1}>
-						Search for a Pokemon
+						Bulbasaur, 493
 					</Text>
 				</chakra.button>
 
@@ -184,6 +188,7 @@ const Navbar = () => {
 				isOpen={sidebar.isOpen}
 				onClose={sidebar.onClose}
 				placement='left'
+				size='xs'
 			>
 				<DrawerOverlay />
 				<DrawerContent>

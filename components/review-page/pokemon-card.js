@@ -9,6 +9,8 @@ import {
 	Skeleton
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { FallBackImage } from '../../utils/fallback-image'
+
 const Star = ({ fillColor }) => {
 	return (
 		<svg
@@ -70,11 +72,26 @@ const PokemonCard = ({ data }) => {
 							rounded={4}
 							bg='#282d359e'
 							borderColor='whiteAlpha.600'
+							maxW='100%'
+							height='auto'
 						>
 							<Text position='absolute' opacity={0.4} px={1}>
 								{paddedId}
 							</Text>
-							<Image src={imageUrl} alt={imageAlt} />
+
+							<Box pos='relative'>
+								<FallBackImage
+									w='auto'
+									h='auto'
+									width={600}
+									height={600}
+									src={imageUrl}
+									alt={imageAlt}
+									fallback='/bug.svg'
+									placeholder='blur'
+									blurDataURL={imageUrl}
+								/>
+							</Box>
 						</Box>
 					</Skeleton>
 					<Flex>

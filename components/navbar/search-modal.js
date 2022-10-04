@@ -87,7 +87,7 @@ const SearchModal = ({ isOpen, onClose }) => {
 								onKeyDown={onKeyDownHandler}
 								pl={3}
 								variant='unstyled'
-								placeholder='Search for pokemon'
+								placeholder='Search by name or National Pokédex number'
 								size='lg'
 								onChange={onChangeHandler}
 							/>

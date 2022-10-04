@@ -67,6 +67,7 @@ export const getPokemonPage = async gen => {
 			const { id, types } = data
 
 			let paddedId = id.toString().padStart(3, '0')
+
 			const imageData = {
 				imageUrl: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${paddedId}.png`,
 				imageAlt: name

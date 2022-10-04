@@ -4,7 +4,8 @@ module.exports = {
 		domains: [
 			'<random_string>.supabase.in',
 			'lh3.googleusercontent.com',
-			'bit.ly'
+			'bit.ly',
+			'assets.pokemon.com'
 		]
 	}
 }

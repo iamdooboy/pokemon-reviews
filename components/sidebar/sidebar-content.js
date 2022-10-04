@@ -1,7 +1,7 @@
-import { Flex, Icon, Link } from '@chakra-ui/react'
-import NextLink from 'next/link'
 import { useState } from 'react'
+import NextLink from 'next/link'
 import { useRouter } from 'next/router'
+import { Flex, Icon, Link } from '@chakra-ui/react'
 
 export const SidebarContent = props => {
 	const router = useRouter()
@@ -51,6 +51,7 @@ const NavItem = props => {
 			role='group'
 			fontWeight='semibold'
 			transition='.15s ease'
+			fontSize={12}
 			{...rest}
 		>
 			{icon && (
