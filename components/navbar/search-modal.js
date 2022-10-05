@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { getPokemonName } from '../../utils/axios'
+import { getAllPokemonNames } from '../../utils/axios'
 import { SearchIcon } from '@chakra-ui/icons'
 import SearchResultList from './search-result-list'
 import { useRouter } from 'next/router'
@@ -23,7 +23,7 @@ const SearchModal = ({ isOpen, onClose }) => {
 	useEffect(() => {
 		if (log.current) {
 			const fetchData = async () => {
-				const res = await getPokemonName()
+				const res = await getAllPokemonNames()
 				setPokemon(res)
 			}
 			fetchData()
@@ -130,7 +130,7 @@ const SearchModal = ({ isOpen, onClose }) => {
 								onKeyDown={onKeyDownHandler}
 								pl={3}
 								variant='unstyled'
-								placeholder='Search by name or National Pokédex number'
+								placeholder='Search by name or number'
 								size='lg'
 								onChange={onChangeHandler}
 							/>

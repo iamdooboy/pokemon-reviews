@@ -4,8 +4,19 @@ export const api = axios.create({
 	baseURL: 'https://pokeapi.co/api/v2/'
 })
 
-export const getPokemonName = async () => {
+export const getAllPokemonNames = async () => {
 	const res = await api.get('/pokemon?limit=905&offset=0')
+
+	const names = res.data.results.map(el => el.name)
+	return names
+}
+
+export const getAllPokemonFromGen = async gen => {
+	const options = getLimitAndOffset(gen)
+
+	const res = await api.get(
+		`/pokemon?limit=${options.limit}&offset=${options.offset}`
+	)
 
 	const names = res.data.results.map(el => el.name)
 	return names
@@ -50,7 +61,7 @@ const getLimitAndOffset = gen => {
 	}
 }
 
-export const getPokemonPage = async gen => {
+export const getPokemonGenPage = async gen => {
 	const options = getLimitAndOffset(gen)
 
 	const response = await api.get(

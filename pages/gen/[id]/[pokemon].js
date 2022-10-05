@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { getPokemon, getPokemonName } from '../../../utils/axios'
+import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
 import { Container, Button, HStack, Box } from '@chakra-ui/react'
 import CommentBox from '../../../components/review-page/reviews/review-box'
 import ReviewModal from '../../../components/review-page/reviews/add-review-modal'
@@ -114,10 +114,12 @@ const Pokemon = ({
 }
 
 export const getServerSideProps = async context => {
-	const { pokemon } = context.params
-	const allPokemon = await getPokemonName()
+	const { id: genId, pokemon } = context.params
 
-	if (!allPokemon.includes(pokemon)) {
+	const names = await getAllPokemonFromGen(genId)
+	const exist = names.includes(pokemon)
+
+	if (!exist) {
 		return {
 			notFound: true
 		}
