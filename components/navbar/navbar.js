@@ -151,6 +151,7 @@ const Navbar = () => {
 					mr={3}
 				/>
 				<chakra.button
+					w={{ base: 'full', md: '50%', lg: '32%' }}
 					mr={3}
 					type='button'
 					display='flex'

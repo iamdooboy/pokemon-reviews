@@ -34,25 +34,6 @@ const SearchModal = ({ isOpen, onClose }) => {
 		}
 	}, [])
 
-	const onCloseHandler = () => {
-		setActiveIndex(0)
-		setFilteredList([])
-		onClose()
-	}
-
-	const onChangeHandler = e => {
-		setActiveIndex(0)
-		const searchItem = e.target.value.toLowerCase()
-		if (searchItem.length === 0) {
-			setFilteredList([])
-			return
-		}
-		const copy = [...pokemon]
-		const results = copy.sort().filter(po => po.startsWith(searchItem))
-
-		setFilteredList(results)
-	}
-
 	const getPokemonGeneration = id => {
 		if (id <= 151) {
 			return 1
@@ -73,12 +54,48 @@ const SearchModal = ({ isOpen, onClose }) => {
 		}
 	}
 
+	const isNumber = input => {
+		if (input === '') {
+			return false
+		}
+		let regex = new RegExp(/[^0-9]/, 'g')
+		return input.match(regex) === null
+	}
+
+	const onCloseHandler = () => {
+		setActiveIndex(0)
+		setFilteredList([])
+		onClose()
+	}
+
+	const onChangeHandler = e => {
+		setActiveIndex(0)
+		const input = e.target.value
+
+		//when input field is empty
+		if (input.length === 0) {
+			setFilteredList([])
+			return
+		}
+
+		if (isNumber(input)) {
+			if (input <= 0) {
+				return
+			}
+			setFilteredList([pokemon[input - 1]])
+		} else {
+			const searchItem = input.toLowerCase() //auto capitalize on mobile
+			const copy = [...pokemon]
+			const results = copy.sort().filter(pkmn => pkmn.startsWith(searchItem))
+			setFilteredList(results)
+		}
+	}
+
 	const onKeyDownHandler = e => {
 		if (e.key === 'Enter') {
 			const highlightedPokemon = filteredList[activeIndex]
 			const pokemonId = pokemon.indexOf(highlightedPokemon) + 1
 			const gen = getPokemonGeneration(pokemonId)
-			console.log(pokemonId)
 			router.push(`/gen/${gen}/${highlightedPokemon}`)
 			onCloseHandler()
 		} else if (e.key === 'ArrowUp') {
