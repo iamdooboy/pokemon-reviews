@@ -13,7 +13,8 @@ import {
 	Textarea,
 	FormHelperText,
 	Spacer,
-	Heading
+	Heading,
+	Text
 } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import axios from 'axios'
@@ -78,13 +79,17 @@ const ReviewModal = ({
 								<Textarea
 									onChange={event => setDescription(event.target.value)}
 									value={description}
-									placeholder='Add your review'
+									placeholder='Share your thoughts on this Pokemon'
 								/>
 								{description.length < 10 && (
 									<FormHelperText>
-										{`Description must have more than ${
-											10 - description.length
-										} characters.`}
+										<Text>
+											Review must have a minimum of{' '}
+											<Text display='inline' textDecoration='underline'>
+												{10 - description.length}
+											</Text>
+											<Text display='inline'> characters.</Text>
+										</Text>
 									</FormHelperText>
 								)}
 							</FormControl>

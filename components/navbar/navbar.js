@@ -189,19 +189,18 @@ const Navbar = () => {
 				isOpen={sidebar.isOpen}
 				onClose={sidebar.onClose}
 				placement='left'
-				size='xs'
 			>
 				<DrawerOverlay />
-				<DrawerContent>
+				<DrawerContent maxWidth='35%'>
 					<Flex
-						px='5'
+						px='4'
 						py='5'
 						align='center'
 						bg='#171923e6'
 						borderBottomWidth={1}
 					>
-						<Icon as={MdCatchingPokemon} w={8} h={8} />
-						<Text fontSize='xl' ml='2' color='white' fontWeight='semibold'>
+						<Icon as={MdCatchingPokemon} w={10} h={10} />
+						<Text fontSize='xs' ml='2' color='white' fontWeight='semibold'>
 							Pokemon Reviews
 						</Text>
 					</Flex>
