@@ -63,6 +63,8 @@ const PokemonCard = ({ data }) => {
 			p='2px'
 			rounded={8}
 			maxW='xs'
+			pos='relative'
+			zIndex={-1}
 		>
 			<Box maxW='xs' rounded={8} mx='auto' bg='rgba(17, 25, 40, 0.6)'>
 				<Box p={3} color='gray.100'>
@@ -75,11 +77,11 @@ const PokemonCard = ({ data }) => {
 							maxW='100%'
 							height='auto'
 						>
-							<Text position='absolute' opacity={0.4} px={1}>
+							<Text opacity={0.4} px={1} align='start' zIndex={1}>
 								{paddedId}
 							</Text>
 
-							<Box pos='relative'>
+							<Box mt='-24px'>
 								<FallBackImage
 									w='auto'
 									h='auto'

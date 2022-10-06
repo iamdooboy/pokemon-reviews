@@ -1,6 +1,26 @@
 import React, { useState } from 'react'
-import { Box, Flex, Avatar, Text, HStack, Spacer } from '@chakra-ui/react'
-import { StarIcon } from '@chakra-ui/icons'
+import {
+	Box,
+	Flex,
+	Avatar,
+	Text,
+	Stack,
+	Spacer,
+	Icon,
+	Button,
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+	PopoverBody,
+	PopoverArrow,
+	Input,
+	useDisclosure
+} from '@chakra-ui/react'
+import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
+import AddOn from './add-on'
+import { AiOutlineEllipsis } from 'react-icons/ai'
+import axios from 'axios'
+import ReviewModal from './add-review-modal'
 
 const ReadMore = ({ children }) => {
 	const [isReadMore, setIsReadMore] = useState(children.length > 156)
@@ -21,8 +41,20 @@ const ReadMore = ({ children }) => {
 	)
 }
 
-const CommentBox = ({ review }) => {
-	const { description, rating, author } = review
+const CommentBox = ({ user, review, setAllReviews, onOpen, setEditReview }) => {
+	const { id, description, rating, author } = review
+
+	const editClickHander = () => {
+		setEditReview(review)
+		onOpen()
+	}
+
+	const deleteClickHander = async () => {
+		const res = await axios.delete('/api/reviews', { data: { id } })
+		setAllReviews(prev => {
+			return prev.filter(el => el.id !== id)
+		})
+	}
 
 	return (
 		<Box
@@ -38,24 +70,48 @@ const CommentBox = ({ review }) => {
 			<Flex>
 				<Avatar size='xs' name={author?.name} src={author?.image} />
 				<Box align='left' pl={3} w='full'>
-					<HStack mt={-2} justify>
+					<Flex mt={-2}>
 						<Text color='gray.500'>{author?.name}</Text>
 						<Spacer />
-						<Flex>
-							{Array.from(Array(5).keys()).map((id, index) => {
-								index += 1
-								return (
-									<StarIcon
-										boxSize={3}
-										key={id}
-										mr={2}
-										color={index <= rating ? 'gold' : 'gray'}
-									/>
-								)
-							})}
-						</Flex>
-					</HStack>
+						{user.id === author.id && (
+							<Popover isLazy>
+								<PopoverTrigger>
+									<button>
+										<Icon as={AiOutlineEllipsis} />
+									</button>
+								</PopoverTrigger>
+								<PopoverContent w='150px'>
+									<PopoverArrow />
+									<PopoverBody p={0}>
+										<Box>
+											<Button
+												onClick={editClickHander}
+												leftIcon={<EditIcon />}
+												variant='ghost'
+												w='full'
+												rounded='none'
+												justifyContent='start'
+											>
+												Edit
+											</Button>
+											<Button
+												onClick={deleteClickHander}
+												leftIcon={<DeleteIcon />}
+												variant='ghost'
+												w='full'
+												rounded='none'
+												justifyContent='start'
+											>
+												Delete
+											</Button>
+										</Box>
+									</PopoverBody>
+								</PopoverContent>
+							</Popover>
+						)}
+					</Flex>
 					<ReadMore>{description}</ReadMore>
+					<AddOn rating={rating} />
 				</Box>
 			</Flex>
 		</Box>

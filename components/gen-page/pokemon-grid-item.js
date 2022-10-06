@@ -18,7 +18,7 @@ const PokemonGridItem = ({
 				<Text pr={1} align='right' color='gray.600'>
 					{id.toString().padStart(3, '0')}
 				</Text>
-				<Box align='center'>
+				<Box align='center' pos='relative' zIndex={-1}>
 					<FallBackImage
 						w='auto'
 						h='auto'

@@ -1,13 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { Flex, Icon, Link } from '@chakra-ui/react'
 
 export const SidebarContent = props => {
 	const router = useRouter()
-	const id = parseInt(router.query.id)
 
-	const [activeGen, setActiveGen] = useState(id)
+	const [activeGen, setActiveGen] = useState(1)
+
+	useEffect(() => {
+		const id = parseInt(router.query.id)
+		setActiveGen(id)
+	}, [router])
 
 	return (
 		<Flex flexDir='column' {...props} bg='#171923e6' h='full'>
@@ -39,8 +43,9 @@ const NavItem = props => {
 	const { active, icon, children, ...rest } = props
 	return (
 		<Flex
+			pl={{ base: 6, md: 0 }}
 			align='center'
-			justify='center'
+			justify={{ base: 'left', md: 'center' }}
 			py={3}
 			cursor='pointer'
 			bg={active && 'rgba(48, 140, 122, 0.3)'}
