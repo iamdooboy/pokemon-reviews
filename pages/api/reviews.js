@@ -17,6 +17,19 @@ export default async function handler(req, res) {
 		res.status(200).json({ message: 'Review Deleted' })
 	}
 
+	if (req.method === 'PUT') {
+		await prisma.review.update({
+			where: {
+				id: req.body.id
+			},
+			data: {
+				description: req.body.description,
+				rating: req.body.rating
+			}
+		})
+		res.status(200).json({ message: 'Review Updated' })
+	}
+
 	if (req.method === 'POST') {
 		try {
 			const user = await prisma.user.findUnique({

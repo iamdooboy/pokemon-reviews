@@ -44,10 +44,11 @@ const LoginModal = ({ isOpen, onClose, finalRef, signIn }) => {
 								colorScheme='gray'
 								variant='outline'
 								h='46px'
+								gap={2}
 								onClick={() => signIn('google')}
 							>
 								<Image src='/google.svg' alt='Google' width={32} height={32} />
-								<Text ml={2} fontWeight='400'>
+								<Text fontWeight='400'>
 									Sign {login ? 'in' : 'up'} with Google
 								</Text>
 							</Button>

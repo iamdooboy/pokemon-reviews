@@ -198,9 +198,10 @@ const Navbar = () => {
 						align='center'
 						bg='#171923e6'
 						borderBottomWidth={1}
+						gap={2}
 					>
 						<Icon as={MdCatchingPokemon} w={10} h={10} />
-						<Text fontSize='xs' ml='2' color='white' fontWeight='semibold'>
+						<Text fontSize='xs' color='white' fontWeight='semibold'>
 							Pokemon Reviews
 						</Text>
 					</Flex>

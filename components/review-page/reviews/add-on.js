@@ -26,11 +26,9 @@ const AddOn = ({ rating }) => {
 					)
 				})}
 			</Flex>
-			<Flex>
+			<Flex gap={1}>
 				<button onClick={() => setFavorite(!favorite)}>{favoriteIcon}</button>
-				<Text ml={1} fontSize='sm'>
-					0
-				</Text>
+				<Text fontSize='sm'>0</Text>
 			</Flex>
 		</Flex>
 	)

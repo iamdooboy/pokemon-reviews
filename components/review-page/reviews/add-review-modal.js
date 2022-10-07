@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
 	Modal,
 	ModalOverlay,
@@ -18,13 +18,31 @@ import {
 } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import axios from 'axios'
+import ResizeTextarea from 'react-textarea-autosize'
+
+const AutoResizeTextarea = React.forwardRef((props, ref) => {
+	return (
+		<Textarea
+			minH='unset'
+			overflow='hidden'
+			w='100%'
+			resize='none'
+			ref={ref}
+			minRows={3}
+			as={ResizeTextarea}
+			{...props}
+		/>
+	)
+})
 
 const ReviewModal = ({
 	pokemonName,
 	isOpen,
 	onClose,
 	initialRef,
-	setAllReviews
+	setAllReviews,
+	editReview,
+	setEditReview
 }) => {
 	const [rating, setRating] = useState(0)
 	const [hover, setHover] = useState(0)
@@ -36,7 +54,25 @@ const ReviewModal = ({
 		setRating(0)
 		setHover(0)
 		setDescription('')
+		setEditReview(null)
 		onClose()
+	}
+
+	const submitHandler = e => {
+		e.preventDefault()
+		setIsLoading(true)
+
+		if (editReview) {
+			updateReview({
+				id: editReview.id,
+				description,
+				rating
+			})
+		} else {
+			saveReview({ description, rating, pokemon: pokemonName })
+		}
+		setIsLoading(false)
+		onCloseHandler()
 	}
 
 	const saveReview = async review => {
@@ -49,13 +85,40 @@ const ReviewModal = ({
 		return response
 	}
 
-	const submitHandler = e => {
-		e.preventDefault()
-		setIsLoading(true)
-		saveReview({ description, rating, pokemon: pokemonName })
-		setIsLoading(false)
-		onCloseHandler()
+	const updateReview = async review => {
+		const oldDescription = editReview.description
+		const currentDescription = description
+
+		const oldRating = editReview.rating
+		const currentRating = rating
+
+		const didNotUpdateDescription = oldDescription === currentDescription
+		const didNotUpdateRating = oldRating === currentRating
+
+		if (didNotUpdateDescription && didNotUpdateRating) {
+			return
+		}
+
+		const res = await axios.put('/api/reviews', review)
+		console.log(res.data.message)
+		setAllReviews(reviews => {
+			const updatedArr = reviews.map(review => {
+				if (review.id === editReview.id) {
+					return { ...review, description: description, rating: rating }
+				} else {
+					return review
+				}
+			})
+			return updatedArr
+		})
 	}
+
+	useEffect(() => {
+		if (editReview) {
+			setDescription(editReview.description)
+			setRating(editReview.rating)
+		}
+	}, [editReview])
 
 	return (
 		<>
@@ -76,20 +139,20 @@ const ReviewModal = ({
 						<ModalCloseButton />
 						<ModalBody>
 							<FormControl isRequired={true}>
-								<Textarea
+								<AutoResizeTextarea
 									onChange={event => setDescription(event.target.value)}
 									value={description}
 									placeholder='Share your thoughts on this Pokemon'
 								/>
 								{description.length < 10 && (
 									<FormHelperText>
-										<Text>
-											Review must have a minimum of{' '}
-											<Text display='inline' textDecoration='underline'>
+										<Flex>
+											Review must have a minimum of&nbsp;
+											<Text textDecoration='underline'>
 												{10 - description.length}
 											</Text>
-											<Text display='inline'> characters.</Text>
-										</Text>
+											&nbsp;characters.
+										</Flex>
 									</FormHelperText>
 								)}
 							</FormControl>
@@ -122,7 +185,7 @@ const ReviewModal = ({
 									rating > 0 && description.length >= 10 ? false : true
 								}
 							>
-								Submit
+								{editReview ? 'Update' : 'Submit'}
 							</Button>
 						</ModalFooter>
 					</ModalContent>

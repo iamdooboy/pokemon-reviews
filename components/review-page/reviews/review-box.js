@@ -4,7 +4,6 @@ import {
 	Flex,
 	Avatar,
 	Text,
-	Stack,
 	Spacer,
 	Icon,
 	Button,
@@ -12,15 +11,12 @@ import {
 	PopoverTrigger,
 	PopoverContent,
 	PopoverBody,
-	PopoverArrow,
-	Input,
-	useDisclosure
+	PopoverArrow
 } from '@chakra-ui/react'
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import AddOn from './add-on'
 import { AiOutlineEllipsis } from 'react-icons/ai'
 import axios from 'axios'
-import ReviewModal from './add-review-modal'
 
 const ReadMore = ({ children }) => {
 	const [isReadMore, setIsReadMore] = useState(children.length > 156)
@@ -41,7 +37,7 @@ const ReadMore = ({ children }) => {
 	)
 }
 
-const CommentBox = ({ user, review, setAllReviews, onOpen, setEditReview }) => {
+const ReviewBox = ({ user, review, setAllReviews, onOpen, setEditReview }) => {
 	const { id, description, rating, author } = review
 
 	const editClickHander = () => {
@@ -51,6 +47,7 @@ const CommentBox = ({ user, review, setAllReviews, onOpen, setEditReview }) => {
 
 	const deleteClickHander = async () => {
 		const res = await axios.delete('/api/reviews', { data: { id } })
+		console.log(res.data.message)
 		setAllReviews(prev => {
 			return prev.filter(el => el.id !== id)
 		})
@@ -118,4 +115,4 @@ const CommentBox = ({ user, review, setAllReviews, onOpen, setEditReview }) => {
 	)
 }
 
-export default CommentBox
+export default ReviewBox

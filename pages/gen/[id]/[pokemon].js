@@ -1,14 +1,13 @@
+import axios from 'axios'
 import { useRef, useState } from 'react'
-import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
-import { Container, Button, HStack, Box } from '@chakra-ui/react'
-import CommentBox from '../../../components/review-page/reviews/review-box'
-import ReviewModal from '../../../components/review-page/reviews/add-review-modal'
-import { useDisclosure } from '@chakra-ui/react'
-import PokemonCardLarge from '../../../components/review-page/pokemon-card'
+import { getSession, useSession } from 'next-auth/react'
+import { Container, Button, HStack, Box, useDisclosure } from '@chakra-ui/react'
 import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
 import { prisma } from '../../../lib/prisma'
-import axios from 'axios'
-import { getSession, useSession } from 'next-auth/react'
+import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
+import ReviewBox from '../../../components/review-page/reviews/review-box'
+import ReviewModal from '../../../components/review-page/reviews/add-review-modal'
+import PokemonPage from '../../../components/review-page/pokemon-card'
 
 const Empty = ({ pokemonName }) => {
 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -30,6 +29,7 @@ const Empty = ({ pokemonName }) => {
 }
 
 const Pokemon = ({
+	user = { id: null },
 	reviews = [],
 	data,
 	pokemonName,
@@ -42,7 +42,8 @@ const Pokemon = ({
 	const [allReviews, setAllReviews] = useState(reviews)
 	const [numberOfFavorites, setNumberOfFavorites] = useState(numOfFavorite)
 	const [favorite, setFavorite] = useState(didUserFavoriteThisPokemon)
-	const { data: session, status } = useSession()
+	const [editReview, setEditReview] = useState(null)
+	const { data: session } = useSession()
 
 	const favoriteIcon = favorite ? (
 		<MdFavorite color='#E53E3E' />
@@ -77,7 +78,7 @@ const Pokemon = ({
 			justify='center'
 			h='100vh'
 		>
-			<PokemonCardLarge data={data} />
+			<PokemonPage data={data} />
 			<HStack align='center' justify='center' mt={3} maxW='xs'>
 				<Button
 					leftIcon={favoriteIcon}
@@ -98,17 +99,27 @@ const Pokemon = ({
 				</Button>
 			</HStack>
 
+			{allReviews.length === 0 && <Empty pokemonName={pokemonName} />}
+			{allReviews.map((review, index) => (
+				<ReviewBox
+					user={user}
+					review={review}
+					key={index}
+					setAllReviews={setAllReviews}
+					onOpen={onOpen}
+					setEditReview={setEditReview}
+				/>
+			))}
+
 			<ReviewModal
 				pokemonName={pokemonName}
 				isOpen={isOpen}
 				onClose={onClose}
 				initialRef={initialRef}
 				setAllReviews={setAllReviews}
+				editReview={editReview}
+				setEditReview={setEditReview}
 			/>
-			{allReviews.length === 0 && <Empty pokemonName={pokemonName} />}
-			{allReviews.map((review, index) => (
-				<CommentBox review={review} key={index} />
-			))}
 		</Container>
 	)
 }
@@ -179,8 +190,11 @@ export const getServerSideProps = async context => {
 
 	const didUserFavoriteThisPokemon = favoritedBy.some(el => el.id === user.id)
 
+	console.log(JSON.parse(JSON.stringify(reviews)))
+
 	return {
 		props: {
+			user: user,
 			data: pokemonData,
 			pokemonName: pokemon,
 			reviews: JSON.parse(JSON.stringify(reviews)),

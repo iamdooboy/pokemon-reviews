@@ -19,12 +19,13 @@ const SearchResultList = ({ pokemon, onClose, index, activeIndex }) => {
 					transition='all 0.3s ease-in-out'
 					onClick={onClose}
 					bg={bgColor}
+					gap={5}
 					_hover={{
 						bg: 'blue.600'
 					}}
 				>
 					<Icon as={CgPokemon} boxSize={5} my='auto' />
-					<Stack dir='row' spacing={0} ml={5}>
+					<Stack dir='row' spacing={0}>
 						<Box fontWeight='bold' textTransform='capitalize'>
 							{pokemon}
 						</Box>
