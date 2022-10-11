@@ -1,5 +1,11 @@
 import { ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons'
-import { IconButton, chakra, useDisclosure, Tooltip } from '@chakra-ui/react'
+import {
+	IconButton,
+	chakra,
+	useDisclosure,
+	Tooltip,
+	Box
+} from '@chakra-ui/react'
 import { SidebarContent } from './sidebar-content'
 
 const Sidebar = () => {
@@ -12,10 +18,10 @@ const Sidebar = () => {
 	}
 
 	return (
-		<chakra.div
+		<Box
 			h='calc((100vh - var(--chakra-sizes-16)))'
 			overflowY='auto'
-			display={{ base: 'none', md: 'unset' }}
+			display={{ base: 'none', lg: 'unset', md: 'unset', sm: 'unset' }}
 			borderRightWidth={1}
 			borderColor='whiteAlpha.100'
 		>
@@ -69,10 +75,10 @@ const Sidebar = () => {
 						/>
 					</Tooltip>
 
-					{isOpen && <SidebarContent pt={6} />}
+					{isOpen && <SidebarContent />}
 				</chakra.aside>
 			</Tooltip>
-		</chakra.div>
+		</Box>
 	)
 }
 

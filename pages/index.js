@@ -2,9 +2,6 @@ import {
 	chakra,
 	Box,
 	Flex,
-	Input,
-	InputGroup,
-	InputLeftElement,
 	Text,
 	Button,
 	SimpleGrid,
@@ -14,10 +11,11 @@ import {
 	Container
 } from '@chakra-ui/react'
 import { useInput } from '../hooks/useInput'
-import { SearchIcon } from '@chakra-ui/icons'
 import { getPokemonGeneration } from '../utils/helpers'
 import Layout from '../components/layout'
-import SearchResultList from '../components/navbar/search-result-list'
+import CustomInputResults from '../components/custom-input-results'
+import CustomInput from '../components/custom-input'
+import { LinkOverlay } from '../components/link-overlay'
 
 const regions = [
 	'Gen 1',
@@ -73,26 +71,22 @@ const Page = () => {
 							</chakra.span>
 						</chakra.span>
 						<HStack mt={8} justify='center' w='full'>
-							<InputGroup bg='gray.700' rounded='md' size='lg'>
-								<InputLeftElement pointerEvents='none' position='relative'>
-									<SearchIcon color='brand.400' />
-								</InputLeftElement>
-								<Input
-									p={0}
-									variant='unstyled'
-									placeholder='Search by name or number'
-									onChange={e => onChangeHandler(e)}
-									onKeyDown={e => onKeyDownHandler(e)}
-								/>
-							</InputGroup>
-
+							<CustomInput
+								boxSize={4}
+								size='lg'
+								bg='gray.700'
+								rounded='md'
+								p={0}
+								onChange={onChangeHandler}
+								onKeyDown={onKeyDownHandler}
+							/>
 							<Button size='lg'>Random</Button>
 						</HStack>
 						{filteredList.map((pkmn, index) => {
 							const pokemonId = pokemon.indexOf(pkmn) + 1
 							const gen = getPokemonGeneration(pokemonId)
 							return (
-								<SearchResultList
+								<CustomInputResults
 									gen={gen}
 									activeIndex={activeIndex}
 									setActiveIndex={setActiveIndex}
@@ -103,12 +97,16 @@ const Page = () => {
 								/>
 							)
 						})}
-						<Divider my={20} />
+						<Divider my={10} />
 						<Flex as='section' justify='center' w='full' h='full'>
 							<SimpleGrid columns={[2, 4, 4]} spacing={10}>
-								{regions.map(region => (
+								{regions.map((region, index) => (
 									<GridItem key={region}>
-										<Button>{region}</Button>
+										<LinkOverlay key={index} href={`/gen/${index + 1}/`}>
+											<Box rounded='md' px={3} py={2} bg='gray.700'>
+												{region}
+											</Box>
+										</LinkOverlay>
 									</GridItem>
 								))}
 							</SimpleGrid>

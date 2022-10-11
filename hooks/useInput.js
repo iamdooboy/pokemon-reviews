@@ -3,7 +3,7 @@ import { getPokemonGeneration, isNumber } from '../utils/helpers'
 import { getAllPokemonNames } from '../utils/axios'
 import { useRouter } from 'next/router'
 
-export const useInput = () => {
+export const useInput = closeModal => {
 	const [pokemon, setPokemon] = useState([])
 	const [filteredList, setFilteredList] = useState([])
 	const [activeIndex, setActiveIndex] = useState(0)
@@ -51,11 +51,11 @@ export const useInput = () => {
 
 	const onKeyDownHandler = e => {
 		if (e.key === 'Enter') {
+			onCloseHandler()
 			const highlightedPokemon = filteredList[activeIndex]
 			const pokemonId = pokemon.indexOf(highlightedPokemon) + 1
 			const gen = getPokemonGeneration(pokemonId)
 			router.push(`/gen/${gen}/${highlightedPokemon}`)
-			onCloseHandler()
 		} else if (e.key === 'ArrowUp') {
 			if (activeIndex === 0) {
 				return
@@ -70,6 +70,9 @@ export const useInput = () => {
 	}
 
 	const onCloseHandler = () => {
+		if (closeModal) {
+			closeModal()
+		}
 		setActiveIndex(0)
 		setFilteredList([])
 	}

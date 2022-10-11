@@ -19,6 +19,7 @@ import {
 	IconButton,
 	Drawer,
 	DrawerContent,
+	Box,
 	DrawerOverlay
 } from '@chakra-ui/react'
 import {
@@ -106,7 +107,10 @@ const Navbar = () => {
 	)
 
 	return (
-		<chakra.nav
+		<Box
+			as='nav'
+			pos='fixed'
+			w='full'
 			ref={ref}
 			h={16}
 			display='flex'
@@ -114,7 +118,6 @@ const Navbar = () => {
 			justifyContent='space-between'
 			px={5}
 			bg='#171923e6'
-			css={{ backdropFilter: 'blur(10px)' }}
 			sx={{
 				'& > div': {
 					flex: 1
@@ -122,6 +125,7 @@ const Navbar = () => {
 			}}
 			borderBottomWidth={1}
 			borderColor='whiteAlpha.100'
+			zIndex={2}
 		>
 			<Flex display={{ base: 'none', md: 'inline' }}>
 				<Link href='/' passHref>
@@ -208,7 +212,7 @@ const Navbar = () => {
 					<SidebarContent w='full' borderRight='none' />
 				</DrawerContent>
 			</Drawer>
-		</chakra.nav>
+		</Box>
 	)
 }
 

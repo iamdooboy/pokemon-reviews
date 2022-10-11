@@ -1,20 +1,14 @@
-import { useState, useEffect } from 'react'
-import NextLink from 'next/link'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { Flex, Icon, Link } from '@chakra-ui/react'
+import { Flex, Icon } from '@chakra-ui/react'
+import { LinkOverlay } from '../../components/link-overlay'
 
-export const SidebarContent = props => {
+export const SidebarContent = () => {
 	const router = useRouter()
-
-	const [activeGen, setActiveGen] = useState(1)
-
-	useEffect(() => {
-		const id = parseInt(router.query.id)
-		setActiveGen(id)
-	}, [router])
+	const [activeGen, setActiveGen] = useState(parseInt(router.query.id))
 
 	return (
-		<Flex flexDir='column' {...props} bg='#171923e6' h='full'>
+		<Flex flexDir='column' pt={6} bg='#171923e6' h='full'>
 			{[...Array(8)].map((e, index) => (
 				<LinkOverlay key={index} href={`/gen/${index + 1}/`}>
 					<NavItem
@@ -26,16 +20,6 @@ export const SidebarContent = props => {
 				</LinkOverlay>
 			))}
 		</Flex>
-	)
-}
-
-const LinkOverlay = ({ href, children }) => {
-	return (
-		<NextLink href={href} passHref>
-			<Link _hover={{ textDecoration: 'none' }} my={3}>
-				{children}
-			</Link>
-		</NextLink>
 	)
 }
 

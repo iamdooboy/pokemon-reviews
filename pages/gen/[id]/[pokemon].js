@@ -1,13 +1,23 @@
+import {
+	chakra,
+	Container,
+	Button,
+	HStack,
+	Box,
+	useDisclosure,
+	Flex
+} from '@chakra-ui/react'
 import axios from 'axios'
 import { useRef, useState } from 'react'
 import { getSession, useSession } from 'next-auth/react'
-import { Container, Button, HStack, Box, useDisclosure } from '@chakra-ui/react'
 import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
 import { prisma } from '../../../lib/prisma'
 import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
 import ReviewBox from '../../../components/review-page/reviews/review-box'
 import ReviewModal from '../../../components/review-page/reviews/add-review-modal'
 import PokemonPage from '../../../components/review-page/pokemon-card'
+import Layout from '../../../components/layout'
+import Sidebar from '../../../components/sidebar/sidebar'
 
 const Empty = ({ pokemonName }) => {
 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -35,7 +45,8 @@ const Pokemon = ({
 	pokemonName,
 	numOfFavorite = 0,
 	didUserFavoriteThisPokemon = false,
-	pokemonId
+	pokemonId,
+	genId
 }) => {
 	const initialRef = useRef()
 	const { isOpen, onOpen, onClose } = useDisclosure()
@@ -69,59 +80,70 @@ const Pokemon = ({
 	}
 
 	return (
-		<Container
-			maxW='container.md'
-			maxH='calc(100vh - var(--chakra-sizes-16))'
-			p={{ base: 5, md: 12 }}
-			margin='0 auto'
-			align='center'
-			justify='center'
-			h='100vh'
-		>
-			<PokemonPage data={data} />
-			<HStack align='center' justify='center' mt={3} maxW='xs'>
-				<Button
-					leftIcon={favoriteIcon}
-					variant='outline'
-					w='20%'
-					onClick={favoriteClickHandler}
-					colorScheme='blue'
+		<Flex pt={16}>
+			<Sidebar id={genId} />
+			<chakra.div
+				flex={1}
+				px='5'
+				overflow='auto'
+				maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
+			>
+				<Container
+					maxW='container.md'
+					p={{ base: 5, md: 12 }}
+					margin='0 auto'
+					align='center'
+					justify='center'
 				>
-					{numberOfFavorites}
-				</Button>
-				<Button
-					leftIcon={<MdOutlineEdit />}
-					onClick={session ? onOpen : () => alert('please login to review')}
-					colorScheme='blue'
-					w='80%'
-				>
-					Leave a review
-				</Button>
-			</HStack>
+					<PokemonPage data={data} />
+					<HStack align='center' justify='center' mt={3} maxW='xs'>
+						<Button
+							leftIcon={favoriteIcon}
+							variant='outline'
+							w='20%'
+							onClick={favoriteClickHandler}
+							colorScheme='blue'
+						>
+							{numberOfFavorites}
+						</Button>
+						<Button
+							leftIcon={<MdOutlineEdit />}
+							onClick={session ? onOpen : () => alert('please login to review')}
+							colorScheme='blue'
+							w='80%'
+						>
+							Leave a review
+						</Button>
+					</HStack>
 
-			{allReviews.length === 0 && <Empty pokemonName={pokemonName} />}
-			{allReviews.map((review, index) => (
-				<ReviewBox
-					user={user}
-					review={review}
-					key={index}
-					setAllReviews={setAllReviews}
-					onOpen={onOpen}
-					setEditReview={setEditReview}
-				/>
-			))}
-
-			<ReviewModal
-				pokemonName={pokemonName}
-				isOpen={isOpen}
-				onClose={onClose}
-				initialRef={initialRef}
-				setAllReviews={setAllReviews}
-				editReview={editReview}
-				setEditReview={setEditReview}
-			/>
-		</Container>
+					{allReviews.length === 0 && <Empty pokemonName={pokemonName} />}
+					{allReviews.map((review, index) => (
+						<ReviewBox
+							user={user}
+							review={review}
+							key={index}
+							setAllReviews={setAllReviews}
+							onOpen={onOpen}
+							setEditReview={setEditReview}
+						/>
+					))}
+					<ReviewModal
+						pokemonName={pokemonName}
+						isOpen={isOpen}
+						onClose={onClose}
+						initialRef={initialRef}
+						setAllReviews={setAllReviews}
+						editReview={editReview}
+						setEditReview={setEditReview}
+					/>
+				</Container>
+			</chakra.div>
+		</Flex>
 	)
+}
+
+Pokemon.getLayout = function getLayout(page) {
+	return <Layout>{page}</Layout>
 }
 
 export const getServerSideProps = async context => {
@@ -200,7 +222,8 @@ export const getServerSideProps = async context => {
 			reviews: JSON.parse(JSON.stringify(reviews)),
 			numOfFavorite: favorite,
 			didUserFavoriteThisPokemon,
-			pokemonId: id
+			pokemonId: id,
+			genId: genId
 		}
 	}
 }

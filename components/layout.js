@@ -12,18 +12,7 @@ const Layout = ({ children }) => {
 				<title>Pokemon Reviews</title>
 			</Head>
 			<Navbar />
-			<Flex as='main' className='main-content'>
-				<Sidebar />
-
-				<chakra.div
-					flex={1}
-					px='5'
-					overflow='auto'
-					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-				>
-					{children}
-				</chakra.div>
-			</Flex>
+			{children}
 		</Box>
 	)
 }
