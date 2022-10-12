@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { FallBackImage } from '../../utils/fallback-image'
+import { formatNames, capitalFirstLetter } from '../../utils/helpers'
 
 const Star = ({ fillColor }) => {
 	return (
@@ -32,7 +33,7 @@ const PokemonCard = ({ data }) => {
 	const router = useRouter()
 	const { id, imageAlt, imageUrl, name, typesArr } = data
 	const [isLoaded, setIsLoaded] = useState(true)
-	const formatName = name.charAt(0).toUpperCase() + name.slice(1)
+	const formattedName = capitalFirstLetter(formatNames(name))
 	let paddedId = id.toString().padStart(3, '0')
 	const log = useRef(true)
 
@@ -101,7 +102,7 @@ const PokemonCard = ({ data }) => {
 							<Flex>
 								<Skeleton isLoaded={isLoaded}>
 									<Heading as='h1' size='lg' fontWeight='800' letterSpacing={1}>
-										{formatName}
+										{formattedName}
 									</Heading>
 								</Skeleton>
 							</Flex>

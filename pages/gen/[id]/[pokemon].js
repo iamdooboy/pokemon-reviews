@@ -5,7 +5,8 @@ import {
 	HStack,
 	Box,
 	useDisclosure,
-	Flex
+	Flex,
+	Text
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useRef, useState } from 'react'
@@ -18,6 +19,11 @@ import ReviewModal from '../../../components/review-page/reviews/add-review-moda
 import PokemonPage from '../../../components/review-page/pokemon-card'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import { useInput } from '../../../hooks/useInput'
+import NavButton from '../../../components/nav-button'
+import RandomButton from '../../../components/random-button'
+import { formatNames, capitalFirstLetter } from '../../../utils/helpers'
 
 const Empty = ({ pokemonName }) => {
 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -55,6 +61,8 @@ const Pokemon = ({
 	const [favorite, setFavorite] = useState(didUserFavoriteThisPokemon)
 	const [editReview, setEditReview] = useState(null)
 	const { data: session } = useSession()
+	const { pokemon } = useInput()
+	const { id } = data
 
 	const favoriteIcon = favorite ? (
 		<MdFavorite color='#E53E3E' />
@@ -89,12 +97,44 @@ const Pokemon = ({
 				maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
 			>
 				<Container
-					maxW='container.md'
-					p={{ base: 5, md: 12 }}
+					maxW='container.xl'
+					px={{ base: 5, md: 12 }}
 					margin='0 auto'
 					align='center'
 					justify='center'
 				>
+					<HStack
+						align='center'
+						justify='space-between'
+						mt={5}
+						mb={3}
+						maxW='xs'
+						w='full'
+					>
+						<NavButton
+							id={id === 1 ? 905 : id - 1}
+							name={id === 1 ? pokemon[904] : pokemon[id - 2]}
+							leftIcon={<ArrowBackIcon />}
+						>
+							{id === 1
+								? capitalFirstLetter(formatNames(pokemon[904]))
+								: capitalFirstLetter(formatNames(pokemon[id - 2]))}
+						</NavButton>
+
+						<RandomButton size='sm' pokemon={pokemon}>
+							Surprise me
+						</RandomButton>
+
+						<NavButton
+							id={id === 905 ? 1 : id + 1}
+							name={id === 905 ? pokemon[0] : pokemon[id]}
+							rightIcon={<ArrowForwardIcon />}
+						>
+							{id === 905
+								? capitalFirstLetter(formatNames(pokemon[0]))
+								: capitalFirstLetter(formatNames(pokemon[id]))}
+						</NavButton>
+					</HStack>
 					<PokemonPage data={data} />
 					<HStack align='center' justify='center' mt={3} maxW='xs'>
 						<Button
@@ -150,6 +190,7 @@ export const getServerSideProps = async context => {
 	const { id: genId, pokemon } = context.params
 
 	const names = await getAllPokemonFromGen(genId)
+
 	const exist = names.includes(pokemon)
 
 	if (!exist) {
@@ -211,8 +252,6 @@ export const getServerSideProps = async context => {
 	})
 
 	const didUserFavoriteThisPokemon = favoritedBy.some(el => el.id === user.id)
-
-	console.log(JSON.parse(JSON.stringify(reviews)))
 
 	return {
 		props: {

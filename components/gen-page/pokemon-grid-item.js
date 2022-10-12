@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, GridItem, Text } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { FallBackImage } from '../../utils/fallback-image'
+import { formatNames, capitalFirstLetter } from '../../utils/helpers'
 
 const PokemonGridItem = ({
 	id,
@@ -11,7 +12,6 @@ const PokemonGridItem = ({
 	rating,
 	reviewCount
 }) => {
-	const formatName = name.charAt(0).toUpperCase() + name.slice(1)
 	return (
 		<GridItem>
 			<Box rounded={8} borderWidth='1px' shadow='lg'>
@@ -39,7 +39,7 @@ const PokemonGridItem = ({
 						noOfLines={1}
 						align='center'
 					>
-						{formatName}
+						{capitalFirstLetter(formatNames(name))}
 					</Text>
 
 					<Box display='flex' my={1} justifyContent='center'>

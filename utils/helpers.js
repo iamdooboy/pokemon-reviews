@@ -25,3 +25,49 @@ export const isNumber = input => {
 	let regex = new RegExp(/[^0-9]/, 'g')
 	return input.match(regex) === null
 }
+
+export const formatNames = name => {
+	if (!name?.includes('-')) {
+		return name
+	}
+	switch (name) {
+		case 'nidoran-f':
+			return 'nidoran♀'
+		case 'nidoran-m':
+			return 'nidoran♂'
+		case 'mr-mime':
+			return 'mr. Mime'
+		case 'ho-oh':
+			return 'ho-Oh'
+		case 'mime-jr':
+			return 'mime Jr.'
+		case 'porygon-z':
+			return 'Porygon-Z'
+		case 'type-null':
+			return 'type: Null'
+		case 'jangmo-o':
+			return 'jangmo-o'
+		case 'hakamo-o':
+			return 'hakamo-o'
+		case 'kommo-o':
+			return 'kommo-o'
+		case 'tapu-koko':
+			return 'tapu Koko'
+		case 'tapu-lele':
+			return 'tapu Lele'
+		case 'tapu-bulu':
+			return 'tapu Bulu'
+		case 'tapu-fini':
+			return 'tapu Fini'
+		case 'mr-rime':
+			return 'mr. Rime'
+		default:
+			return name.substring(0, name.indexOf('-'))
+	}
+}
+
+export const capitalFirstLetter = str => {
+	const firstLetter = str?.charAt(0).toUpperCase()
+	const restOfString = str?.slice(1)
+	return firstLetter + restOfString
+}

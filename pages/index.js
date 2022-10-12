@@ -16,6 +16,7 @@ import Layout from '../components/layout'
 import CustomInputResults from '../components/custom-input-results'
 import CustomInput from '../components/custom-input'
 import { LinkOverlay } from '../components/link-overlay'
+import RandomButton from '../components/random-button'
 
 const regions = [
 	'Gen 1',
@@ -27,6 +28,18 @@ const regions = [
 	'Gen 7',
 	'Gen 8'
 ]
+
+const generations = [
+	{ num: 1, color1: '#F2844B', color2: '#61CCEF' },
+	{ num: 2, color1: '#A38E59', color2: '#5C6A71' },
+	{ num: 3, color1: '#D9452F', color2: '#0075B7' },
+	{ num: 4, color1: '#43A3B7', color2: '#B97692' },
+	{ num: 5, color1: '#C8D4E6', color2: '#434343' },
+	{ num: 6, color1: '#06598F', color2: '#CF2C46' },
+	{ num: 7, color1: '#F99C1D', color2: '#1DB1E7' },
+	{ num: 8, color1: '#00A1E9', color2: '#E50C5C' }
+]
+
 const Page = () => {
 	const {
 		pokemon,
@@ -80,7 +93,9 @@ const Page = () => {
 								onChange={onChangeHandler}
 								onKeyDown={onKeyDownHandler}
 							/>
-							<Button size='lg'>Random</Button>
+							<RandomButton size='lg' pokemon={pokemon}>
+								Surprise Me
+							</RandomButton>
 						</HStack>
 						{filteredList.map((pkmn, index) => {
 							const pokemonId = pokemon.indexOf(pkmn) + 1
@@ -100,11 +115,11 @@ const Page = () => {
 						<Divider my={10} />
 						<Flex as='section' justify='center' w='full' h='full'>
 							<SimpleGrid columns={[2, 4, 4]} spacing={10}>
-								{regions.map((region, index) => (
-									<GridItem key={region}>
-										<LinkOverlay key={index} href={`/gen/${index + 1}/`}>
-											<Box rounded='md' px={3} py={2} bg='gray.700'>
-												{region}
+								{generations.map((gen, index) => (
+									<GridItem key={gen.num}>
+										<LinkOverlay href={`/gen/${index + 1}/`}>
+											<Box rounded='md' px={5} py={2} bg='gray.700'>
+												Gen {gen.num}
 											</Box>
 										</LinkOverlay>
 									</GridItem>
