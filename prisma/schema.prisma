@@ -52,6 +52,7 @@ model User {
   sessions        Session[]
   writtenReviews  Review[]  @relation("WrittenReviews")
   favoritePokemon Pokemon[]
+  FavoriteReview  Review[]
 }
 
 model Review {
@@ -62,6 +63,8 @@ model Review {
   author      User?    @relation("WrittenReviews", fields: [authorId], references: [id])
   authorId    String?
   pokemon     String
+  favorite    Int?     @default(0)
+  favoritedBy User[]
 }
 
 model Pokemon {

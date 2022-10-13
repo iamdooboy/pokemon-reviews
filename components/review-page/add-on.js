@@ -1,16 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
 import { StarIcon } from '@chakra-ui/icons'
+import { useFavorite } from '../../hooks/useFavorite'
 
-const AddOn = ({ rating }) => {
-	const [favorite, setFavorite] = useState(false)
+const AddOn = ({ id, favorite: numOfFav, rating, didUserFavoriteReview }) => {
+	const { favoriteClickHandler, numberOfFavorites, favorite } = useFavorite(
+		'review',
+		id,
+		numOfFav,
+		didUserFavoriteReview
+	)
 
 	const favoriteIcon = favorite ? (
 		<MdFavorite color='#E53E3E' />
 	) : (
 		<MdFavoriteBorder />
 	)
+
 	return (
 		<Flex align='center' justify='space-between' mt={2}>
 			<Flex>
@@ -27,23 +34,11 @@ const AddOn = ({ rating }) => {
 				})}
 			</Flex>
 			<Flex gap={1}>
-				<button onClick={() => setFavorite(!favorite)}>{favoriteIcon}</button>
-				<Text fontSize='sm'>0</Text>
+				<button onClick={() => favoriteClickHandler()}>{favoriteIcon}</button>
+				<Text fontSize='sm'>{numberOfFavorites}</Text>
 			</Flex>
 		</Flex>
 	)
 }
 
 export default AddOn
-
-{
-	/* <Button
-    leftIcon={favoriteIcon}
-    variant='outline'
-    w='20%'
-    onClick={() => setFavorite(!favorite)}
-    colorScheme='blue'
->
-    1
-</Button> */
-}

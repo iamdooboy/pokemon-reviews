@@ -37,8 +37,16 @@ const ReadMore = ({ children }) => {
 	)
 }
 
-const ReviewBox = ({ user, review, setAllReviews, onOpen, setEditReview }) => {
-	const { id, description, rating, author } = review
+const ReviewBox = ({
+	didUserFavoriteReview,
+	user,
+	review,
+	setAllReviews,
+	onOpen,
+	setEditReview
+}) => {
+	const { id, description, rating, author, favorite, favoritedByCurrentUser } =
+		review
 
 	const editClickHander = () => {
 		setEditReview(review)
@@ -108,7 +116,12 @@ const ReviewBox = ({ user, review, setAllReviews, onOpen, setEditReview }) => {
 						)}
 					</Flex>
 					<ReadMore>{description}</ReadMore>
-					<AddOn rating={rating} />
+					<AddOn
+						id={id}
+						rating={rating}
+						favorite={favorite}
+						didUserFavoriteReview={favoritedByCurrentUser}
+					/>
 				</Box>
 			</Flex>
 		</Box>

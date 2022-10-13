@@ -66,7 +66,8 @@ const ReviewModal = ({
 			updateReview({
 				id: editReview.id,
 				description,
-				rating
+				rating,
+				updatingWhat: 'review'
 			})
 		} else {
 			saveReview({ description, rating, pokemon: pokemonName })

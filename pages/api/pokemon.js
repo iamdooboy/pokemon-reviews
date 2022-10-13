@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
 	if (req.method === 'PUT') {
 		try {
-			const { fav, pokemonId, toggle } = req.body
+			const { fav, id, toggle } = req.body
 
 			const toggleFunction = !toggle
 				? {
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
 			const savedPokemon = await prisma.pokemon.update({
 				where: {
-					id: pokemonId
+					id: id
 				},
 				data: {
 					favorite: fav,

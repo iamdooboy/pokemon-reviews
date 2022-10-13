@@ -1,29 +1,17 @@
-import {
-	chakra,
-	Container,
-	Button,
-	HStack,
-	Box,
-	useDisclosure,
-	Flex,
-	Text
-} from '@chakra-ui/react'
-import axios from 'axios'
 import { useRef, useState } from 'react'
+import { chakra, Container, Box, useDisclosure, Flex } from '@chakra-ui/react'
 import { getSession, useSession } from 'next-auth/react'
-import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
-import { prisma } from '../../../lib/prisma'
-import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
-import ReviewBox from '../../../components/review-page/reviews/review-box'
-import ReviewModal from '../../../components/review-page/reviews/add-review-modal'
-import PokemonPage from '../../../components/review-page/pokemon-card'
+import ReviewBox from '../../../components/review-page/review-box'
+import ReviewModal from '../../../components/review-page/add-review-modal'
+import PokemonCard from '../../../components/review-page/pokemon-card'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
-import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import { prisma } from '../../../lib/prisma'
+import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
 import { useInput } from '../../../hooks/useInput'
-import NavButton from '../../../components/nav-button'
-import RandomButton from '../../../components/random-button'
-import { formatNames, capitalFirstLetter } from '../../../utils/helpers'
+import { useFavorite } from '../../../hooks/useFavorite'
+import NavSection from '../../../components/review-page/nav-section'
+import ActionButtons from '../../../components/review-page/action-buttons'
 
 const Empty = ({ pokemonName }) => {
 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -57,35 +45,17 @@ const Pokemon = ({
 	const initialRef = useRef()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [allReviews, setAllReviews] = useState(reviews)
-	const [numberOfFavorites, setNumberOfFavorites] = useState(numOfFavorite)
-	const [favorite, setFavorite] = useState(didUserFavoriteThisPokemon)
 	const [editReview, setEditReview] = useState(null)
 	const { data: session } = useSession()
 	const { pokemon } = useInput()
 	const { id } = data
 
-	const favoriteIcon = favorite ? (
-		<MdFavorite color='#E53E3E' />
-	) : (
-		<MdFavoriteBorder />
+	const { favoriteClickHandler, numberOfFavorites, favorite } = useFavorite(
+		'pokemon',
+		pokemonId,
+		numOfFavorite,
+		didUserFavoriteThisPokemon
 	)
-
-	const favoriteClickHandler = async () => {
-		if (!session) {
-			alert('please login to like')
-			return
-		}
-		setFavorite(!favorite)
-
-		const data = {
-			fav: favorite ? numberOfFavorites - 1 : numberOfFavorites + 1,
-			pokemonId,
-			toggle: favorite
-		}
-
-		setNumberOfFavorites(data.fav)
-		await axios.put('/api/pokemon', data)
-	}
 
 	return (
 		<Flex pt={16}>
@@ -103,78 +73,35 @@ const Pokemon = ({
 					align='center'
 					justify='center'
 				>
-					<HStack
-						align='center'
-						justify='space-between'
-						mt={5}
-						mb={3}
-						maxW='xs'
-						w='full'
-					>
-						<NavButton
-							id={id === 1 ? 905 : id - 1}
-							name={id === 1 ? pokemon[904] : pokemon[id - 2]}
-							leftIcon={<ArrowBackIcon />}
-						>
-							{id === 1
-								? capitalFirstLetter(formatNames(pokemon[904]))
-								: capitalFirstLetter(formatNames(pokemon[id - 2]))}
-						</NavButton>
+					<NavSection id={id} pokemon={pokemon} />
+					<PokemonCard data={data} />
+					<ActionButtons
+						{...{
+							favoriteClickHandler,
+							numberOfFavorites,
+							favorite,
+							session,
+							onOpen
+						}}
+					/>
 
-						<RandomButton size='sm' pokemon={pokemon}>
-							Surprise me
-						</RandomButton>
-
-						<NavButton
-							id={id === 905 ? 1 : id + 1}
-							name={id === 905 ? pokemon[0] : pokemon[id]}
-							rightIcon={<ArrowForwardIcon />}
-						>
-							{id === 905
-								? capitalFirstLetter(formatNames(pokemon[0]))
-								: capitalFirstLetter(formatNames(pokemon[id]))}
-						</NavButton>
-					</HStack>
-					<PokemonPage data={data} />
-					<HStack align='center' justify='center' mt={3} maxW='xs'>
-						<Button
-							leftIcon={favoriteIcon}
-							variant='outline'
-							w='20%'
-							onClick={favoriteClickHandler}
-							colorScheme='blue'
-						>
-							{numberOfFavorites}
-						</Button>
-						<Button
-							leftIcon={<MdOutlineEdit />}
-							onClick={session ? onOpen : () => alert('please login to review')}
-							colorScheme='blue'
-							w='80%'
-						>
-							Leave a review
-						</Button>
-					</HStack>
-
-					{allReviews.length === 0 && <Empty pokemonName={pokemonName} />}
-					{allReviews.map((review, index) => (
+					{allReviews.length === 0 && <Empty {...{ pokemonName }} />}
+					{allReviews.map(review => (
 						<ReviewBox
-							user={user}
-							review={review}
-							key={index}
-							setAllReviews={setAllReviews}
-							onOpen={onOpen}
-							setEditReview={setEditReview}
+							key={review.id}
+							{...{ user, review, setAllReviews, setEditReview, onOpen }}
 						/>
 					))}
 					<ReviewModal
-						pokemonName={pokemonName}
-						isOpen={isOpen}
-						onClose={onClose}
-						initialRef={initialRef}
-						setAllReviews={setAllReviews}
-						editReview={editReview}
-						setEditReview={setEditReview}
+						{...{
+							pokemonName,
+							isOpen,
+							onClose,
+							initialRef,
+							setAllReviews,
+							editReview,
+							setEditReview
+						}}
 					/>
 				</Container>
 			</chakra.div>
@@ -223,14 +150,15 @@ export const getServerSideProps = async context => {
 		}
 	})
 
-	const reviews = await prisma.review.findMany({
+	let reviews = await prisma.review.findMany({
 		//return all reviews for the selected pokemond
 		where: {
 			pokemon: pokemon
 		},
 		include: {
 			//return all fields from user model
-			author: true
+			author: true,
+			favoritedBy: true
 		}
 	})
 
@@ -247,11 +175,20 @@ export const getServerSideProps = async context => {
 		}
 	}
 
+	///////////////////////////////////////////////
+
 	const user = await prisma.user.findUnique({
 		where: { email: session.user.email }
 	})
 
 	const didUserFavoriteThisPokemon = favoritedBy.some(el => el.id === user.id)
+
+	reviews = reviews.map(review => {
+		const favoritedByCurrentUser = review.favoritedBy.some(
+			el => el.id === user.id
+		)
+		return { ...review, favoritedByCurrentUser }
+	})
 
 	return {
 		props: {

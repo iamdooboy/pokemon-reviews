@@ -8,6 +8,10 @@ export default async function handler(req, res) {
 		return res.status(401).json({ message: 'Unauthorized.' })
 	}
 
+	const user = await prisma.user.findUnique({
+		where: { email: session.user.email }
+	})
+
 	if (req.method === 'DELETE') {
 		await prisma.review.delete({
 			where: {
@@ -18,16 +22,45 @@ export default async function handler(req, res) {
 	}
 
 	if (req.method === 'PUT') {
-		await prisma.review.update({
-			where: {
-				id: req.body.id
-			},
-			data: {
-				description: req.body.description,
-				rating: req.body.rating
-			}
-		})
-		res.status(200).json({ message: 'Review Updated' })
+		if (req.body.updatingWhat === 'review') {
+			await prisma.review.update({
+				where: {
+					id: req.body.id
+				},
+				data: {
+					description: req.body.description,
+					rating: req.body.rating
+				}
+			})
+			res.status(200).json({ message: 'Review Updated' })
+		} else {
+			const { fav, id, toggle } = req.body
+			const toggleFunction = !toggle
+				? {
+						connect: {
+							id: user.id
+						}
+				  }
+				: {
+						disconnect: {
+							id: user.id
+						}
+				  }
+
+			await prisma.review.update({
+				where: {
+					id: id
+				},
+				data: {
+					favorite: fav,
+					favoritedBy: {
+						...toggleFunction
+					}
+				}
+			})
+
+			res.status(200).json({ message: 'Review Updated' })
+		}
 	}
 
 	if (req.method === 'POST') {
