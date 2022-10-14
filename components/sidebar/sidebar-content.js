@@ -9,8 +9,8 @@ export const SidebarContent = () => {
 
 	return (
 		<Flex flexDir='column' pt={6} bg='#171923e6' h='full'>
-			{[...Array(8)].map((e, index) => (
-				<LinkOverlay key={index} href={`/gen/${index + 1}/`}>
+			{[...Array(8)].map((_, index) => (
+				<LinkOverlay key={index} href={`/gen/${index + 1}/`} my={3}>
 					<NavItem
 						active={activeGen === index + 1}
 						onClick={() => setActiveGen(index + 1)}

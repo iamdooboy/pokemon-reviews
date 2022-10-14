@@ -8,11 +8,7 @@ const CustomInput = ({ boxSize, size, bg, rounded, ...props }) => {
 			<InputLeftElement pointerEvents='none' position='relative'>
 				<SearchIcon boxSize={boxSize} />
 			</InputLeftElement>
-			<Input
-				variant='unstyled'
-				placeholder='Search by name or number'
-				{...props}
-			/>
+			<Input variant='unstyled' placeholder='Aceus, 493' {...props} />
 		</InputGroup>
 	)
 }

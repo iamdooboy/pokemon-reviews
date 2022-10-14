@@ -3,7 +3,6 @@ import {
 	Box,
 	Flex,
 	Text,
-	Button,
 	SimpleGrid,
 	GridItem,
 	Divider,
@@ -93,7 +92,7 @@ const Page = () => {
 								onChange={onChangeHandler}
 								onKeyDown={onKeyDownHandler}
 							/>
-							<RandomButton size='lg' pokemon={pokemon}>
+							<RandomButton w='30%' size='lg' pokemon={pokemon}>
 								Surprise Me
 							</RandomButton>
 						</HStack>

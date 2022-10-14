@@ -25,7 +25,7 @@ const NavSection = ({ id, pokemon }) => {
 					: capitalFirstLetter(formatNames(pokemon[id - 2]))}
 			</NavButton>
 
-			<RandomButton size='sm' pokemon={pokemon}>
+			<RandomButton w='full' size='sm' pokemon={pokemon}>
 				Surprise me
 			</RandomButton>
 

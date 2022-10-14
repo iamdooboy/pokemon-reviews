@@ -36,6 +36,7 @@ import LoginModal from './login-modal'
 import SearchModal from './search-modal'
 import { FallBackImage } from '../../utils/fallback-image'
 import { SidebarContent } from '../sidebar/sidebar-content'
+import { LinkOverlay } from '../link-overlay'
 
 const LoadingButton = (
 	<Button isLoading colorScheme='gray' variant='solid'>
@@ -168,7 +169,7 @@ const Navbar = () => {
 				>
 					<SearchIcon color='white' />
 					<Text px={{ base: 2, sm: 4 }} textAlign='left' flex='1' noOfLines={1}>
-						Bulbasaur, 493
+						Aceus, 493
 					</Text>
 				</chakra.button>
 
@@ -196,19 +197,22 @@ const Navbar = () => {
 			>
 				<DrawerOverlay />
 				<DrawerContent maxWidth='35%'>
-					<Flex
-						px='4'
-						py='5'
-						align='center'
-						bg='#171923e6'
-						borderBottomWidth={1}
-						gap={2}
-					>
-						<Icon as={MdCatchingPokemon} w={10} h={10} />
-						<Text fontSize='xs' color='white' fontWeight='semibold'>
-							Pokemon Reviews
-						</Text>
-					</Flex>
+					<LinkOverlay href='/'>
+						<Flex
+							px='4'
+							py='5'
+							align='center'
+							bg='#171923e6'
+							borderBottomWidth={1}
+							gap={2}
+						>
+							<Icon as={MdCatchingPokemon} w={10} h={10} />
+							<Text fontSize='xs' color='white' fontWeight='semibold'>
+								Pokemon Reviews
+							</Text>
+						</Flex>
+					</LinkOverlay>
+
 					<SidebarContent w='full' borderRight='none' />
 				</DrawerContent>
 			</Drawer>

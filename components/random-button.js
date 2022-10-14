@@ -16,11 +16,17 @@ const RandomButton = ({ pokemon, children, ...props }) => {
 		router.push(`/gen/${gen}/${name}`)
 	}
 	return (
-		<Box bgGradient='linear(to-r, blue.400, teal.400)' p='1px' rounded='md'>
-			<Button {...props} bg='gray.800' onClick={onClickHandler}>
-				{children}
-			</Button>
-		</Box>
+		<Button
+			{...props}
+			bg='teal.400'
+			onClick={onClickHandler}
+			fontSize={{ base: 'xs', md: 'md', lg: 'md' }}
+			_hover={{
+				bg: 'teal.600'
+			}}
+		>
+			{children}
+		</Button>
 	)
 }
 export default RandomButton

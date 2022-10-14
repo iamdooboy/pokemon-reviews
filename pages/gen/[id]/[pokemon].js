@@ -1,17 +1,17 @@
 import { useRef, useState } from 'react'
 import { chakra, Container, Box, useDisclosure, Flex } from '@chakra-ui/react'
 import { getSession, useSession } from 'next-auth/react'
-import ReviewBox from '../../../components/review-page/review-box'
-import ReviewModal from '../../../components/review-page/add-review-modal'
-import PokemonCard from '../../../components/review-page/pokemon-card'
+import ReviewBox from '../../../components/pokemon-page/review-box'
+import ReviewModal from '../../../components/pokemon-page/add-review-modal'
+import PokemonCard from '../../../components/pokemon-page/pokemon-card'
+import NavSection from '../../../components/pokemon-page/nav-section'
+import ActionButtons from '../../../components/pokemon-page/action-buttons'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
 import { prisma } from '../../../lib/prisma'
 import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
 import { useInput } from '../../../hooks/useInput'
 import { useFavorite } from '../../../hooks/useFavorite'
-import NavSection from '../../../components/review-page/nav-section'
-import ActionButtons from '../../../components/review-page/action-buttons'
 
 const Empty = ({ pokemonName }) => {
 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -187,7 +187,9 @@ export const getServerSideProps = async context => {
 		const favoritedByCurrentUser = review.favoritedBy.some(
 			el => el.id === user.id
 		)
-		return { ...review, favoritedByCurrentUser }
+
+		const { favoritedBy, ...reviewRest } = review //remove favoritedBy
+		return { ...reviewRest, favoritedByCurrentUser }
 	})
 
 	return {
