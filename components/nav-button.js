@@ -8,7 +8,6 @@ const NavButton = ({ name, id, children, ...props }) => {
 
 	const onClickHandler = () => {
 		const gen = getPokemonGeneration(id)
-		console.log({ name, id, gen })
 		router.push(`/gen/${gen}/${name}`)
 	}
 

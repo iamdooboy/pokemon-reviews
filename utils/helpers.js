@@ -71,3 +71,73 @@ export const capitalFirstLetter = str => {
 	const restOfString = str?.slice(1)
 	return firstLetter + restOfString
 }
+
+export const getPokemonImageUrl = id => {
+	if (id === 0) {
+		return
+	}
+	const paddedId = id.toString().padStart(3, '0')
+	return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${paddedId}.png`
+}
+export const timeOffset = time => {
+	const createdAt = new Date(time)
+	const now = new Date()
+	const offset = now - createdAt
+	const minutes = Math.floor(offset / 1000 / 60)
+
+	if (minutes < 1) {
+		return 'a momemt ago'
+	}
+
+	if (minutes === 1) {
+		return 'a minute ago'
+	}
+
+	if (minutes < 60) {
+		return `${minutes} minutes ago`
+	}
+
+	const hours = Math.floor(minutes / 60)
+
+	if (hours === 1) {
+		return 'an hour ago'
+	}
+
+	if (hours < 24) {
+		return `${hours} hours ago`
+	}
+
+	const days = Math.floor(hours / 24)
+
+	const numOfDaysInMonth = new Date(
+		now.getFullYear(),
+		now.getMonth(),
+		0
+	).getDate()
+
+	if (days === 1) {
+		return 'a day ago'
+	}
+
+	if (days < numOfDaysInMonth) {
+		return `${days} days ago`
+	}
+
+	const months = days / numOfDaysInMonth
+
+	if (months === 1) {
+		return 'a month ago'
+	}
+
+	if (months < 12) {
+		return `${months} months ago`
+	}
+
+	const years = months / 12
+
+	if (years === 1) {
+		return 'a year ago'
+	}
+
+	return `${years} year ago`
+}

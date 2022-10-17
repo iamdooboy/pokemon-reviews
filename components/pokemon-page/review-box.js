@@ -16,50 +16,11 @@ import {
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import AddOn from './add-on'
 import { AiOutlineEllipsis } from 'react-icons/ai'
-import axios from 'axios'
+import ReadMore from '../read-more'
 
-const ReadMore = ({ children }) => {
-	const [isReadMore, setIsReadMore] = useState(children.length > 156)
-
-	return (
-		<>
-			<Text fontSize='sm' noOfLines={isReadMore ? 4 : ''}>
-				{children}
-			</Text>
-			<Text
-				cursor='pointer'
-				color='whiteAlpha.500'
-				onClick={() => setIsReadMore(!isReadMore)}
-			>
-				{isReadMore ? 'read more' : ''}
-			</Text>
-		</>
-	)
-}
-
-const ReviewBox = ({
-	didUserFavoriteReview,
-	user,
-	review,
-	setAllReviews,
-	onOpen,
-	setEditReview
-}) => {
+const ReviewBox = ({ user, review, onEdit, onDelete }) => {
 	const { id, description, rating, author, favorite, favoritedByCurrentUser } =
 		review
-
-	const editClickHander = () => {
-		setEditReview(review)
-		onOpen()
-	}
-
-	const deleteClickHander = async () => {
-		const res = await axios.delete('/api/reviews', { data: { id } })
-		console.log(res.data.message)
-		setAllReviews(prev => {
-			return prev.filter(el => el.id !== id)
-		})
-	}
 
 	return (
 		<Box
@@ -90,7 +51,7 @@ const ReviewBox = ({
 									<PopoverBody p={0}>
 										<Box>
 											<Button
-												onClick={editClickHander}
+												onClick={() => onEdit(review)}
 												leftIcon={<EditIcon />}
 												variant='ghost'
 												w='full'
@@ -100,7 +61,7 @@ const ReviewBox = ({
 												Edit
 											</Button>
 											<Button
-												onClick={deleteClickHander}
+												onClick={() => onDelete(id)}
 												leftIcon={<DeleteIcon />}
 												variant='ghost'
 												w='full'
@@ -115,7 +76,7 @@ const ReviewBox = ({
 							</Popover>
 						)}
 					</Flex>
-					<ReadMore>{description}</ReadMore>
+					<ReadMore noOfLines={4}>{description}</ReadMore>
 					<AddOn
 						id={id}
 						rating={rating}

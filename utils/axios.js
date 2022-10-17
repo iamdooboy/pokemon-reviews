@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getPokemonImageUrl } from './helpers'
 
 export const api = axios.create({
 	baseURL: 'https://pokeapi.co/api/v2/'
@@ -28,10 +29,8 @@ export const getPokemon = async pokemon => {
 	const { id, types } = data
 	const typesArr = types.map(el => el.type.name)
 
-	let paddedId = id.toString().padStart(3, '0')
-
 	const imageData = {
-		imageUrl: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${paddedId}.png`,
+		imageUrl: getPokemonImageUrl(id),
 		imageAlt: pokemon
 	}
 

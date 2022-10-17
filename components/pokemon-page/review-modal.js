@@ -17,8 +17,8 @@ import {
 	Text
 } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
-import axios from 'axios'
 import ResizeTextarea from 'react-textarea-autosize'
+import { capitalFirstLetter } from '../../utils/helpers'
 
 const AutoResizeTextarea = React.forwardRef((props, ref) => {
 	return (
@@ -40,79 +40,82 @@ const ReviewModal = ({
 	isOpen,
 	onClose,
 	initialRef,
-	setAllReviews,
 	editReview,
-	setEditReview
+	onSubmit
 }) => {
 	const [rating, setRating] = useState(0)
 	const [hover, setHover] = useState(0)
 	const [description, setDescription] = useState('')
-	const [isLoading, setIsLoading] = useState(false)
-	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+
+	const onSubmitHandler = e => {
+		console.log({ description, rating })
+		onSubmit(e, description, rating)
+		onCloseHandler()
+	}
 
 	const onCloseHandler = () => {
 		setRating(0)
 		setHover(0)
 		setDescription('')
-		setEditReview(null)
 		onClose()
 	}
 
-	const submitHandler = e => {
-		e.preventDefault()
-		setIsLoading(true)
+	// const submitHandler = e => {
+	// 	e.preventDefault()
+	// 	setIsLoading(true)
 
-		if (editReview) {
-			updateReview({
-				id: editReview.id,
-				description,
-				rating,
-				updatingWhat: 'review'
-			})
-		} else {
-			saveReview({ description, rating, pokemon: pokemonName })
-		}
-		setIsLoading(false)
-		onCloseHandler()
-	}
+	// 	if (editReview) {
+	// 		updateReview({
+	// 			id: editReview.id,
+	// 			description,
+	// 			rating,
+	// 			updatingWhat: 'review'
+	// 		})
+	// 	} else {
+	// 		saveReview({ description, rating, pokemon: pokemonName })
+	// 	}
+	// 	setIsLoading(false)
+	// 	onCloseHandler()
+	// }
 
-	const saveReview = async review => {
-		const response = await axios.post('/api/reviews', review)
+	// const saveReview = async review => {
+	// 	const response = await axios.post('/api/reviews', review)
 
-		if (!response) {
-			throw new Error('error')
-		}
-		setAllReviews(prev => [...prev, response.data])
-		return response
-	}
+	// 	if (!response) {
+	// 		throw new Error('error')
+	// 	}
+	// 	setAllReviews(prev => [...prev, response.data])
+	// 	return response
+	// }
 
-	const updateReview = async review => {
-		const oldDescription = editReview.description
-		const currentDescription = description
+	// const updateReview = async review => {
+	// 	const oldDescription = editReview.description
+	// 	const currentDescription = description
 
-		const oldRating = editReview.rating
-		const currentRating = rating
+	// 	const oldRating = editReview.rating
+	// 	const currentRating = rating
 
-		const didNotUpdateDescription = oldDescription === currentDescription
-		const didNotUpdateRating = oldRating === currentRating
+	// 	const didNotUpdateDescription = oldDescription === currentDescription
+	// 	const didNotUpdateRating = oldRating === currentRating
 
-		if (didNotUpdateDescription && didNotUpdateRating) {
-			return
-		}
+	// 	if (didNotUpdateDescription && didNotUpdateRating) {
+	// 		return
+	// 	}
 
-		const res = await axios.put('/api/reviews', review)
-		console.log(res.data.message)
-		setAllReviews(reviews => {
-			const updatedArr = reviews.map(review => {
-				if (review.id === editReview.id) {
-					return { ...review, description: description, rating: rating }
-				} else {
-					return review
-				}
-			})
-			return updatedArr
-		})
-	}
+	// 	const res = await axios.put('/api/reviews', review)
+	// 	console.log(res.data.message)
+
+	// 	setAllReviews(reviews => {
+	// 		const updatedArr = reviews.map(review => {
+	// 			if (review.id === editReview.id) {
+	// 				return { ...review, description: description, rating: rating }
+	// 			} else {
+	// 				return review
+	// 			}
+	// 		})
+	// 		return updatedArr
+	// 	})
+	// }
 
 	useEffect(() => {
 		if (editReview) {
@@ -130,11 +133,12 @@ const ReviewModal = ({
 				initialFocusRef={initialRef}
 			>
 				<ModalOverlay />
-				<form onSubmit={submitHandler}>
+				{/* <form onSubmit={e => onSubmit(e, description, rating)}> */}
+				<form onSubmit={onSubmitHandler}>
 					<ModalContent>
 						<ModalHeader>
 							<Heading as='h3' size='lg'>
-								Review {formatName}
+								Review {capitalFirstLetter(pokemonName)}
 							</Heading>
 						</ModalHeader>
 						<ModalCloseButton />
@@ -181,7 +185,6 @@ const ReviewModal = ({
 								align='right'
 								type='submit'
 								colorScheme='blue'
-								isLoading={isLoading}
 								isDisabled={
 									rating > 0 && description.length >= 10 ? false : true
 								}

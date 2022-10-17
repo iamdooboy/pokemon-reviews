@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { chakra, Container, Box, useDisclosure, Flex } from '@chakra-ui/react'
 import { getSession, useSession } from 'next-auth/react'
 import ReviewBox from '../../../components/pokemon-page/review-box'
-import ReviewModal from '../../../components/pokemon-page/add-review-modal'
+import ReviewModal from '../../../components/pokemon-page/review-modal'
 import PokemonCard from '../../../components/pokemon-page/pokemon-card'
 import NavSection from '../../../components/pokemon-page/nav-section'
 import ActionButtons from '../../../components/pokemon-page/action-buttons'
@@ -12,6 +12,7 @@ import { prisma } from '../../../lib/prisma'
 import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
 import { useInput } from '../../../hooks/useInput'
 import { useFavorite } from '../../../hooks/useFavorite'
+import { useReview } from '../../../hooks/useReview'
 
 const Empty = ({ pokemonName }) => {
 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -42,13 +43,21 @@ const Pokemon = ({
 	pokemonId,
 	genId
 }) => {
-	const initialRef = useRef()
-	const { isOpen, onOpen, onClose } = useDisclosure()
-	const [allReviews, setAllReviews] = useState(reviews)
-	const [editReview, setEditReview] = useState(null)
 	const { data: session } = useSession()
 	const { pokemon } = useInput()
 	const { id } = data
+
+	const {
+		initialRef,
+		isOpen,
+		onOpen,
+		onClose,
+		onEdit,
+		onDelete,
+		allReviews,
+		editReview,
+		onSubmit
+	} = useReview(reviews, pokemonName)
 
 	const { favoriteClickHandler, numberOfFavorites, favorite } = useFavorite(
 		'pokemon',
@@ -73,7 +82,7 @@ const Pokemon = ({
 					align='center'
 					justify='center'
 				>
-					<NavSection id={id} pokemon={pokemon} />
+					<NavSection {...{ id, pokemon }} />
 					<PokemonCard data={data} />
 					<ActionButtons
 						{...{
@@ -89,7 +98,7 @@ const Pokemon = ({
 					{allReviews.map(review => (
 						<ReviewBox
 							key={review.id}
-							{...{ user, review, setAllReviews, setEditReview, onOpen }}
+							{...{ user, review, onEdit, onDelete }}
 						/>
 					))}
 					<ReviewModal
@@ -98,9 +107,8 @@ const Pokemon = ({
 							isOpen,
 							onClose,
 							initialRef,
-							setAllReviews,
 							editReview,
-							setEditReview
+							onSubmit
 						}}
 					/>
 				</Container>
