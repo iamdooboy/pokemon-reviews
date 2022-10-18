@@ -86,7 +86,7 @@ export const timeOffset = time => {
 	const minutes = Math.floor(offset / 1000 / 60)
 
 	if (minutes < 1) {
-		return 'a momemt ago'
+		return 'a moment ago'
 	}
 
 	if (minutes === 1) {

@@ -5,7 +5,7 @@ import Sidebar from '../components/sidebar/sidebar'
 import ReviewGrid from '../components/review-page/review-grid'
 import { getSession } from 'next-auth/react'
 
-const MyReviews = ({ reviews }) => {
+const MyReviews = ({ reviews = [] }) => {
 	return (
 		<Layout>
 			<Flex pt={16}>
@@ -19,6 +19,7 @@ const MyReviews = ({ reviews }) => {
 					<Heading as='h1' size='xl' align='center' py={4}>
 						Your Reviews
 					</Heading>
+					{reviews.length === 0 && <Box>You don't have any reviews</Box>}
 					<ReviewGrid {...{ reviews }} />
 				</Box>
 			</Flex>
@@ -29,10 +30,17 @@ const MyReviews = ({ reviews }) => {
 export const getServerSideProps = async context => {
 	const session = await getSession(context)
 
+	if (!session) {
+		return {
+			notFound: true
+		}
+	}
+	console.log(1)
 	const user = await prisma.user.findUnique({
 		where: { email: session.user.email }
 	})
 
+	console.log(2)
 	let reviews = await prisma.review.findMany({
 		//return all reviews for current user
 		where: {
@@ -46,6 +54,7 @@ export const getServerSideProps = async context => {
 		}
 	})
 
+	console.log(3)
 	reviews = reviews.map(review => {
 		const favoritedByCurrentUser = review.favoritedBy.some(
 			el => el.id === user.id

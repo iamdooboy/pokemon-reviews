@@ -60,63 +60,6 @@ const ReviewModal = ({
 		onClose()
 	}
 
-	// const submitHandler = e => {
-	// 	e.preventDefault()
-	// 	setIsLoading(true)
-
-	// 	if (editReview) {
-	// 		updateReview({
-	// 			id: editReview.id,
-	// 			description,
-	// 			rating,
-	// 			updatingWhat: 'review'
-	// 		})
-	// 	} else {
-	// 		saveReview({ description, rating, pokemon: pokemonName })
-	// 	}
-	// 	setIsLoading(false)
-	// 	onCloseHandler()
-	// }
-
-	// const saveReview = async review => {
-	// 	const response = await axios.post('/api/reviews', review)
-
-	// 	if (!response) {
-	// 		throw new Error('error')
-	// 	}
-	// 	setAllReviews(prev => [...prev, response.data])
-	// 	return response
-	// }
-
-	// const updateReview = async review => {
-	// 	const oldDescription = editReview.description
-	// 	const currentDescription = description
-
-	// 	const oldRating = editReview.rating
-	// 	const currentRating = rating
-
-	// 	const didNotUpdateDescription = oldDescription === currentDescription
-	// 	const didNotUpdateRating = oldRating === currentRating
-
-	// 	if (didNotUpdateDescription && didNotUpdateRating) {
-	// 		return
-	// 	}
-
-	// 	const res = await axios.put('/api/reviews', review)
-	// 	console.log(res.data.message)
-
-	// 	setAllReviews(reviews => {
-	// 		const updatedArr = reviews.map(review => {
-	// 			if (review.id === editReview.id) {
-	// 				return { ...review, description: description, rating: rating }
-	// 			} else {
-	// 				return review
-	// 			}
-	// 		})
-	// 		return updatedArr
-	// 	})
-	// }
-
 	useEffect(() => {
 		if (editReview) {
 			setDescription(editReview.description)

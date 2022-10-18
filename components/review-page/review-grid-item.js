@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
 	chakra,
 	Box,
@@ -20,11 +20,18 @@ import {
 import { useInput } from '../../hooks/useInput'
 import { getPokemonImageUrl } from '../../utils/helpers'
 import ReadMore from '../read-more'
-import { timeOffset, capitalFirstLetter } from '../../utils/helpers'
 import { AiOutlineEllipsis } from 'react-icons/ai'
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
 import { useFavorite } from '../../hooks/useFavorite'
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
+import { LinkOverlay } from '../link-overlay'
+import { getAllPokemonNames } from '../../utils/axios'
+import {
+	getPokemonGeneration,
+	formatNames,
+	timeOffset,
+	capitalFirstLetter
+} from '../../utils/helpers'
 
 const ReviewGridItem = ({
 	id,
@@ -33,8 +40,31 @@ const ReviewGridItem = ({
 	createdAt,
 	pokemon,
 	favorite,
-	favoritedByCurrentUser
+	favoritedByCurrentUser,
+	onEdit,
+	onDelete,
+	setPokemonName
 }) => {
+	const log = useRef(true)
+	const [path, setPath] = useState('/')
+
+	useEffect(() => {
+		if (log.current) {
+			const getPath = async () => {
+				const res = await getAllPokemonNames()
+				const index = res.indexOf(pokemon) + 1
+				const gen = getPokemonGeneration(index)
+
+				setPath(`gen/${gen}/${pokemon}`)
+			}
+			getPath()
+		}
+
+		return () => {
+			log.current = false
+		}
+	}, [])
+
 	const { pokemon: allPokemon } = useInput()
 	const {
 		favoriteClickHandler,
@@ -50,7 +80,8 @@ const ReviewGridItem = ({
 
 	const src = getPokemonImageUrl(allPokemon.indexOf(pokemon) + 1)
 
-	const editClickHander = () => {}
+	let formattedName = formatNames(pokemon)
+	formattedName = capitalFirstLetter(formattedName)
 
 	return (
 		<GridItem>
@@ -65,20 +96,28 @@ const ReviewGridItem = ({
 			>
 				<Stack direction='column' maxW='2xl'>
 					<HStack spacing={3}>
-						<Avatar bg='gray.700' size='md' name={pokemon} src={src} />
-						<Flex direction='column'>
-							<Text fontWeight='bold' fontSize='md'>
-								{capitalFirstLetter(pokemon)}
-							</Text>
-							<Text fontWeight='light' fontSize='xs'>
-								{timeOffset(createdAt)}
-							</Text>
-						</Flex>
+						<LinkOverlay
+							href={path}
+							display='flex'
+							gap={2}
+							onClick={() => console.log('home')}
+							cursor='pointer'
+						>
+							<Avatar bg='gray.700' size='md' name={pokemon} src={src} />
+							<Flex direction='column'>
+								<Text fontWeight='bold' fontSize='md'>
+									{formattedName}
+								</Text>
+								<Text fontWeight='light' fontSize='xs'>
+									{timeOffset(createdAt)}
+								</Text>
+							</Flex>
+						</LinkOverlay>
 						<Spacer />
 						<Flex direction='column'>
 							<Popover isLazy>
 								<PopoverTrigger>
-									<button>
+									<button onClick={() => setPokemonName(pokemon)}>
 										<Icon as={AiOutlineEllipsis} />
 									</button>
 								</PopoverTrigger>
@@ -87,7 +126,7 @@ const ReviewGridItem = ({
 									<PopoverBody p={0}>
 										<Box>
 											<Button
-												onClick={editClickHander}
+												onClick={() => onEdit({ id, description, rating })}
 												leftIcon={<EditIcon />}
 												variant='ghost'
 												w='full'
@@ -97,7 +136,7 @@ const ReviewGridItem = ({
 												Edit
 											</Button>
 											<Button
-												//onClick={deleteClickHander}
+												onClick={() => onDelete(id)}
 												leftIcon={<DeleteIcon />}
 												variant='ghost'
 												w='full'
