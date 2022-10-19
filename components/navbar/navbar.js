@@ -88,16 +88,17 @@ const Navbar = () => {
 						</Text>
 					</VStack>
 				</MenuItem>
-
 				<MenuDivider />
 				<LinkOverlay href='/reviews'>
 					<MenuItem icon={<MdOutlineRateReview fontSize={21} />}>
 						<Text fontWeight='500'>My Reviews</Text>
 					</MenuItem>
 				</LinkOverlay>
-				<MenuItem icon={<MdFavoriteBorder fontSize={21} />}>
-					<Text fontWeight='500'>Favorites</Text>
-				</MenuItem>
+				<LinkOverlay href='/favorites'>
+					<MenuItem icon={<MdFavoriteBorder fontSize={21} />}>
+						<Text fontWeight='500'>Favorites</Text>
+					</MenuItem>
+				</LinkOverlay>
 				<MenuItem icon={<MdOutlineSettings fontSize={21} />}>
 					<Text fontWeight='500'>Settings</Text>
 				</MenuItem>

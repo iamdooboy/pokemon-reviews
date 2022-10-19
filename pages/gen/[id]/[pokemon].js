@@ -1,5 +1,4 @@
-import { useRef, useState } from 'react'
-import { chakra, Container, Box, useDisclosure, Flex } from '@chakra-ui/react'
+import { chakra, Container, Box, Flex } from '@chakra-ui/react'
 import { getSession, useSession } from 'next-auth/react'
 import ReviewBox from '../../../components/pokemon-page/review-box'
 import ReviewModal from '../../../components/pokemon-page/review-modal'

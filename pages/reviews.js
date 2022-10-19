@@ -35,12 +35,11 @@ export const getServerSideProps = async context => {
 			notFound: true
 		}
 	}
-	console.log(1)
+
 	const user = await prisma.user.findUnique({
 		where: { email: session.user.email }
 	})
 
-	console.log(2)
 	let reviews = await prisma.review.findMany({
 		//return all reviews for current user
 		where: {
@@ -54,7 +53,6 @@ export const getServerSideProps = async context => {
 		}
 	})
 
-	console.log(3)
 	reviews = reviews.map(review => {
 		const favoritedByCurrentUser = review.favoritedBy.some(
 			el => el.id === user.id

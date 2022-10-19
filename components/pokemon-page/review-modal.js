@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import ResizeTextarea from 'react-textarea-autosize'
-import { capitalFirstLetter } from '../../utils/helpers'
+import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 
 const AutoResizeTextarea = React.forwardRef((props, ref) => {
 	return (
@@ -67,6 +67,9 @@ const ReviewModal = ({
 		}
 	}, [editReview])
 
+	let formattedName = formatNames(pokemonName)
+	formattedName = capitalFirstLetter(formattedName)
+
 	return (
 		<>
 			<Modal
@@ -76,12 +79,11 @@ const ReviewModal = ({
 				initialFocusRef={initialRef}
 			>
 				<ModalOverlay />
-				{/* <form onSubmit={e => onSubmit(e, description, rating)}> */}
 				<form onSubmit={onSubmitHandler}>
 					<ModalContent>
 						<ModalHeader>
 							<Heading as='h3' size='lg'>
-								Review {capitalFirstLetter(pokemonName)}
+								Review {formattedName}
 							</Heading>
 						</ModalHeader>
 						<ModalCloseButton />
