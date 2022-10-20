@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Box, color } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { getPokemonGeneration } from '../utils/helpers'
 

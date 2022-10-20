@@ -35,6 +35,8 @@ const AutoResizeTextarea = React.forwardRef((props, ref) => {
 	)
 })
 
+AutoResizeTextarea.displayName = 'AutoResizeTextarea'
+
 const ReviewModal = ({
 	pokemonName,
 	isOpen,

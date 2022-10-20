@@ -11,7 +11,7 @@ import { SidebarContent } from './sidebar-content'
 const Sidebar = () => {
 	const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: true })
 
-	const onClickHandler = e => {
+	const onClickHandler = () => {
 		if (!isOpen) {
 			onOpen()
 		}

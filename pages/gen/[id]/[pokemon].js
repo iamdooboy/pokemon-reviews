@@ -195,8 +195,9 @@ export const getServerSideProps = async context => {
 			el => el.id === user.id
 		)
 
-		const { favoritedBy, ...reviewRest } = review //remove favoritedBy
-		return { ...reviewRest, favoritedByCurrentUser }
+		delete review.favoritedBy
+
+		return { ...review, favoritedByCurrentUser }
 	})
 
 	return {

@@ -18,6 +18,7 @@ import {
 } from '../../utils/helpers'
 import { useFavorite } from '../../hooks/useFavorite'
 import { LinkOverlay } from '../link-overlay'
+import { motion } from 'framer-motion'
 
 const FavoritesGridItem = ({
 	id,
@@ -62,6 +63,7 @@ const FavoritesGridItem = ({
 	return (
 		<GridItem>
 			<Box
+				as={motion.div}
 				p='2px'
 				rounded={8}
 				maxW='xs'
@@ -73,6 +75,9 @@ const FavoritesGridItem = ({
 						typesArr[1] ? typesArr[1] + '.default' : typesArr[0] + '.light'
 					})`
 				}}
+				whileHover={{ scale: 1.1 }}
+				transition='0.08s linear'
+				opacity={favorite ? 1 : 0.4}
 			>
 				<Box
 					maxW='xs'
@@ -107,14 +112,21 @@ const FavoritesGridItem = ({
 
 						<Flex>
 							<Box align='left'>
-								<Flex justify='space-between' mt={1} align='center'>
-									<Heading as='h1' size='md' fontWeight='800' letterSpacing={1}>
-										{formattedName}
-									</Heading>
-									<Text opacity={0.4} align='end' zIndex={1}>
-										{num.toString().padStart(3, '0')}
-									</Text>
-								</Flex>
+								<LinkOverlay href={`/gen/${gen}/${pokemon}`}>
+									<Flex justify='space-between' mt={1} align='center'>
+										<Heading
+											as='h1'
+											size='md'
+											fontWeight='800'
+											letterSpacing={1}
+										>
+											{formattedName}
+										</Heading>
+										<Text opacity={0.4} align='end' zIndex={1}>
+											{num.toString().padStart(3, '0')}
+										</Text>
+									</Flex>
+								</LinkOverlay>
 
 								<HStack my={2} justify='space-between'>
 									<HStack>

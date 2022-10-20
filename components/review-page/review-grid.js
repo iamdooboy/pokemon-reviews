@@ -19,7 +19,7 @@ const ReviewGrid = ({ reviews }) => {
 	} = useReview(reviews, pokemonName)
 
 	return (
-		<SimpleGrid columns={[1, 2, 3]} spacing={4} py={4}>
+		<SimpleGrid columns={[1, 2, 2, 3]} spacing={4} py={4}>
 			{allReviews.map(review => (
 				<ReviewGridItem
 					key={review.id}

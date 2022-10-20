@@ -32,7 +32,7 @@ import {
 	timeOffset,
 	capitalFirstLetter
 } from '../../utils/helpers'
-
+import { motion } from 'framer-motion'
 const ReviewGridItem = ({
 	id,
 	description,
@@ -86,6 +86,7 @@ const ReviewGridItem = ({
 	return (
 		<GridItem>
 			<Box
+				as={motion.div}
 				rounded={8}
 				borderWidth='1px'
 				shadow='lg'
@@ -93,6 +94,9 @@ const ReviewGridItem = ({
 				h='full'
 				maxHeight='205px'
 				overflow='auto'
+				whileHover={{ y: -7 }}
+				transition='0.08s linear'
+				_hover={{ borderColor: 'whiteAlpha.700', bg: 'gray.800' }}
 			>
 				<Stack direction='column' maxW='2xl'>
 					<HStack spacing={3}>
@@ -114,7 +118,42 @@ const ReviewGridItem = ({
 							</Flex>
 						</LinkOverlay>
 						<Spacer />
-						<Flex direction='column'>
+						<Stack
+							direction='row'
+							spacing={4}
+							display={['none', 'none', 'none', 'inline']}
+						>
+							<Flex gap={3}>
+								<Flex gap={1}>
+									<chakra.button onClick={() => favoriteClickHandler()}>
+										{favoriteIcon}
+									</chakra.button>
+									<Text fontSize='md'>{numberOfFavorites}</Text>
+								</Flex>
+								<Button
+									size='xs'
+									leftIcon={<EditIcon />}
+									colorScheme='gray'
+									variant='solid'
+									onClick={() => onEdit({ id, description, rating })}
+								>
+									Edit
+								</Button>
+								<Button
+									size='xs'
+									leftIcon={<DeleteIcon />}
+									colorScheme='red'
+									variant='outline'
+									onClick={() => onDelete(id)}
+								>
+									Delete
+								</Button>
+							</Flex>
+						</Stack>
+						<Flex
+							direction='column'
+							display={['inline', 'inline', 'inline-block', 'none']}
+						>
 							<Popover isLazy>
 								<PopoverTrigger>
 									<button onClick={() => setPokemonName(pokemon)}>

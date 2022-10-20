@@ -4,6 +4,7 @@ import Layout from '../components/layout'
 import Sidebar from '../components/sidebar/sidebar'
 import ReviewGrid from '../components/review-page/review-grid'
 import { getSession } from 'next-auth/react'
+import { prisma } from '../lib/prisma'
 
 const MyReviews = ({ reviews = [] }) => {
 	return (
@@ -19,7 +20,7 @@ const MyReviews = ({ reviews = [] }) => {
 					<Heading as='h1' size='xl' align='center' py={4}>
 						Your Reviews
 					</Heading>
-					{reviews.length === 0 && <Box>You don't have any reviews</Box>}
+					{reviews.length === 0 && <Box>You don&apos;t have any reviews</Box>}
 					<ReviewGrid {...{ reviews }} />
 				</Box>
 			</Flex>
@@ -58,8 +59,9 @@ export const getServerSideProps = async context => {
 			el => el.id === user.id
 		)
 
-		const { favoritedBy, ...reviewRest } = review //remove favoritedBy
-		return { ...reviewRest, favoritedByCurrentUser }
+		delete review.favoritedBy
+
+		return { ...review, favoritedByCurrentUser }
 	})
 
 	return {

@@ -5,6 +5,7 @@ import Sidebar from '../components/sidebar/sidebar'
 import { Box, Heading, Flex } from '@chakra-ui/react'
 import { getSession } from 'next-auth/react'
 import { getPokemon } from '../utils/axios'
+import { prisma } from '../lib/prisma'
 
 const Favorites = ({ data }) => {
 	return (

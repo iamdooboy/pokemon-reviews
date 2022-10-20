@@ -17,16 +17,16 @@ import CustomInput from '../components/custom-input'
 import { LinkOverlay } from '../components/link-overlay'
 import RandomButton from '../components/random-button'
 
-const regions = [
-	'Gen 1',
-	'Gen 2',
-	'Gen 3',
-	'Gen 4',
-	'Gen 5',
-	'Gen 6',
-	'Gen 7',
-	'Gen 8'
-]
+// const regions = [
+// 	'Gen 1',
+// 	'Gen 2',
+// 	'Gen 3',
+// 	'Gen 4',
+// 	'Gen 5',
+// 	'Gen 6',
+// 	'Gen 7',
+// 	'Gen 8'
+// ]
 
 const generations = [
 	{ num: 1, color1: '#F2844B', color2: '#61CCEF' },

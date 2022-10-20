@@ -3,6 +3,7 @@ import { Box, GridItem, Text } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { FallBackImage } from '../../utils/fallback-image'
 import { formatNames, capitalFirstLetter } from '../../utils/helpers'
+import { motion } from 'framer-motion'
 
 const PokemonGridItem = ({
 	id,
@@ -14,7 +15,15 @@ const PokemonGridItem = ({
 }) => {
 	return (
 		<GridItem>
-			<Box rounded={8} borderWidth='1px' shadow='lg'>
+			<Box
+				as={motion.div}
+				rounded={8}
+				borderWidth='1px'
+				shadow='lg'
+				whileHover={{ scale: 1.1 }}
+				transition='0.08s linear'
+				_hover={{ borderColor: 'whiteAlpha.800', bg: 'gray.700' }}
+			>
 				<Text pr={1} align='right' color='gray.600'>
 					{id.toString().padStart(3, '0')}
 				</Text>
