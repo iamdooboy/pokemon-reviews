@@ -1,12 +1,18 @@
 import axios from 'axios'
 import { useState, useRef } from 'react'
-import { useDisclosure } from '@chakra-ui/react'
+import { useDisclosure, useToast } from '@chakra-ui/react'
+import { useAsyncToast } from './useAsyncToast'
 
 export const useReview = (reviews, pokemonName) => {
 	const initialRef = useRef()
+	const toast = useToast()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [allReviews, setAllReviews] = useState(reviews)
 	const [editReview, setEditReview] = useState(null)
+	const [_, setIsLoading] = useAsyncToast(false, {
+		title: 'Loading...',
+		position: 'bottom-right'
+	})
 
 	const onEdit = review => {
 		setEditReview(review)
@@ -19,10 +25,19 @@ export const useReview = (reviews, pokemonName) => {
 	}
 
 	const onDelete = async id => {
+		setIsLoading(true)
 		const res = await axios.delete('/api/reviews', { data: { id } })
 		console.log(res.data.message)
 		setAllReviews(prev => prev.filter(el => el.id !== id))
 		onClose()
+		setIsLoading(false)
+		toast({
+			title: 'Review deleted.',
+			position: 'bottom-right',
+			status: 'error',
+			duration: 1500,
+			isClosable: true
+		})
 	}
 
 	const onSave = async review => {
@@ -32,7 +47,15 @@ export const useReview = (reviews, pokemonName) => {
 			throw new Error('error')
 		}
 		setAllReviews(prev => [...prev, response.data])
-		return response
+		setIsLoading(false)
+
+		toast({
+			title: 'Review created.',
+			position: 'bottom-right',
+			status: 'success',
+			duration: 1500,
+			isClosable: true
+		})
 	}
 
 	const onUpdate = async review => {
@@ -63,11 +86,21 @@ export const useReview = (reviews, pokemonName) => {
 			})
 			return updatedArr
 		})
+
+		setIsLoading(false)
+
+		toast({
+			title: 'Review updated.',
+			position: 'bottom-right',
+			status: 'success',
+			duration: 1500,
+			isClosable: true
+		})
 	}
 
 	const onSubmit = (e, description, rating) => {
 		e.preventDefault()
-
+		setIsLoading(true)
 		if (editReview) {
 			onUpdate({
 				id: editReview.id,

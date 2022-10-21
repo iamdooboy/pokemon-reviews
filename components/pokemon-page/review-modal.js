@@ -50,7 +50,6 @@ const ReviewModal = ({
 	const [description, setDescription] = useState('')
 
 	const onSubmitHandler = e => {
-		console.log({ description, rating })
 		onSubmit(e, description, rating)
 		onCloseHandler()
 	}

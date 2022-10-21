@@ -156,9 +156,13 @@ const ReviewGridItem = ({
 						>
 							<Popover isLazy>
 								<PopoverTrigger>
-									<button onClick={() => setPokemonName(pokemon)}>
-										<Icon as={AiOutlineEllipsis} />
-									</button>
+									<chakra.button onClick={() => setPokemonName(pokemon)}>
+										<Icon
+											align='right'
+											justify='right'
+											as={AiOutlineEllipsis}
+										/>
+									</chakra.button>
 								</PopoverTrigger>
 								<PopoverContent w='150px'>
 									<PopoverArrow />

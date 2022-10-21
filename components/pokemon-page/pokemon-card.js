@@ -6,7 +6,8 @@ import {
 	Image,
 	Heading,
 	Flex,
-	Skeleton
+	Skeleton,
+	Stack
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { FallBackImage } from '../../utils/fallback-image'
@@ -29,6 +30,25 @@ const Star = ({ fillColor }) => {
 	)
 }
 
+const CardSkeleton = (
+	<Stack maxW='xs' p={3} rounded={8} mx='auto'>
+		<Skeleton h='19.2rem' w='100%' />
+		<Stack isInline align='center' marginBottom='5px'>
+			<Box align='left' w='100%'>
+				<Skeleton my={1} h='30px' w='100%' />
+				<Flex gap={3}>
+					<Skeleton h='20px' w='35%' />
+					<Skeleton h='20px' w='35%' />
+				</Flex>
+				<Skeleton my={1} h='20px' w='100%' />
+			</Box>
+			<Box w='100%' align='right'>
+				<Skeleton h='60px' w='50%' mt={5} />
+			</Box>
+		</Stack>
+	</Stack>
+)
+
 const PokemonCard = ({ data }) => {
 	const router = useRouter()
 	const { id, imageAlt, imageUrl, name, typesArr } = data
@@ -38,21 +58,24 @@ const PokemonCard = ({ data }) => {
 	const log = useRef(true)
 
 	useEffect(() => {
-		if (log.current) {
-			const handleStart = () => {
-				setIsLoaded(false)
-			}
-
-			const handleStop = () => {
-				setIsLoaded(true)
-			}
-
-			router.events.on('routeChangeStart', handleStart)
-			router.events.on('routeChangeComplete', handleStop)
-			router.events.on('routeChangeError', handleStop)
+		const handleStart = url => {
+			console.log(url)
+			setIsLoaded(false)
 		}
+
+		const handleStop = url => {
+			console.log(url)
+			setIsLoaded(true)
+		}
+
+		router.events.on('routeChangeStart', handleStart)
+		router.events.on('routeChangeComplete', handleStop)
+		router.events.on('routeChangeError', handleStop)
+
 		return () => {
-			log.current = false
+			router.events.off('routeChangeStart', handleStart)
+			router.events.off('routeChangeComplete', handleStop)
+			router.events.off('routeChangeError', handleStop)
 		}
 	}, [router])
 
@@ -67,59 +90,56 @@ const PokemonCard = ({ data }) => {
 			pos='relative'
 			zIndex={-1}
 		>
-			<Box maxW='xs' rounded={8} mx='auto' bg='rgba(17, 25, 40, 0.6)'>
-				<Box p={3} color='gray.100'>
-					<Skeleton isLoaded={isLoaded}>
-						<Box
-							borderWidth={2}
-							rounded={4}
-							bg='#282d359e'
-							borderColor='whiteAlpha.600'
-							maxW='100%'
-							height='auto'
-						>
-							<Text opacity={0.4} px={1} align='start' zIndex={1}>
-								{paddedId}
-							</Text>
+			{isLoaded ? (
+				<Box maxW='xs' p={3} rounded={8} mx='auto' bg='rgba(17, 25, 40, 0.6)'>
+					<Box
+						borderWidth={2}
+						rounded={4}
+						bg='#282d359e'
+						borderColor='whiteAlpha.600'
+						maxW='100%'
+						height='auto'
+					>
+						<Text opacity={0.4} px={1} align='start' zIndex={1}>
+							{paddedId}
+						</Text>
 
-							<Box mt='-24px'>
-								<FallBackImage
-									w='auto'
-									h='auto'
-									width={600}
-									height={600}
-									src={imageUrl}
-									alt={imageAlt}
-									fallback='/bug.svg'
-									placeholder='blur'
-									blurDataURL={imageUrl}
-								/>
-							</Box>
+						<Box mt='-15px'>
+							<FallBackImage
+								w='auto'
+								h='auto'
+								width={600}
+								height={600}
+								src={imageUrl}
+								alt={imageAlt}
+								fallback='/bug.svg'
+								placeholder='blur'
+								blurDataURL={imageUrl}
+							/>
 						</Box>
-					</Skeleton>
-					<Flex>
-						<Box align='left'>
-							<Flex>
-								<Skeleton isLoaded={isLoaded}>
-									<Heading as='h1' size='lg' fontWeight='800' letterSpacing={1}>
-										{formattedName}
-									</Heading>
-								</Skeleton>
-							</Flex>
-							<Skeleton isLoaded={isLoaded}>
-								<HStack my={3}>
+					</Box>
+					<Box>
+						<Heading
+							as='h1'
+							size='lg'
+							fontWeight='800'
+							letterSpacing={1}
+							align='left'
+						>
+							{formattedName}
+						</Heading>
+						<HStack>
+							<Stack>
+								<HStack>
 									{typesArr.map((type, index) => (
 										<Image
 											key={index}
-											boxSize='30%'
+											boxSize='23%'
 											src={`/type/${type}.png`}
 											alt={`${type}`}
 										/>
 									))}
 								</HStack>
-							</Skeleton>
-
-							<Skeleton isLoaded={isLoaded}>
 								<Flex align='center' mt={4}>
 									{Array.from(Array(4).keys()).map(id => {
 										return <Star key={id} fillColor='#FBBC05' />
@@ -129,38 +149,34 @@ const PokemonCard = ({ data }) => {
 									})}
 									<Text opacity={0.4}>(365)</Text>
 								</Flex>
-							</Skeleton>
-						</Box>
-
-						<Box w='full' align='right'>
-							<Skeleton isLoaded={isLoaded}>
-								<Heading
-									as='h1'
-									fontWeight='900'
-									fontSize='7xl'
-									mt={6}
-									position='relative'
-									_before={{
-										content: '""',
-										position: 'absolute',
-										top: '100%',
-										width: '100%',
-										left: '0',
-										height: '5px',
-										bgGradient: `linear(to-r, ${typesArr[0]}.default, ${
-											typesArr[1]
-												? typesArr[1] + '.default'
-												: typesArr[0] + '.light'
-										})`
-									}}
-								>
-									4.5
-								</Heading>
-							</Skeleton>
-						</Box>
-					</Flex>
+							</Stack>
+							<Heading
+								as='h1'
+								fontSize='5xl'
+								fontWeight='900'
+								position='relative'
+								_before={{
+									content: '""',
+									position: 'absolute',
+									top: '100%',
+									width: '100%',
+									left: '0',
+									height: '2px',
+									bgGradient: `linear(to-r, ${typesArr[0]}.default, ${
+										typesArr[1]
+											? typesArr[1] + '.default'
+											: typesArr[0] + '.light'
+									})`
+								}}
+							>
+								4.5
+							</Heading>
+						</HStack>
+					</Box>
 				</Box>
-			</Box>
+			) : (
+				CardSkeleton
+			)}
 		</Box>
 	)
 }
