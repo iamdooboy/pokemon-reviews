@@ -1,0 +1,64 @@
+import React from 'react'
+import { Box, Skeleton, Stack, SimpleGrid, GridItem } from '@chakra-ui/react'
+
+export const ReviewBoxSkeleton = (
+	<Box
+		maxW='xs'
+		rounded={8}
+		borderWidth={1}
+		align='center'
+		mt={3}
+		mx='auto'
+		p={3}
+		bg='gray.500'
+	>
+		<Stack isInline align='center'>
+			<Box>
+				<Skeleton size='sm' width='2em' height='2em' borderRadius='50%' />
+			</Box>
+			<Skeleton height='14px' width='30%' />
+		</Stack>
+		<Box pl='2.5em' align='left'>
+			<Skeleton my={2} height='16px' width='100%' />
+			<Skeleton my={2} height='14px' width='40%' />
+		</Box>
+	</Box>
+)
+
+export const ReviewGridSkeleton = (
+	<SimpleGrid columns={[1, 2, 2, 3]} spacing={4} py={4}>
+		{[...Array(6)].map((_, index) => (
+			<GridItem key={index}>
+				<Box
+					rounded={8}
+					p={3}
+					h='full'
+					maxHeight='205px'
+					overflow='auto'
+					bg='gray.500'
+				>
+					<Stack direction='column' maxW='2xl'>
+						<Stack isInline align='center'>
+							<Box>
+								<Skeleton
+									size='sm'
+									width='2em'
+									height='2em'
+									borderRadius='50%'
+								/>
+							</Box>
+							<Box w='full'>
+								<Skeleton height='14px' width='30%' mb={2} />
+								<Skeleton height='14px' width='50%' />
+							</Box>
+						</Stack>
+						<Box pl='2.5em' align='left'>
+							<Skeleton my={2} height='16px' width='100%' />
+							<Skeleton my={2} height='16px' width='100%' />
+						</Box>
+					</Stack>
+				</Box>
+			</GridItem>
+		))}
+	</SimpleGrid>
+)

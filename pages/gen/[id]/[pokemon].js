@@ -12,6 +12,10 @@ import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
 import { useInput } from '../../../hooks/useInput'
 import { useFavorite } from '../../../hooks/useFavorite'
 import { useReview } from '../../../hooks/useReview'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { PokemonCardSkeleton } from '../../../components/loading/pokemon-card-skeleton'
+import { ReviewBoxSkeleton } from '../../../components/loading/review-box-skeleton'
 
 const Empty = ({ pokemonName }) => {
 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -65,6 +69,31 @@ const Pokemon = ({
 		didUserFavoriteThisPokemon
 	)
 
+	const router = useRouter()
+	const [isLoaded, setIsLoaded] = useState(true)
+
+	useEffect(() => {
+		const handleStart = url => {
+			console.log(url)
+			setIsLoaded(false)
+		}
+
+		const handleStop = url => {
+			console.log(url)
+			setIsLoaded(true)
+		}
+
+		router.events.on('routeChangeStart', handleStart)
+		router.events.on('routeChangeComplete', handleStop)
+		router.events.on('routeChangeError', handleStop)
+
+		return () => {
+			router.events.off('routeChangeStart', handleStart)
+			router.events.off('routeChangeComplete', handleStop)
+			router.events.off('routeChangeError', handleStop)
+		}
+	}, [router])
+
 	return (
 		<Flex pt={16}>
 			<Sidebar id={genId} />
@@ -82,7 +111,7 @@ const Pokemon = ({
 					justify='center'
 				>
 					<NavSection {...{ id, pokemon }} />
-					<PokemonCard data={data} />
+					{isLoaded ? <PokemonCard data={data} /> : PokemonCardSkeleton}
 					<ActionButtons
 						{...{
 							favoriteClickHandler,
@@ -92,14 +121,20 @@ const Pokemon = ({
 							onOpen
 						}}
 					/>
-
-					{allReviews.length === 0 && <Empty {...{ pokemonName }} />}
-					{allReviews.map(review => (
-						<ReviewBox
-							key={review.id}
-							{...{ user, review, onEdit, onDelete }}
-						/>
-					))}
+					{isLoaded ? (
+						allReviews.length === 0 ? (
+							<Empty {...{ pokemonName }} />
+						) : (
+							allReviews.map(review => (
+								<ReviewBox
+									key={review.id}
+									{...{ user, review, onEdit, onDelete }}
+								/>
+							))
+						)
+					) : (
+						ReviewBoxSkeleton
+					)}
 					<ReviewModal
 						{...{
 							pokemonName,

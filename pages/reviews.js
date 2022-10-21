@@ -1,12 +1,19 @@
 import { Box, Flex, Heading } from '@chakra-ui/react'
-import React from 'react'
 import Layout from '../components/layout'
 import Sidebar from '../components/sidebar/sidebar'
 import ReviewGrid from '../components/review-page/review-grid'
 import { getSession } from 'next-auth/react'
 import { prisma } from '../lib/prisma'
+import React, { useEffect, useState } from 'react'
+import { ReviewGridSkeleton } from '../components/loading/review-box-skeleton'
 
 const MyReviews = ({ reviews = [] }) => {
+	const [isLoaded, setIsLoaded] = useState(false)
+
+	useEffect(() => {
+		setIsLoaded(true)
+	}, [reviews])
+
 	return (
 		<Layout>
 			<Flex pt={16}>
@@ -21,7 +28,7 @@ const MyReviews = ({ reviews = [] }) => {
 						Your Reviews
 					</Heading>
 					{reviews.length === 0 && <Box>You don&apos;t have any reviews</Box>}
-					<ReviewGrid {...{ reviews }} />
+					{isLoaded ? <ReviewGrid {...{ reviews }} /> : ReviewGridSkeleton}
 				</Box>
 			</Flex>
 		</Layout>
