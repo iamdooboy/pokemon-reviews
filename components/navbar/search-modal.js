@@ -9,7 +9,6 @@ const SearchModal = ({ isOpen, onClose }) => {
 		pokemon,
 		filteredList,
 		activeIndex,
-		setActiveIndex,
 		onChangeHandler,
 		onKeyDownHandler,
 		onCloseHandler
@@ -40,13 +39,12 @@ const SearchModal = ({ isOpen, onClose }) => {
 							const gen = getPokemonGeneration(pokemonId)
 							return (
 								<CustomInputResults
-									gen={gen}
-									activeIndex={activeIndex}
-									setActiveIndex={setActiveIndex}
 									key={pkmn}
+									id={pokemonId}
+									gen={gen}
 									pokemon={pkmn}
 									onClose={onCloseHandler}
-									index={index}
+									bgColor={index === activeIndex ? 'blue.600' : 'gray.600'}
 								/>
 							)
 						})}

@@ -44,7 +44,6 @@ const Page = () => {
 		pokemon,
 		filteredList,
 		activeIndex,
-		setActiveIndex,
 		onChangeHandler,
 		onKeyDownHandler,
 		onCloseHandler
@@ -101,13 +100,12 @@ const Page = () => {
 							const gen = getPokemonGeneration(pokemonId)
 							return (
 								<CustomInputResults
-									gen={gen}
-									activeIndex={activeIndex}
-									setActiveIndex={setActiveIndex}
 									key={pkmn}
+									id={pokemonId}
+									gen={gen}
 									pokemon={pkmn}
-									onClose={() => onCloseHandler()}
-									index={index}
+									onClose={onCloseHandler}
+									bgColor={index === activeIndex ? 'blue.600' : 'gray.600'}
 								/>
 							)
 						})}
