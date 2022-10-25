@@ -24,7 +24,7 @@ export const getAllPokemonFromGen = async gen => {
 }
 
 export const getPokemon = async pokemon => {
-	const { data } = await api.get(`/pokemon/${pokemon}`)
+	const { data } = await api.get(`/pokemon/${pokemon}/`)
 
 	const { id, types } = data
 	const typesArr = types.map(el => el.type.name)
