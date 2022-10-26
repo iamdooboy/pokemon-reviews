@@ -7,15 +7,23 @@ import {
 	GridItem,
 	Divider,
 	HStack,
-	Container
+	Container,
+	Button,
+	Image,
+	Heading
 } from '@chakra-ui/react'
 import { useInput } from '../hooks/useInput'
-import { getPokemonGeneration } from '../utils/helpers'
+import {
+	getPokemonGeneration,
+	getRandomPokemonNum,
+	getPokemonImageUrl
+} from '../utils/helpers'
 import Layout from '../components/layout'
 import CustomInputResults from '../components/custom-input-results'
 import CustomInput from '../components/custom-input'
 import { LinkOverlay } from '../components/link-overlay'
 import RandomButton from '../components/random-button'
+import { useState } from 'react'
 
 // const regions = [
 // 	'Gen 1',
@@ -50,9 +58,30 @@ const Page = () => {
 		onCloseHandler
 	} = useInput()
 
+	const up = '/up.png'
+	const down = '/down.png'
+
+	const [image, setImage] = useState(down)
+	const [randomId, setRandomId] = useState('')
+	const [imageUrl, setImageUrl] = useState('')
+
+	const onMouseEnterHandler = () => {
+		setImage(up)
+		const random = getRandomPokemonNum()
+		setRandomId(random)
+		const url = getPokemonImageUrl(random)
+		setImageUrl(url)
+	}
+
+	const onMouseLeaveHandler = () => {
+		setImage(down)
+		setRandomId('')
+		setImageUrl('')
+	}
+
 	return (
 		<Layout>
-			<Container maxW='5xl' pt={40} h='98vh'>
+			<Container maxW='5xl' pt={40} h='100vh'>
 				<Box pt={20} textAlign={{ base: 'left', md: 'center' }}>
 					<Container maxW='xl'>
 						<chakra.span
@@ -92,7 +121,14 @@ const Page = () => {
 								onChange={onChangeHandler}
 								onKeyDown={onKeyDownHandler}
 							/>
-							<RandomButton w='30%' size='lg' pokemon={pokemon}>
+							<RandomButton
+								randomId={randomId}
+								w='30%'
+								size='lg'
+								pokemon={pokemon}
+								onMouseEnter={onMouseEnterHandler}
+								onMouseOut={onMouseLeaveHandler}
+							>
 								Surprise Me
 							</RandomButton>
 						</HStack>
@@ -117,9 +153,9 @@ const Page = () => {
 								{generations.map((gen, index) => (
 									<GridItem key={gen.num}>
 										<LinkOverlay href={`/gen/${index + 1}/`}>
-											<Box rounded='md' px={5} py={2} bg='gray.700'>
+											<Button rounded='md' px={5} py={2} bg='gray.700'>
 												Gen {gen.num}
-											</Box>
+											</Button>
 										</LinkOverlay>
 									</GridItem>
 								))}
@@ -127,6 +163,25 @@ const Page = () => {
 						</Flex>
 					</Container>
 				</Box>
+				<Image
+					pos='absolute'
+					boxSize='65px'
+					display={!imageUrl && 'none'}
+					src={imageUrl}
+					right='119px'
+					bottom='114px'
+					zIndex='1'
+					filter='auto'
+					brightness='0%'
+					blur='.5px'
+				/>
+				<Image
+					pos='absolute'
+					bottom={0}
+					right={0}
+					boxSize='200px'
+					src={image}
+				/>
 			</Container>
 		</Layout>
 	)

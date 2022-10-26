@@ -3,9 +3,14 @@ import { HStack } from '@chakra-ui/react'
 import NavButton from '../nav-button'
 import RandomButton from '../random-button'
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
-import { formatNames, capitalFirstLetter } from '../../utils/helpers'
+import {
+	formatNames,
+	capitalFirstLetter,
+	getRandomPokemonNum
+} from '../../utils/helpers'
 
 const NavSection = ({ id, pokemon }) => {
+	const random = getRandomPokemonNum()
 	return (
 		<HStack
 			align='center'
@@ -25,7 +30,7 @@ const NavSection = ({ id, pokemon }) => {
 					: capitalFirstLetter(formatNames(pokemon[id - 2]))}
 			</NavButton>
 
-			<RandomButton w='full' size='sm' pokemon={pokemon}>
+			<RandomButton w='full' size='sm' pokemon={pokemon} randomId={random}>
 				Surprise me
 			</RandomButton>
 
