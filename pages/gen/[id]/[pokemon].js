@@ -237,7 +237,7 @@ export const getServerSideProps = async context => {
 
 	return {
 		props: {
-			user: user,
+			user: JSON.parse(JSON.stringify(user)),
 			data: pokemonData,
 			pokemonName: pokemon,
 			reviews: JSON.parse(JSON.stringify(reviews)),

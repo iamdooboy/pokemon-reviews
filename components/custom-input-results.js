@@ -1,39 +1,39 @@
-import NextLink from 'next/link'
-import { Box, Icon, Flex, Spacer, Stack, Link } from '@chakra-ui/react'
+import { Box, Icon, Flex, Spacer, Stack, Text } from '@chakra-ui/react'
 import { BsArrowReturnLeft } from 'react-icons/bs'
-import { CgPokemon } from 'react-icons/cg'
+import { formatNames, capitalFirstLetter } from '../utils/helpers'
+import { LinkOverlay } from '../components/link-overlay'
 
-const CustomInputResults = ({ pokemon, onClose, index, activeIndex, gen }) => {
-	const bgColor = index === activeIndex ? 'blue.600' : 'gray.600'
+const CustomInputResults = ({ id, gen, pokemon, onClose, bgColor }) => {
+	let formattedName = formatNames(pokemon)
+	formattedName = capitalFirstLetter(formattedName)
 
+	let paddedId = id?.toString().padStart(3, '0')
 	return (
-		<NextLink href={`/gen/${gen}/${pokemon}`} passHref>
-			<Link>
-				<Flex
-					my={2}
-					px={4}
-					py={3}
-					rounded='lg'
-					cursor='pointer'
-					transition='all 0.3s ease-in-out'
-					onClick={onClose}
-					bg={bgColor}
-					gap={5}
-					_hover={{
-						bg: 'blue.600'
-					}}
-				>
-					<Icon as={CgPokemon} boxSize={5} my='auto' />
-					<Stack dir='row' spacing={0}>
-						<Box fontWeight='bold' textTransform='capitalize'>
-							{pokemon}
-						</Box>
-					</Stack>
-					<Spacer />
-					<Icon my='auto' boxSize={5} as={BsArrowReturnLeft} />
-				</Flex>
-			</Link>
-		</NextLink>
+		<LinkOverlay href={`/gen/${gen}/${pokemon}`}>
+			<Flex
+				my={2}
+				px={4}
+				py={3}
+				rounded='lg'
+				cursor='pointer'
+				transition='all 0.3s ease-in-out'
+				onClick={onClose}
+				bg={bgColor}
+				gap={5}
+				_hover={{
+					bg: 'blue.600'
+				}}
+			>
+				<Text color='gray.400' my='auto'>
+					{paddedId}
+				</Text>
+				<Stack dir='row' spacing={0}>
+					<Box fontWeight='bold'>{formattedName}</Box>
+				</Stack>
+				<Spacer />
+				<Icon my='auto' boxSize={5} as={BsArrowReturnLeft} />
+			</Flex>
+		</LinkOverlay>
 	)
 }
 
