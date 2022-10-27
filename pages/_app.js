@@ -3,7 +3,11 @@ import { SessionProvider } from 'next-auth/react'
 import theme from '../lib/theme'
 import NextNProgress from 'nextjs-progressbar'
 
-const Website = ({ session, Component, pageProps, router }) => {
+const Website = ({
+	Component,
+	pageProps: { session, ...pageProps },
+	router
+}) => {
 	const getLayout = Component.getLayout || (page => page)
 	return (
 		<SessionProvider session={session}>

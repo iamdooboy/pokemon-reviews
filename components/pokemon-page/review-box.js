@@ -39,7 +39,7 @@ const ReviewBox = ({ user, review, onEdit, onDelete }) => {
 					<Flex mt={-2}>
 						<Text color='gray.500'>{author?.name}</Text>
 						<Spacer />
-						{user.id === author.id && (
+						{user.id === author?.id && (
 							<Popover isLazy>
 								<PopoverTrigger>
 									<button>

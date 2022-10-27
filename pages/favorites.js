@@ -18,7 +18,7 @@ const Favorites = ({ data }) => {
 					overflow='auto'
 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
 				>
-					<Heading as='h1' size='xl' align='center' py={4}>
+					<Heading as='h1' size='lg' align='left' py={8}>
 						Your Favorite Pokemon
 					</Heading>
 					<FavoritesGrid data={data} />

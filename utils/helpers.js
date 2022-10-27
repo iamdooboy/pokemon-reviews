@@ -150,3 +150,8 @@ export const getRandomPokemonNum = () => {
 
 	return random
 }
+
+export const splitEmail = email => {
+	const arr = email.split('@')
+	return arr[0]
+}

@@ -16,6 +16,7 @@ import {
 
 const LoginModal = ({ isOpen, onClose, finalRef, signIn }) => {
 	const [login, setLogin] = useState(false)
+	const [input, setInput] = useState('')
 	return (
 		<>
 			<Modal
@@ -53,11 +54,29 @@ const LoginModal = ({ isOpen, onClose, finalRef, signIn }) => {
 								</Text>
 							</Button>
 							<FormControl id='email' h='46px'>
-								<Input type='email' placeholder='ashketchum@pokemon.com' />
+								<Input
+									onChange={e => setInput(e.target.value)}
+									type='email'
+									placeholder='ashketchum@pokemon.com'
+								/>
 							</FormControl>
 
 							<Stack pt={1}>
-								<Button colorScheme='blue'>Sign in</Button>
+								<Button
+									onClick={async () => {
+										const { error } = await signIn('email', {
+											email: input
+										})
+										console.log(error)
+										// Something went wrong
+										if (error) {
+											throw new Error(error)
+										}
+									}}
+									colorScheme='blue'
+								>
+									Sign in
+								</Button>
 							</Stack>
 							<Stack>
 								<Text align={'center'}>

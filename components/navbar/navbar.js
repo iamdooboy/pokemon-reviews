@@ -37,6 +37,7 @@ import SearchModal from './search-modal'
 import { FallBackImage } from '../../utils/fallback-image'
 import { SidebarContent } from '../sidebar/sidebar-content'
 import { LinkOverlay } from '../link-overlay'
+import { splitEmail } from '../../utils/helpers'
 
 const LoadingButton = (
 	<Button isLoading colorScheme='gray' variant='solid'>
@@ -60,56 +61,6 @@ const Navbar = () => {
 	const signOutHandler = () => {
 		signOut({ redirect: false })
 	}
-
-	const CustomMenu = (
-		<Menu isLazy>
-			<MenuButton>
-				<Flex align='center' pos='relative'>
-					<FallBackImage
-						borderRadius={9999}
-						width={36}
-						height={36}
-						name={user?.name}
-						src={user?.image}
-						alt={user?.name}
-						fallback='/bug.svg'
-						layout='fixed'
-					/>
-
-					<Icon as={ChevronDownIcon} w={6} h={6} mr={-1} />
-				</Flex>
-			</MenuButton>
-			<MenuList>
-				<MenuItem>
-					<VStack justify='start' alignItems='left'>
-						<Text fontWeight='500'>{user?.name}</Text>
-						<Text size='sm' color='gray.500' mt='0 !important'>
-							{user?.email}
-						</Text>
-					</VStack>
-				</MenuItem>
-				<MenuDivider />
-				<LinkOverlay href='/reviews'>
-					<MenuItem icon={<MdOutlineRateReview fontSize={21} />}>
-						<Text fontWeight='500'>My Reviews</Text>
-					</MenuItem>
-				</LinkOverlay>
-				<LinkOverlay href='/favorites'>
-					<MenuItem icon={<MdFavoriteBorder fontSize={21} />}>
-						<Text fontWeight='500'>Favorites</Text>
-					</MenuItem>
-				</LinkOverlay>
-				<MenuItem icon={<MdOutlineSettings fontSize={21} />}>
-					<Text fontWeight='500'>Settings</Text>
-				</MenuItem>
-				<MenuDivider />
-				<MenuItem onClick={signOutHandler} icon={<MdLogout fontSize={21} />}>
-					<Text fontWeight='500'>Log out</Text>
-				</MenuItem>
-			</MenuList>
-		</Menu>
-	)
-
 	return (
 		<Box
 			as='nav'
@@ -179,7 +130,59 @@ const Navbar = () => {
 				{isLoadingUser ? (
 					LoadingButton
 				) : user ? (
-					CustomMenu
+					<Menu isLazy>
+						<MenuButton>
+							<Flex align='center' pos='relative'>
+								<FallBackImage
+									borderRadius={9999}
+									width={36}
+									height={36}
+									name={user.name}
+									src={user.image}
+									alt={user.name}
+									fallback='/bug.svg'
+									layout='fixed'
+								/>
+
+								<Icon as={ChevronDownIcon} w={6} h={6} mr={-1} />
+							</Flex>
+						</MenuButton>
+						<MenuList>
+							<MenuItem>
+								<VStack justify='start' alignItems='left'>
+									<Text fontWeight='500'>
+										{user.name ? user.name : splitEmail(user.email)}
+									</Text>
+									<Text size='sm' color='gray.500' mt='0 !important'>
+										{user.email}
+									</Text>
+								</VStack>
+							</MenuItem>
+							<MenuDivider />
+							<LinkOverlay href='/reviews'>
+								<MenuItem icon={<MdOutlineRateReview fontSize={21} />}>
+									<Text fontWeight='500'>My Reviews</Text>
+								</MenuItem>
+							</LinkOverlay>
+							<LinkOverlay href='/favorites'>
+								<MenuItem icon={<MdFavoriteBorder fontSize={21} />}>
+									<Text fontWeight='500'>Favorites</Text>
+								</MenuItem>
+							</LinkOverlay>
+							<LinkOverlay href='/settings'>
+								<MenuItem icon={<MdOutlineSettings fontSize={21} />}>
+									<Text fontWeight='500'>Settings</Text>
+								</MenuItem>
+							</LinkOverlay>
+							<MenuDivider />
+							<MenuItem
+								onClick={signOutHandler}
+								icon={<MdLogout fontSize={21} />}
+							>
+								<Text fontWeight='500'>Log out</Text>
+							</MenuItem>
+						</MenuList>
+					</Menu>
 				) : (
 					<Button colorScheme='blue' onClick={onOpen}>
 						Log in
