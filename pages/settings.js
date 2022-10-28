@@ -58,9 +58,9 @@ const Settings = ({ user }) => {
 		if (res) {
 			setIsLoading(false)
 			toast({
-				title: 'User updated.',
+				title: 'Profile updated.',
 				position: 'bottom-right',
-				status: 'error',
+				status: 'success',
 				duration: 1500,
 				isClosable: true
 			})
@@ -144,8 +144,6 @@ export const getServerSideProps = async context => {
 	}
 
 	const { user } = session || {}
-
-	console.log(user)
 
 	return {
 		props: {

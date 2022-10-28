@@ -149,27 +149,29 @@ const Page = () => {
 						</Flex>
 					</Container>
 				</Box>
-				<Image
-					pos='absolute'
-					boxSize='65px'
-					display={!imageUrl && 'none'}
-					src={imageUrl}
-					right='119px'
-					bottom='114px'
-					zIndex='1'
-					filter='auto'
-					brightness='0%'
-					blur='.5px'
-					alt=''
-				/>
-				<Image
-					pos='absolute'
-					bottom={0}
-					right={0}
-					boxSize='200px'
-					src={image}
-					alt=''
-				/>
+				<chakra.div display={{ base: 'none', md: 'inline', lg: 'inline' }}>
+					<Image
+						pos='absolute'
+						boxSize='65px'
+						display={!imageUrl && 'none'}
+						src={imageUrl}
+						right='119px'
+						bottom='114px'
+						zIndex='1'
+						filter='auto'
+						brightness='0%'
+						blur='.5px'
+						alt=''
+					/>
+					<Image
+						pos='absolute'
+						bottom={0}
+						right={0}
+						boxSize='200px'
+						src={image}
+						alt=''
+					/>
+				</chakra.div>
 			</Container>
 		</Layout>
 	)

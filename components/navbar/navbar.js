@@ -38,6 +38,7 @@ import { FallBackImage } from '../../utils/fallback-image'
 import { SidebarContent } from '../sidebar/sidebar-content'
 import { LinkOverlay } from '../link-overlay'
 import { splitEmail } from '../../utils/helpers'
+import { useRouter } from 'next/router'
 
 const LoadingButton = (
 	<Button isLoading colorScheme='gray' variant='solid'>
@@ -47,6 +48,7 @@ const LoadingButton = (
 
 const Navbar = () => {
 	const { data: session, status } = useSession()
+	const router = useRouter()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const {
 		isOpen: isOpenSearch,
@@ -59,8 +61,17 @@ const Navbar = () => {
 	const finalRef = useRef(null)
 	const ref = useRef(null)
 	const signOutHandler = () => {
-		signOut({ redirect: false })
+		if (
+			router.asPath === '/setting' ||
+			router.asPath === '/favorites' ||
+			router.asPath === '/reviews'
+		) {
+			signOut({ callbackUrl: '/' })
+		} else {
+			signOut({ redirect: false })
+		}
 	}
+
 	return (
 		<Box
 			as='nav'

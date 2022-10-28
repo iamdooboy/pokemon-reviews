@@ -1,11 +1,14 @@
 import React from 'react'
 import { Button } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { getPokemonGeneration } from '../utils/helpers'
+import { getPokemonGeneration, getRandomPokemonNum } from '../utils/helpers'
 
 const RandomButton = ({ randomId, pokemon, children, ...props }) => {
 	const router = useRouter()
 	const onClickHandler = () => {
+		if (!randomId) {
+			randomId = getRandomPokemonNum()
+		}
 		const gen = getPokemonGeneration(randomId)
 		const name = pokemon[randomId - 1]
 

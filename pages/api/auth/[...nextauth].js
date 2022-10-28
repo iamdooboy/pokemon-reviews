@@ -28,7 +28,7 @@ export const authOptions = {
 		signOut: '/',
 		error: '/',
 		verifyRequest: '/',
-		newUser: '/welcome'
+		newUser: '/hello'
 	},
 	secret: process.env.NEXTAUTH_SECRET
 }

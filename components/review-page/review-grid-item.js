@@ -83,6 +83,11 @@ const ReviewGridItem = ({
 	let formattedName = formatNames(pokemon)
 	formattedName = capitalFirstLetter(formattedName)
 
+	const onClickHandler = () => {
+		setPokemonName(formattedName)
+		onEdit({ id, description, rating })
+	}
+
 	return (
 		<GridItem>
 			<Box
@@ -135,7 +140,7 @@ const ReviewGridItem = ({
 									leftIcon={<EditIcon />}
 									colorScheme='gray'
 									variant='solid'
-									onClick={() => onEdit({ id, description, rating })}
+									onClick={onClickHandler}
 								>
 									Edit
 								</Button>

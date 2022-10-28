@@ -41,7 +41,7 @@ const avatars = [
 	{ type: 'water', src: '/avatar/water.svg' }
 ]
 
-const Welcome = () => {
+const Hello = () => {
 	const { data: session } = useSession()
 
 	const toast = useToast()
@@ -54,7 +54,9 @@ const Welcome = () => {
 
 	const username = splitEmail(session.user.email)
 
-	const [avatar, setAvatar] = useState(avatars[0])
+	const [avatar, setAvatar] = useState(
+		avatars[Math.floor(Math.random() * 18) + 1]
+	)
 	const [name, setName] = useState(username)
 
 	const onSubmitHandler = async e => {
@@ -64,9 +66,9 @@ const Welcome = () => {
 		if (res) {
 			setIsLoading(false)
 			toast({
-				title: 'User updated.',
+				title: 'Profile created.',
 				position: 'bottom-right',
-				status: 'error',
+				status: 'success',
 				duration: 1500,
 				isClosable: true
 			})
@@ -132,7 +134,7 @@ const Welcome = () => {
 	)
 }
 
-export default Welcome
+export default Hello
 
 export const getServerSideProps = async context => {
 	const session = await unstable_getServerSession(
@@ -149,9 +151,12 @@ export const getServerSideProps = async context => {
 
 	const { user } = session || {}
 
-	if (user?.name) {
+	if (user.name) {
 		return {
-			notFound: true
+			redirect: {
+				destination: '/',
+				permanent: false
+			}
 		}
 	}
 

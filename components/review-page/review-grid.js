@@ -24,8 +24,7 @@ const ReviewGrid = ({ reviews }) => {
 				<ReviewGridItem
 					key={review.id}
 					{...review}
-					{...{ onEdit, onDelete }}
-					setPokemonName={setPokemonName}
+					{...{ onEdit, onDelete, setPokemonName }}
 				/>
 			))}
 			<ReviewModal
