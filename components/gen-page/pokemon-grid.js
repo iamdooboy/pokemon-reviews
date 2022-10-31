@@ -5,7 +5,7 @@ import { LinkOverlay } from '../../components/link-overlay'
 
 const PokemonGrid = ({ data }) => {
 	return (
-		<SimpleGrid columns={[2, 3, 6]} spacing={6} py={4}>
+		<SimpleGrid columns={[2, 3, 3, 6]} spacing={6} py={4}>
 			{data.map((pokemon, index) => (
 				<LinkOverlay href={`/gen/${pokemon.gen}/${pokemon.name}`} key={index}>
 					<PokemonGridItem {...pokemon} />

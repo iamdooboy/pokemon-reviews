@@ -21,7 +21,7 @@ import { useInput } from '../../hooks/useInput'
 import { getPokemonImageUrl } from '../../utils/helpers'
 import ReadMore from '../read-more'
 import { AiOutlineEllipsis } from 'react-icons/ai'
-import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
+import { FaThumbsUp, FaRegThumbsUp } from 'react-icons/fa'
 import { useFavorite } from '../../hooks/useFavorite'
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import { LinkOverlay } from '../link-overlay'
@@ -73,9 +73,9 @@ const ReviewGridItem = ({
 	} = useFavorite('review', id, favorite, favoritedByCurrentUser)
 
 	const favoriteIcon = didUserFavorite ? (
-		<MdFavorite color='#E53E3E' />
+		<FaThumbsUp color='#38B2AC' />
 	) : (
-		<MdFavoriteBorder />
+		<FaRegThumbsUp />
 	)
 
 	const src = getPokemonImageUrl(allPokemon.indexOf(pokemon) + 1)

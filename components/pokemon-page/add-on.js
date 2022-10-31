@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, Text } from '@chakra-ui/react'
-import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
+import { FaThumbsUp, FaRegThumbsUp } from 'react-icons/fa'
 import { StarIcon } from '@chakra-ui/icons'
 import { useFavorite } from '../../hooks/useFavorite'
 
@@ -13,9 +13,9 @@ const AddOn = ({ id, favorite: numOfFav, rating, didUserFavoriteReview }) => {
 	)
 
 	const favoriteIcon = favorite ? (
-		<MdFavorite color='#E53E3E' />
+		<FaThumbsUp color='#38B2AC' />
 	) : (
-		<MdFavoriteBorder />
+		<FaRegThumbsUp />
 	)
 
 	return (

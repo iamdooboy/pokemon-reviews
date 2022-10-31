@@ -74,12 +74,14 @@ const Pokemon = ({
 
 	useEffect(() => {
 		const handleStart = url => {
-			console.log(url)
+			if (url === '/reviews' || url === '/favorites' || url === '/settings') {
+				setIsLoaded(true)
+				return
+			}
 			setIsLoaded(false)
 		}
 
-		const handleStop = url => {
-			console.log(url)
+		const handleStop = () => {
 			setIsLoaded(true)
 		}
 

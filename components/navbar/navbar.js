@@ -134,7 +134,7 @@ const Navbar = () => {
 				>
 					<SearchIcon color='white' />
 					<Text px={{ base: 2, sm: 4 }} textAlign='left' flex='1' noOfLines={1}>
-						Aceus, 493
+						Arceus, 493
 					</Text>
 				</chakra.button>
 
