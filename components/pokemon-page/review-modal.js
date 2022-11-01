@@ -19,6 +19,7 @@ import {
 import { StarIcon } from '@chakra-ui/icons'
 import ResizeTextarea from 'react-textarea-autosize'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
+import { CustomRating } from '../rating'
 
 const AutoResizeTextarea = React.forwardRef((props, ref) => {
 	return (
@@ -110,21 +111,12 @@ const ReviewModal = ({
 						</ModalBody>
 
 						<ModalFooter justifyContent='left'>
-							<Flex>
-								{Array.from(Array(5).keys()).map((id, index) => {
-									index += 1
-									return (
-										<StarIcon
-											boxSize={5}
-											key={id}
-											mr={2}
-											color={index <= (hover || rating) ? 'gold' : 'gray'}
-											onClick={() => setRating(index)}
-											onMouseEnter={() => setHover(index)}
-											onMouseLeave={() => setHover(rating)}
-										/>
-									)
-								})}
+							<Flex maxW={150}>
+								<CustomRating
+									value={rating}
+									onChange={setRating}
+									spaceBetween='small'
+								/>
 							</Flex>
 							<Spacer />
 							<Button

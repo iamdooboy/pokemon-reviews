@@ -155,3 +155,26 @@ export const splitEmail = email => {
 	const arr = email.split('@')
 	return arr[0]
 }
+
+export const getLimitAndOffset = gen => {
+	switch (gen) {
+		case '1':
+			return { limit: 151, offset: 0, gen: 1 }
+		case '2':
+			return { limit: 100, offset: 151, gen: 2 }
+		case '3':
+			return { limit: 135, offset: 251, gen: 3 }
+		case '4':
+			return { limit: 107, offset: 386, gen: 4 }
+		case '5':
+			return { limit: 156, offset: 493, gen: 5 }
+		case '6':
+			return { limit: 72, offset: 649, gen: 6 }
+		case '7':
+			return { limit: 88, offset: 721, gen: 7 }
+		case '8':
+			return { limit: 96, offset: 809, gen: 8 }
+		default:
+			return { limit: 151, offset: 0, gen: 1 }
+	}
+}

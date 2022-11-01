@@ -2,6 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { SessionProvider } from 'next-auth/react'
 import theme from '../lib/theme'
 import NextNProgress from 'nextjs-progressbar'
+import '@smastrom/react-rating/style.css'
 
 const Website = ({
 	Component,

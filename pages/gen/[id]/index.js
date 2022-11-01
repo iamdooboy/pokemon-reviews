@@ -4,25 +4,11 @@ import { getPokemonGenPage } from '../../../utils/axios'
 import { Heading, Flex, Box } from '@chakra-ui/react'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
+import { isNumber, getLimitAndOffset } from '../../../utils/helpers'
+import { api } from '../../../utils/axios'
+import { prisma } from '../../../lib/prisma'
 
-const GenerationPage = ({ id }) => {
-	const [data, setData] = useState([])
-	const log = useRef(true)
-
-	useEffect(() => {
-		const getData = async () => {
-			const response = await getPokemonGenPage(id)
-			setData(response)
-		}
-		if (log.current) {
-			getData()
-		}
-
-		return () => {
-			log.current = false
-		}
-	}, [id])
-
+const GenerationPage = ({ data = [] }) => {
 	return (
 		<Layout>
 			<Flex pt={16}>
@@ -48,14 +34,6 @@ const GenerationPage = ({ id }) => {
 }
 
 export const getServerSideProps = async context => {
-	const isNumber = input => {
-		if (input === '') {
-			return false
-		}
-		let regex = new RegExp(/[^0-9]/, 'g')
-		return input.match(regex) === null
-	}
-
 	if (!isNumber(context.query.id)) {
 		return {
 			notFound: true
@@ -63,15 +41,55 @@ export const getServerSideProps = async context => {
 	}
 
 	const id = parseInt(context.query.id)
+
 	if (id <= 0 || id >= 9) {
 		return {
 			notFound: true
 		}
 	}
 
+	const options = getLimitAndOffset(id)
+
+	const response = await api.get(
+		`/pokemon?limit=${options.limit}&offset=${options.offset}`
+	)
+
+	const data = await Promise.all(
+		response.data.results.map(async ({ name }) => {
+			const { data } = await api.get(`/pokemon/${name}`)
+			const test = await prisma.review.findMany({
+				where: {
+					pokemon: name
+				}
+			})
+
+			const totalRating = test
+				? test.reduce((sum, obj) => sum + obj.rating, 0)
+				: 0
+			let averageRating = totalRating ? totalRating / test.length : 0
+
+			averageRating = Math.round(averageRating * 10) / 10
+
+			const reviews = {
+				reviewCount: test.length,
+				rating: averageRating
+			}
+
+			const { id, types } = data
+
+			let paddedId = id.toString().padStart(3, '0')
+
+			const imageData = {
+				imageUrl: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${paddedId}.png`,
+				imageAlt: name
+			}
+			return { name, id, types, gen: options.gen, ...imageData, ...reviews }
+		})
+	)
+
 	return {
 		props: {
-			id: context.query.id
+			data: data
 		}
 	}
 }

@@ -1,9 +1,10 @@
 import React from 'react'
-import { Box, GridItem, Text } from '@chakra-ui/react'
+import { chakra, Box, GridItem, Text } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { FallBackImage } from '../../utils/fallback-image'
 import { formatNames, capitalFirstLetter } from '../../utils/helpers'
 import { motion } from 'framer-motion'
+import { CustomRating } from '../rating'
 
 const PokemonGridItem = ({
 	id,
@@ -50,16 +51,13 @@ const PokemonGridItem = ({
 					>
 						{capitalFirstLetter(formatNames(name))}
 					</Text>
-
-					<Box display='flex' my={1} justifyContent='center'>
-						{Array(5)
-							.fill('')
-							.map((_, i) => (
-								<StarIcon key={i} color={i < rating ? '#FBBC05' : 'gray.300'} />
-							))}
-					</Box>
-					<Box color='gray.600' fontSize='sm' align='center'>
-						{reviewCount} ratings
+					<Box justifyContent='center' align='center'>
+						<chakra.div my={1} maxW={100}>
+							<CustomRating value={rating} readOnly />
+						</chakra.div>
+						<Box color='gray.600' fontSize='sm' align='center' mb={2}>
+							{reviewCount} ratings
+						</Box>
 					</Box>
 				</Box>
 			</Box>

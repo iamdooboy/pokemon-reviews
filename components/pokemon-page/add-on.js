@@ -28,7 +28,7 @@ const AddOn = ({ id, favorite: numOfFav, rating, didUserFavoriteReview }) => {
 							boxSize={3}
 							key={id}
 							mr={2}
-							color={index <= rating ? 'gold' : 'gray'}
+							color={index <= rating ? '#f59e0b' : 'gray'}
 						/>
 					)
 				})}
