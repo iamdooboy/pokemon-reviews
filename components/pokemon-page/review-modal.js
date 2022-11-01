@@ -16,7 +16,6 @@ import {
 	Heading,
 	Text
 } from '@chakra-ui/react'
-import { StarIcon } from '@chakra-ui/icons'
 import ResizeTextarea from 'react-textarea-autosize'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 import { CustomRating } from '../rating'
@@ -47,7 +46,6 @@ const ReviewModal = ({
 	onSubmit
 }) => {
 	const [rating, setRating] = useState(0)
-	const [hover, setHover] = useState(0)
 	const [description, setDescription] = useState('')
 
 	const onSubmitHandler = e => {
@@ -57,7 +55,6 @@ const ReviewModal = ({
 
 	const onCloseHandler = () => {
 		setRating(0)
-		setHover(0)
 		setDescription('')
 		onClose()
 	}

@@ -1,6 +1,5 @@
 import React from 'react'
 import { chakra, Box, GridItem, Text } from '@chakra-ui/react'
-import { StarIcon } from '@chakra-ui/icons'
 import { FallBackImage } from '../../utils/fallback-image'
 import { formatNames, capitalFirstLetter } from '../../utils/helpers'
 import { motion } from 'framer-motion'
