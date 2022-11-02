@@ -43,16 +43,6 @@ const NavItem = props => {
 			fontSize={12}
 			{...rest}
 		>
-			{icon && (
-				<Icon
-					mr='2'
-					boxSize='4'
-					_groupHover={{
-						color: 'gray.300'
-					}}
-					as={icon}
-				/>
-			)}
 			{children}
 		</Flex>
 	)

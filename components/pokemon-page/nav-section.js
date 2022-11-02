@@ -10,7 +10,13 @@ import {
 } from '../../utils/helpers'
 
 const NavSection = ({ id, pokemon }) => {
-	const random = getRandomPokemonNum()
+	const onClickHandler = () => {
+		const random = getRandomPokemonNum()
+		const gen = getPokemonGeneration(random)
+		const name = pokemon[random - 1]
+		router.push(`/gen/${gen}/${name}`)
+	}
+
 	return (
 		<HStack
 			align='center'
@@ -30,7 +36,7 @@ const NavSection = ({ id, pokemon }) => {
 					: capitalFirstLetter(formatNames(pokemon[id - 2]))}
 			</NavButton>
 
-			<RandomButton w='full' size='sm' pokemon={pokemon} randomId={random}>
+			<RandomButton w='full' size='sm' onClick={onClickHandler}>
 				Surprise me
 			</RandomButton>
 

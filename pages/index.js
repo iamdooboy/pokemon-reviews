@@ -9,7 +9,8 @@ import {
 	HStack,
 	Container,
 	Button,
-	Image
+	Image,
+	Spinner
 } from '@chakra-ui/react'
 import { useInput } from '../hooks/useInput'
 import {
@@ -23,6 +24,12 @@ import CustomInput from '../components/custom-input'
 import { LinkOverlay } from '../components/link-overlay'
 import RandomButton from '../components/random-button'
 import { useState } from 'react'
+import { GenPageSkeleton } from '../components/loading/gen-page-skeleton'
+import { ReviewBoxSkeleton } from '../components/loading/review-box-skeleton'
+import { PokemonCardSkeleton } from '../components/loading/pokemon-card-skeleton'
+import { useRouter } from 'next/router'
+import { MdOutlineEdit } from 'react-icons/md'
+import NavSection from '../components/pokemon-page/nav-section'
 
 const generations = [
 	{ num: 1, color1: '#F2844B', color2: '#61CCEF' },
@@ -48,9 +55,12 @@ const Page = () => {
 	const up = '/up.png'
 	const down = '/down.png'
 
+	const router = useRouter()
 	const [image, setImage] = useState(down)
 	const [randomId, setRandomId] = useState('')
 	const [imageUrl, setImageUrl] = useState('')
+	const [genPageLoading, setGenPageLoading] = useState(false)
+	const [pokemonPageLoading, setPokemonPageLoading] = useState(false)
 
 	const onMouseEnterHandler = () => {
 		setImage(up)
@@ -64,6 +74,74 @@ const Page = () => {
 		setImage(down)
 		setRandomId('')
 		setImageUrl('')
+	}
+
+	const onClickHandler = () => {
+		setPokemonPageLoading(true)
+		if (!randomId) {
+			randomId = getRandomPokemonNum()
+		}
+		const gen = getPokemonGeneration(randomId)
+		const name = pokemon[randomId - 1]
+
+		router.push(`/gen/${gen}/${name}`)
+	}
+
+	if (genPageLoading) {
+		return (
+			<Layout>
+				<Flex pt={16}>
+					<Box
+						flex={1}
+						px='5'
+						overflow='auto'
+						maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
+					>
+						<GenPageSkeleton />
+					</Box>
+				</Flex>
+			</Layout>
+		)
+	}
+
+	if (pokemonPageLoading) {
+		return (
+			<Layout>
+				<Flex pt={16}>
+					<chakra.div
+						flex={1}
+						px='5'
+						overflow='auto'
+						maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
+					>
+						<Container
+							maxW='container.xl'
+							px={{ base: 5, md: 12 }}
+							margin='0 auto'
+							align='center'
+							justify='center'
+						>
+							<NavSection id={randomId} pokemon={pokemon} />
+							<PokemonCardSkeleton />
+							<HStack align='center' justify='center' mt={3} maxW='xs'>
+								<Button
+									isLoading
+									variant='outline'
+									w='20%'
+									colorScheme='blue'
+									spinner={<Spinner size='xs' />}
+								/>
+
+								<Button leftIcon={<MdOutlineEdit />} colorScheme='blue' w='80%'>
+									Leave a review
+								</Button>
+							</HStack>
+							<ReviewBoxSkeleton />
+						</Container>
+					</chakra.div>
+				</Flex>
+			</Layout>
+		)
 	}
 
 	return (
@@ -109,12 +187,11 @@ const Page = () => {
 								onKeyDown={onKeyDownHandler}
 							/>
 							<RandomButton
-								randomId={randomId}
 								w='30%'
 								size='lg'
-								pokemon={pokemon}
 								onMouseEnter={onMouseEnterHandler}
 								onMouseOut={onMouseLeaveHandler}
+								onClick={onClickHandler}
 							>
 								Surprise Me
 							</RandomButton>
@@ -139,7 +216,13 @@ const Page = () => {
 								{generations.map((gen, index) => (
 									<GridItem key={gen.num}>
 										<LinkOverlay href={`/gen/${index + 1}/`}>
-											<Button rounded='md' px={5} py={2} bg='gray.700'>
+											<Button
+												rounded='md'
+												px={5}
+												py={2}
+												bg='gray.700'
+												onClick={() => setGenPageLoading(true)}
+											>
 												Gen {gen.num}
 											</Button>
 										</LinkOverlay>

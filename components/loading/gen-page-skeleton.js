@@ -15,7 +15,7 @@ export const GenPageSkeleton = () => {
 						zIndex={-1}
 					>
 						<Stack maxW='xs' p={5} rounded={8} mx='auto'>
-							<Skeleton h='100px' w='100%' />
+							<Skeleton h='110px' w='100%' />
 							<Stack align='center'>
 								<Box align='center' w='100%'>
 									<Skeleton my={1} h='20px' w='100%' />
