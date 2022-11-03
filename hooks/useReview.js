@@ -2,13 +2,16 @@ import axios from 'axios'
 import { useState, useRef } from 'react'
 import { useDisclosure, useToast } from '@chakra-ui/react'
 import { useAsyncToast } from './useAsyncToast'
+import { getPokemonGenPage } from '../utils/axios'
+import useSWR, { useSWRConfig } from 'swr'
 
-export const useReview = (reviews, pokemonName) => {
+export const useReview = (reviews, pokemonName, genId) => {
 	const initialRef = useRef()
 	const toast = useToast()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [allReviews, setAllReviews] = useState(reviews)
 	const [editReview, setEditReview] = useState(null)
+	const { mutate } = useSWRConfig()
 	const [_, setIsLoading] = useAsyncToast(false, {
 		title: 'Loading...',
 		position: 'bottom-right'
@@ -111,6 +114,8 @@ export const useReview = (reviews, pokemonName) => {
 		} else {
 			onSave({ description, rating, pokemon: pokemonName })
 		}
+
+		mutate(`/gen/${genId}`, getPokemonGenPage(genId))
 	}
 
 	return {

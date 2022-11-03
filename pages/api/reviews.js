@@ -83,4 +83,18 @@ export default async function handler(req, res) {
 			res.status(500).json({ message: 'Something went wrong' })
 		}
 	}
+
+	if (req.method === 'GET') {
+		try {
+			const reviews = await prisma.review.findMany({
+				where: {
+					pokemon: req.query.pokemon
+				}
+			})
+
+			res.status(200).json(reviews)
+		} catch (e) {
+			res.status(500).json({ message: 'Something went wrong' })
+		}
+	}
 }

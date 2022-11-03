@@ -1,44 +1,19 @@
-import { useEffect, useState } from 'react'
+import useSWR from 'swr'
+import { Flex, Box } from '@chakra-ui/react'
 import PokemonGrid from '../../../components/gen-page/pokemon-grid'
-import { Heading, Flex, Box } from '@chakra-ui/react'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
 import { isNumber, getLimitAndOffset } from '../../../utils/helpers'
-import { api } from '../../../utils/axios'
-import { prisma } from '../../../lib/prisma'
 import { GenPageSkeleton } from '../../../components/loading/gen-page-skeleton'
-import { useRouter } from 'next/router'
+import { api } from '../../../utils/axios'
 
-const GenerationPage = ({ data = [] }) => {
-	const router = useRouter()
-	const [isLoaded, setIsLoaded] = useState(false)
-
-	useEffect(() => {
-		if (data) {
-			setIsLoaded(true)
-		}
-		const handleStart = url => {
-			if (url === '/reviews' || url === '/favorites' || url === '/settings') {
-				setIsLoaded(true)
-				return
-			}
-			setIsLoaded(false)
-		}
-
-		const handleStop = () => {
-			setIsLoaded(true)
-		}
-
-		router.events.on('routeChangeStart', handleStart)
-		router.events.on('routeChangeComplete', handleStop)
-		router.events.on('routeChangeError', handleStop)
-
-		return () => {
-			router.events.off('routeChangeStart', handleStart)
-			router.events.off('routeChangeComplete', handleStop)
-			router.events.off('routeChangeError', handleStop)
-		}
-	}, [router, data])
+const GenerationPage = ({ gen }) => {
+	const options = getLimitAndOffset(gen)
+	const { data } = useSWR(`/gen/${gen}`, () =>
+		api
+			.get(`/pokemon?limit=${options.limit}&offset=${options.offset}`)
+			.then(res => res.data.results)
+	)
 
 	return (
 		<Layout>
@@ -50,14 +25,18 @@ const GenerationPage = ({ data = [] }) => {
 					overflow='auto'
 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
 				>
-					<Heading as='h1' size='xl' align='center' py={4}>
+					{/* <Heading as='h1' size='xl' align='center' py={4}>
 						Pokemon Reviews
 					</Heading>
 					<Heading as='h1' size='md' align='center' py={4}>
 						Nintendo has been creating a lot of questionable Pokemon. Luckily
 						they are looking for your feedback.
-					</Heading>
-					{!isLoaded ? <GenPageSkeleton /> : <PokemonGrid data={data} />}
+					</Heading> */}
+					{!data ? (
+						<GenPageSkeleton />
+					) : (
+						<PokemonGrid {...{ gen, data, api }} />
+					)}
 				</Box>
 			</Flex>
 		</Layout>
@@ -79,48 +58,9 @@ export const getServerSideProps = async context => {
 		}
 	}
 
-	const options = getLimitAndOffset(id)
-
-	const response = await api.get(
-		`/pokemon?limit=${options.limit}&offset=${options.offset}`
-	)
-
-	const data = await Promise.all(
-		response.data.results.map(async ({ name }) => {
-			const { data } = await api.get(`/pokemon/${name}`)
-			const test = await prisma.review.findMany({
-				where: {
-					pokemon: name
-				}
-			})
-
-			const totalRating = test
-				? test.reduce((sum, obj) => sum + obj.rating, 0)
-				: 0
-			let averageRating = totalRating ? totalRating / test.length : 0
-
-			averageRating = Math.round(averageRating * 10) / 10
-
-			const reviews = {
-				reviewCount: test.length,
-				rating: averageRating
-			}
-
-			const { id, types } = data
-
-			let paddedId = id.toString().padStart(3, '0')
-
-			const imageData = {
-				imageUrl: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${paddedId}.png`,
-				imageAlt: name
-			}
-			return { name, id, types, gen: options.gen, ...imageData, ...reviews }
-		})
-	)
-
 	return {
 		props: {
-			data: data
+			gen: context.query.id
 		}
 	}
 }

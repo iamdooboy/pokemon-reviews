@@ -1,4 +1,4 @@
-import React from 'react'
+import { useRouter } from 'next/router'
 import { HStack } from '@chakra-ui/react'
 import NavButton from '../nav-button'
 import RandomButton from '../random-button'
@@ -6,10 +6,12 @@ import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import {
 	formatNames,
 	capitalFirstLetter,
-	getRandomPokemonNum
+	getRandomPokemonNum,
+	getPokemonGeneration
 } from '../../utils/helpers'
 
 const NavSection = ({ id, pokemon }) => {
+	const router = useRouter()
 	const onClickHandler = () => {
 		const random = getRandomPokemonNum()
 		const gen = getPokemonGeneration(random)

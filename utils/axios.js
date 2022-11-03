@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getPokemonImageUrl } from './helpers'
+import useSWR from 'swr'
 
 export const api = axios.create({
 	baseURL: 'https://pokeapi.co/api/v2/'
@@ -70,11 +71,36 @@ export const getPokemonGenPage = async gen => {
 	const arr = await Promise.all(
 		response.data.results.map(async ({ name }) => {
 			const { data } = await api.get(`/pokemon/${name}`)
-			const reviews = {
-				reviewCount: Math.floor(Math.random() * 100),
-				rating: Math.floor(Math.random() * 5)
-			}
 			const { id, types } = data
+
+			// const { data: test } = useSWR('/reviews/', () =>
+			// 	axios
+			// 		.get('/api/reviews', {
+			// 			params: { pokemon: name }
+			// 		})
+			// 		.then(res => res.data)
+			// )
+			const test = await axios
+				.get('/api/reviews', {
+					params: { pokemon: name }
+				})
+				.then(res => res.data)
+
+			const totalRating = test
+				? test.reduce((sum, obj) => sum + obj.rating, 0)
+				: 0
+			let averageRating = totalRating ? totalRating / test.length : 0
+
+			averageRating = Math.round(averageRating * 10) / 10
+
+			const reviews = {
+				reviewCount: test.length,
+				rating: averageRating
+			}
+			// const reviews = {
+			// 	reviewCount: Math.floor(Math.random() * 100),
+			// 	rating: Math.floor(Math.random() * 5)
+			// }
 
 			let paddedId = id.toString().padStart(3, '0')
 
