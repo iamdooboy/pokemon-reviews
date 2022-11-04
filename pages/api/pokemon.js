@@ -19,33 +19,27 @@ export default async function handler(req, res) {
 
 	if (req.method === 'PUT') {
 		try {
-			const { fav, id, toggle } = req.body
+			const { numberOfFavorites, id, toggle } = req.body
 
-			const toggleFunction = !toggle
-				? {
-						connect: {
-							id: user.id
-						}
-				  }
-				: {
-						disconnect: {
-							id: user.id
-						}
-				  }
+			const toggleFunction = {
+				[!toggle ? 'connect' : 'disconnect']: {
+					id: user.id
+				}
+			}
 
-			const savedPokemon = await prisma.pokemon.update({
+			const updatedPokemon = await prisma.pokemon.update({
 				where: {
 					id: id
 				},
 				data: {
-					favorite: fav,
+					favorite: numberOfFavorites,
 					favoritedBy: {
 						...toggleFunction
 					}
-				},
-				select: { id: true, pokemon: true, favoritedBy: true }
+				}
+				//select: { id: true, pokemon: true, favoritedBy: true }
 			})
-			res.status(200).json(savedPokemon)
+			res.status(200).json(updatedPokemon)
 		} catch (e) {
 			res.status(500).json({ message: 'Something went wrong' })
 		}

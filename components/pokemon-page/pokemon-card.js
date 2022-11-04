@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { FallBackImage } from '../../utils/fallback-image'
 import { formatNames, capitalFirstLetter } from '../../utils/helpers'
+import useSWR from 'swr'
 
 const Star = ({ fillColor }) => {
 	return (
@@ -27,8 +28,13 @@ const Star = ({ fillColor }) => {
 	)
 }
 
-const PokemonCard = ({ data }) => {
-	const { id, imageAlt, imageUrl, name, typesArr } = data
+const PokemonCard = ({ pokemonName }) => {
+	const { data: pokemon, error } = useSWR(`/pokemon/${pokemonName}`)
+
+	if (!pokemon) return <div>loading</div>
+	if (error) return <div>error</div>
+
+	const { id, imageAlt, imageUrl, name, typesArr } = pokemon
 	const formattedName = capitalFirstLetter(formatNames(name))
 	let paddedId = id.toString().padStart(3, '0')
 

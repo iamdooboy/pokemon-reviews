@@ -2,34 +2,41 @@ import { useState, useEffect, useRef } from 'react'
 import { getPokemonGeneration, isNumber } from '../utils/helpers'
 import { getAllPokemonNames } from '../utils/axios'
 import { useRouter } from 'next/router'
+import useSWR from 'swr'
+import { api } from '../utils/axios'
 
 export const useInput = closeModal => {
-	const [pokemon, setPokemon] = useState([])
+	const { data: pokemon } = useSWR('/pokemon?limit=905', () =>
+		api
+			.get('/pokemon?limit=905&offset=0')
+			.then(res => res.data.results.map(el => el.name))
+	)
+
+	//const [pokemon, setPokemon] = useState([])
 	const [filteredList, setFilteredList] = useState([])
 	const [activeIndex, setActiveIndex] = useState(0)
-	const log = useRef(true)
+	//const log = useRef(true)
 
 	const router = useRouter()
 
-	useEffect(() => {
-		if (log.current) {
-			const fetchData = async () => {
-				const res = await getAllPokemonNames()
-				setPokemon(res)
-			}
-			fetchData()
-		}
+	// useEffect(() => {
+	// 	if (log.current) {
+	// 		const fetchData = async () => {
+	// 			const res = await getAllPokemonNames()
+	// 			setPokemon(res)
+	// 		}
+	// 		fetchData()
+	// 	}
 
-		return () => {
-			log.current = false
-		}
-	}, [])
+	// 	return () => {
+	// 		log.current = false
+	// 	}
+	// }, [])
 
 	const onChangeHandler = e => {
 		setActiveIndex(0)
 		const input = e.target.value
 
-		//when input field is empty
 		if (input.length === 0) {
 			setFilteredList([])
 			return

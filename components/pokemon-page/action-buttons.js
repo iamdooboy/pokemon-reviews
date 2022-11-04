@@ -1,19 +1,20 @@
 import React from 'react'
 import { HStack, Button } from '@chakra-ui/react'
 import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
+import { useFavorite } from '../../hooks/useFavorite'
 
-const ActionButtons = ({
-	favoriteClickHandler,
-	numberOfFavorites,
-	favorite,
-	session,
-	onOpen
-}) => {
-	const favoriteIcon = favorite ? (
+const ActionButtons = ({ session, onOpen, pokemonName, favorite }) => {
+	const { favoriteClickHandler, favoritedByUser, pokemonData } = useFavorite(
+		pokemonName,
+		favorite
+	)
+
+	const favoriteIcon = favoritedByUser ? (
 		<MdFavorite color='#E53E3E' />
 	) : (
 		<MdFavoriteBorder />
 	)
+
 	return (
 		<HStack align='center' justify='center' mt={3} maxW='xs'>
 			<Button
@@ -23,7 +24,7 @@ const ActionButtons = ({
 				onClick={favoriteClickHandler}
 				colorScheme='blue'
 			>
-				{numberOfFavorites}
+				{pokemonData.favorite}
 			</Button>
 			<Button
 				leftIcon={<MdOutlineEdit />}
