@@ -13,53 +13,55 @@ export default async function handler(req, res) {
 	})
 
 	if (req.method === 'DELETE') {
-		await prisma.review.delete({
+		const updatedData = await prisma.review.delete({
 			where: {
 				id: req.body.id
 			}
 		})
-		res.status(200).json({ message: 'Review Deleted' })
+
+		res.status(200).json(updatedData)
 	}
 
 	if (req.method === 'PUT') {
-		if (req.body.updatingWhat === 'review') {
-			await prisma.review.update({
+		if (req.body.api === 'PUT_REVIEW') {
+			const updateData = await prisma.review.update({
 				where: {
 					id: req.body.id
 				},
 				data: {
 					description: req.body.description,
 					rating: req.body.rating
+				},
+				include: {
+					//return all fields from user model
+					author: true
 				}
 			})
-			res.status(200).json({ message: 'Review Updated' })
+			res.status(200).json(updateData)
 		} else {
-			const { fav, id, toggle } = req.body
-			const toggleFunction = !toggle
-				? {
-						connect: {
-							id: user.id
-						}
-				  }
-				: {
-						disconnect: {
-							id: user.id
-						}
-				  }
-
-			await prisma.review.update({
+			const { favorite, id, favoritedByCurrentUser } = req.body
+			const toggleFunction = {
+				[favoritedByCurrentUser ? 'connect' : 'disconnect']: {
+					id: user.id
+				}
+			}
+			const updateData = await prisma.review.update({
 				where: {
 					id: id
 				},
 				data: {
-					favorite: fav,
+					favorite,
 					favoritedBy: {
 						...toggleFunction
 					}
+				},
+				include: {
+					//return all fields from user model
+					author: true
 				}
 			})
 
-			res.status(200).json({ message: 'Review Updated' })
+			res.status(200).json(updateData)
 		}
 	}
 
@@ -69,10 +71,11 @@ export default async function handler(req, res) {
 				where: { email: session.user.email }
 			})
 
-			const reviewData = req.body
+			const { description, rating, pokemon } = req.body
 
 			const savedReview = await prisma.review.create({
-				data: { ...reviewData, authorId: user.id },
+				// data: { ...reviewData, authorId: user.id },
+				data: { description, rating, pokemon, authorId: user.id },
 				include: {
 					//return all fields from user model
 					author: true

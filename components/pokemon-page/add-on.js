@@ -2,17 +2,12 @@ import React from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 import { FaThumbsUp, FaRegThumbsUp } from 'react-icons/fa'
 import { StarIcon } from '@chakra-ui/icons'
-import { useFavorite } from '../../hooks/useFavorite'
+import { useLike } from '../../hooks/useLike'
 
-const AddOn = ({ id, favorite: numOfFav, rating, didUserFavoriteReview }) => {
-	const { favoriteClickHandler, numberOfFavorites, favorite } = useFavorite(
-		'review',
-		id,
-		numOfFav,
-		didUserFavoriteReview
-	)
+const AddOn = ({ pokemonName, review }) => {
+	const { onLike } = useLike(pokemonName, review)
 
-	const favoriteIcon = favorite ? (
+	const favoriteIcon = review.favorite ? (
 		<FaThumbsUp color='#38B2AC' />
 	) : (
 		<FaRegThumbsUp />
@@ -28,14 +23,14 @@ const AddOn = ({ id, favorite: numOfFav, rating, didUserFavoriteReview }) => {
 							boxSize={3}
 							key={id}
 							mr={2}
-							color={index <= rating ? '#f59e0b' : 'gray'}
+							color={index <= review.rating ? '#f59e0b' : 'gray'}
 						/>
 					)
 				})}
 			</Flex>
 			<Flex gap={1}>
-				<button onClick={() => favoriteClickHandler()}>{favoriteIcon}</button>
-				<Text fontSize='sm'>{numberOfFavorites}</Text>
+				<button onClick={() => onLike(review)}>{favoriteIcon}</button>
+				<Text fontSize='sm'>{review.favorite}</Text>
 			</Flex>
 		</Flex>
 	)

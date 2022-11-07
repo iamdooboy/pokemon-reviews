@@ -1,6 +1,8 @@
-import { chakra, Container, Box, Flex } from '@chakra-ui/react'
+import { useRef } from 'react'
+import { chakra, Container, Box, Flex, useDisclosure } from '@chakra-ui/react'
 import { getSession, useSession } from 'next-auth/react'
 import ReviewBox from '../../../components/pokemon-page/review-box'
+import ReviewList from '../../../components/pokemon-page/review-list'
 import ReviewModal from '../../../components/pokemon-page/review-modal'
 import PokemonCard from '../../../components/pokemon-page/pokemon-card'
 import NavSection from '../../../components/pokemon-page/nav-section'
@@ -18,7 +20,7 @@ import { PokemonCardSkeleton } from '../../../components/loading/pokemon-card-sk
 import { ReviewBoxSkeleton } from '../../../components/loading/review-box-skeleton'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from '../../api/auth/[...nextauth]'
-import useSWR, { SWRConfig } from 'swr'
+import { SWRConfig } from 'swr'
 
 const Empty = ({ pokemonName }) => {
 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -41,8 +43,8 @@ const Empty = ({ pokemonName }) => {
 
 const Pokemon = ({
 	fallback,
-	user = { id: null },
-	reviews = [],
+	//user = { id: null },
+	//reviews = [],
 	favorite,
 	data,
 	pokemonName,
@@ -56,20 +58,23 @@ const Pokemon = ({
 	const { pokemon } = useInput()
 	//const { id } = data
 
-	const {
-		initialRef,
-		isOpen,
-		onOpen,
-		onClose,
-		onEdit,
-		onDelete,
-		allReviews,
-		editReview,
-		onSubmit
-	} = useReview(reviews, pokemonName, gen)
+	// const {
+	// 	initialRef,
+	// 	isOpen,
+	// 	onOpen,
+	// 	onClose,
+	// 	onEdit,
+	// 	onDelete,
+	// 	allReviews,
+	// 	editReview,
+	// 	onSubmit
+	// } = useReview(reviews, pokemonName, gen)
 
 	const router = useRouter()
 	const [isLoaded, setIsLoaded] = useState(true)
+	const [selected, setSelected] = useState({ description: '', rating: 0 })
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	const initialRef = useRef()
 
 	useEffect(() => {
 		const handleStart = url => {
@@ -122,6 +127,22 @@ const Pokemon = ({
 								favorite
 							}}
 						/>
+						<ReviewList
+							pokemonName={pokemonName}
+							onOpen={onOpen}
+							setSelected={setSelected}
+						/>
+						<ReviewModal
+							{...{
+								pokemonName,
+								isOpen,
+								onClose,
+								initialRef,
+								selected,
+								setSelected
+							}}
+						/>
+
 						{/*{isLoaded ? (
 							<PokemonCard pokemonName={pokemonName} />
 						) : (
@@ -214,17 +235,6 @@ export const getServerSideProps = async context => {
 
 	const favorite = selectedPokemon.favoritedBy.some(el => el.id === user.id)
 
-	// const { id, favorite, favoritedBy } = await prisma.pokemon.findUnique({
-	// 	where: {
-	// 		pokemon: pokemon
-	// 	},
-	// 	select: {
-	// 		id: true,
-	// 		favorite: true,
-	// 		favoritedBy: true
-	// 	}
-	// })
-
 	let reviews = await prisma.review.findMany({
 		where: {
 			pokemon: pokemon
@@ -235,16 +245,27 @@ export const getServerSideProps = async context => {
 		}
 	})
 
+	reviews = reviews.map(review => {
+		const favoritedByCurrentUser = review.favoritedBy.some(
+			el => el.id === user.id
+		)
+
+		delete review.favoritedBy
+
+		return { ...review, favoritedByCurrentUser }
+	})
+
 	return {
 		props: {
 			fallback: {
 				[`/pokemon/${pokemon}`]: pokemonData,
 				[`/api/pokemon/${pokemon}`]: selectedPokemon,
-				[`/api/reviews/${pokemon}`]: JSON.parse(JSON.stringify(reviews))
+				[`/api/reviews/${pokemon}`]: JSON.parse(JSON.stringify(reviews)),
+				['/api/user']: JSON.parse(JSON.stringify(user))
 			},
 			pokemonName: pokemon,
 			favorite,
-			user: JSON.parse(JSON.stringify(user))
+			gen
 		}
 	}
 

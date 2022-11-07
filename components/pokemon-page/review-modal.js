@@ -19,6 +19,7 @@ import {
 import ResizeTextarea from 'react-textarea-autosize'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 import { CustomRating } from '../rating'
+import { useReview } from '../../hooks/useReview'
 
 const AutoResizeTextarea = React.forwardRef((props, ref) => {
 	return (
@@ -42,95 +43,102 @@ const ReviewModal = ({
 	isOpen,
 	onClose,
 	initialRef,
-	editReview,
-	onSubmit
+	selected,
+	setSelected
 }) => {
+	const { onMutate } = useReview(pokemonName)
 	const [rating, setRating] = useState(0)
 	const [description, setDescription] = useState('')
 
-	const onSubmitHandler = e => {
-		onSubmit(e, description, rating)
+	useEffect(() => {
+		if (selected.description) {
+			setRating(selected.rating)
+			setDescription(selected.description)
+		}
+	}, [selected])
+
+	const onSubmitHandler = async e => {
+		e.preventDefault()
+
+		let data = { description, rating, pokemon: pokemonName, api: 'POST' }
+
+		if (selected.description) {
+			data = { id: selected.id, description, rating, api: 'PUT_REVIEW' }
+		}
+
+		onMutate(data)
+
 		onCloseHandler()
 	}
 
 	const onCloseHandler = () => {
 		setRating(0)
 		setDescription('')
+		setSelected({ description: '', rating: 0 })
 		onClose()
 	}
-
-	useEffect(() => {
-		if (editReview) {
-			setDescription(editReview.description)
-			setRating(editReview.rating)
-		}
-	}, [editReview])
 
 	let formattedName = formatNames(pokemonName)
 	formattedName = capitalFirstLetter(formattedName)
 
 	return (
-		<>
-			<Modal
-				isCentered
-				isOpen={isOpen}
-				onClose={onCloseHandler}
-				initialFocusRef={initialRef}
-			>
-				<ModalOverlay />
-				<form onSubmit={onSubmitHandler}>
-					<ModalContent>
-						<ModalHeader>
-							<Heading as='h3' size='lg'>
-								Review {formattedName}
-							</Heading>
-						</ModalHeader>
-						<ModalCloseButton />
-						<ModalBody>
-							<FormControl isRequired={true}>
-								<AutoResizeTextarea
-									onChange={event => setDescription(event.target.value)}
-									value={description}
-									placeholder='Share your thoughts on this Pokemon'
-								/>
-								{description.length < 10 && (
-									<FormHelperText>
-										<Flex>
-											Review must have a minimum of&nbsp;
-											<Text textDecoration='underline'>
-												{10 - description.length}
-											</Text>
-											&nbsp;characters.
-										</Flex>
-									</FormHelperText>
-								)}
-							</FormControl>
-						</ModalBody>
+		<Modal
+			isCentered
+			isOpen={isOpen}
+			onClose={onCloseHandler}
+			initialFocusRef={initialRef}
+		>
+			<ModalOverlay />
+			<form onSubmit={onSubmitHandler}>
+				<ModalContent>
+					<ModalHeader>
+						<Heading as='h3' size='lg'>
+							Review {formattedName}
+						</Heading>
+					</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<FormControl isRequired={true}>
+							<AutoResizeTextarea
+								onChange={e => setDescription(e.target.value)}
+								value={description}
+								placeholder='Share your thoughts on this Pokemon'
+							/>
+							{description.length < 10 && (
+								<FormHelperText>
+									<Flex>
+										Review must have a minimum of&nbsp;
+										<Text textDecoration='underline'>
+											{10 - description.length}
+										</Text>
+										&nbsp;characters.
+									</Flex>
+								</FormHelperText>
+							)}
+						</FormControl>
+					</ModalBody>
 
-						<ModalFooter justifyContent='left'>
-							<Flex maxW={150}>
-								<CustomRating
-									value={rating}
-									onChange={setRating}
-									spaceBetween='small'
-								/>
-							</Flex>
-							<Spacer />
-							<Button
-								align='right'
-								type='submit'
-								colorScheme='blue'
-								isDisabled={
-									rating > 0 && description.length >= 10 ? false : true
-								}
-							>
-								{editReview ? 'Update' : 'Submit'}
-							</Button>
-						</ModalFooter>
-					</ModalContent>
-				</form>
-			</Modal>
-		</>
+					<ModalFooter justifyContent='left'>
+						<Flex maxW={150}>
+							<CustomRating
+								value={rating}
+								onChange={setRating}
+								spaceBetween='small'
+							/>
+						</Flex>
+						<Spacer />
+						<Button
+							align='right'
+							type='submit'
+							colorScheme='blue'
+							isDisabled={rating > 0 && description.length >= 10 ? false : true}
+						>
+							{selected.description ? 'Update' : 'Submit'}
+						</Button>
+					</ModalFooter>
+				</ModalContent>
+			</form>
+		</Modal>
 	)
 }
 
