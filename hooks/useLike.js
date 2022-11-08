@@ -1,10 +1,10 @@
 import axios from 'axios'
 import useSWR from 'swr'
-import { useReview } from './useReview'
+import { useMutation } from './useMutation'
 import { useState } from 'react'
 
 export const useLike = (pokemonName, review) => {
-	const { onMutate } = useReview(pokemonName)
+	const { onMutate } = useMutation(pokemonName)
 	const [favByUser, setFavByUser] = useState(review.favoritedByCurrentUser)
 	const [numOfFav, setNumOfFav] = useState(review.favorite)
 

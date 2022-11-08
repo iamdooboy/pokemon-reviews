@@ -6,40 +6,38 @@ import Sidebar from '../../../components/sidebar/sidebar'
 import { isNumber, getLimitAndOffset } from '../../../utils/helpers'
 import { GenPageSkeleton } from '../../../components/loading/gen-page-skeleton'
 import { api } from '../../../utils/axios'
+import { SWRConfig } from 'swr'
 
-const GenerationPage = ({ gen }) => {
-	const options = getLimitAndOffset(gen)
-	const { data } = useSWR(`/gen/${gen}`, () =>
-		api
-			.get(`/pokemon?limit=${options.limit}&offset=${options.offset}`)
-			.then(res => res.data.results)
-	)
-
+const GenerationPage = ({ fallback, gen }) => {
 	return (
-		<Layout>
-			<Flex pt={16}>
-				<Sidebar />
-				<Box
-					flex={1}
-					px='5'
-					overflow='auto'
-					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-				>
-					{/* <Heading as='h1' size='xl' align='center' py={4}>
+		<SWRConfig value={{ fallback }}>
+			<Layout>
+				<Flex pt={16}>
+					<Sidebar />
+					<Box
+						flex={1}
+						px='5'
+						overflow='auto'
+						maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
+					>
+						{/* <Heading as='h1' size='xl' align='center' py={4}>
 						Pokemon Reviews
 					</Heading>
 					<Heading as='h1' size='md' align='center' py={4}>
 						Nintendo has been creating a lot of questionable Pokemon. Luckily
 						they are looking for your feedback.
 					</Heading> */}
-					{!data ? (
-						<GenPageSkeleton />
-					) : (
-						<PokemonGrid {...{ gen, data, api }} />
-					)}
-				</Box>
-			</Flex>
-		</Layout>
+						<PokemonGrid gen={gen} />
+						{/* {!data ? (
+							<GenPageSkeleton />
+						) : (
+							
+							<PokemonGrid {...{ gen, data, api }} />
+						)} */}
+					</Box>
+				</Flex>
+			</Layout>
+		</SWRConfig>
 	)
 }
 
@@ -58,8 +56,17 @@ export const getServerSideProps = async context => {
 		}
 	}
 
+	const options = getLimitAndOffset(id)
+
+	const response = await api
+		.get(`/pokemon?limit=${options.limit}&offset=${options.offset}`)
+		.then(res => res.data.results)
+
 	return {
 		props: {
+			fallback: {
+				[`/gen/${id}`]: response
+			},
 			gen: context.query.id
 		}
 	}

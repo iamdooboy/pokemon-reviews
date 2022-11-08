@@ -19,7 +19,8 @@ import {
 import ResizeTextarea from 'react-textarea-autosize'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 import { CustomRating } from '../rating'
-import { useReview } from '../../hooks/useReview'
+import { useMutation } from '../../hooks/useMutation'
+import { useAsyncToast } from '../../hooks/useAsyncToast'
 
 const AutoResizeTextarea = React.forwardRef((props, ref) => {
 	return (
@@ -46,9 +47,14 @@ const ReviewModal = ({
 	selected,
 	setSelected
 }) => {
-	const { onMutate } = useReview(pokemonName)
+	const { onMutate } = useMutation(pokemonName)
 	const [rating, setRating] = useState(0)
 	const [description, setDescription] = useState('')
+
+	const [_, setIsLoading] = useAsyncToast(false, {
+		title: 'Loading...',
+		position: 'bottom-right'
+	})
 
 	useEffect(() => {
 		if (selected.description) {
@@ -75,6 +81,7 @@ const ReviewModal = ({
 		setRating(0)
 		setDescription('')
 		setSelected({ description: '', rating: 0 })
+
 		onClose()
 	}
 

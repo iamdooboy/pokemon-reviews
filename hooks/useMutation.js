@@ -1,12 +1,15 @@
 import axios from 'axios'
-import { useState, useRef } from 'react'
-import { useDisclosure, useToast } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import { useAsyncToast } from './useAsyncToast'
-import { getPokemonGenPage } from '../utils/axios'
 import useSWR from 'swr'
 
-export const useReview = pokemonName => {
+export const useMutation = pokemonName => {
 	const { data: reviews, error, mutate } = useSWR(`/api/reviews/${pokemonName}`)
+	const toast = useToast()
+	const [_, setIsLoading] = useAsyncToast(false, {
+		title: 'Loading...',
+		position: 'bottom-right'
+	})
 
 	const updateLocal = data => {
 		let localData = []
@@ -23,7 +26,7 @@ export const useReview = pokemonName => {
 					favoritedByCurrentUser: !favoritedByCurrentUser
 				}
 			})
-		} else {
+		} else if (data.api === 'PUT_REVIEW') {
 			const { id, description, rating } = data
 			localData = reviews.map(review => {
 				if (id !== review.id) {
@@ -31,18 +34,27 @@ export const useReview = pokemonName => {
 				}
 				return { ...review, description, rating }
 			})
+		} else {
+			localData = reviews.filter(review => review.id !== data.id)
 		}
 
 		return localData
 	}
 
 	const updateFn = async data => {
+		let message
 		let res
 		let newData
 
+		setIsLoading(true)
 		if (data.api === 'POST') {
 			res = await axios.post('/api/reviews', data).then(res => res.data)
 			newData = [...reviews, res]
+			message = 'Review created.'
+		} else if (data.api === 'DELETE') {
+			res = await axios.delete('/api/reviews', { data }).then(res => res.data)
+			newData = reviews.filter(review => review.id !== res.id)
+			message = 'Review deleted.'
 		} else {
 			res = await axios.put('/api/reviews', data).then(res => res.data)
 			newData = reviews.map(review => {
@@ -53,8 +65,16 @@ export const useReview = pokemonName => {
 					...res
 				}
 			})
+			message = 'Review updated.'
 		}
-		console.log(newData)
+		setIsLoading(false)
+		toast({
+			title: message,
+			position: 'bottom-right',
+			status: 'success',
+			duration: 1500,
+			isClosable: true
+		})
 
 		return newData
 	}
@@ -66,7 +86,11 @@ export const useReview = pokemonName => {
 			revalidate: false
 		}
 
-		if (data.api === 'PUT' || data.api === 'PUT_REVIEW_LIKES') {
+		if (
+			data.api === 'PUT' ||
+			data.api === 'PUT_REVIEW_LIKES' ||
+			data.api === 'DELETE'
+		) {
 			const localData = updateLocal(data)
 			options = {
 				...options,
@@ -85,7 +109,7 @@ export const useReview = pokemonName => {
 		onMutate
 	}
 }
-// export const useReview = (reviews, pokemonName, genId) => {
+// export const useMutation = (reviews, pokemonName, genId) => {
 // 	const initialRef = useRef()
 // 	const toast = useToast()
 // 	const { isOpen, onOpen, onClose } = useDisclosure()

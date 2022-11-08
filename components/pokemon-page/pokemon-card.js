@@ -8,8 +8,7 @@ import {
 	Stack
 } from '@chakra-ui/react'
 import { FallBackImage } from '../../utils/fallback-image'
-import { formatNames, capitalFirstLetter } from '../../utils/helpers'
-import useSWR from 'swr'
+import { useFetchPokemon } from '../../hooks/useFetchPokemon'
 
 const Star = ({ fillColor }) => {
 	return (
@@ -29,19 +28,12 @@ const Star = ({ fillColor }) => {
 }
 
 const PokemonCard = ({ pokemonName }) => {
-	const { data: pokemon, error } = useSWR(`/pokemon/${pokemonName}`)
-
-	if (!pokemon) return <div>loading</div>
-	if (error) return <div>error</div>
-
-	const { id, imageAlt, imageUrl, name, typesArr } = pokemon
-	const formattedName = capitalFirstLetter(formatNames(name))
-	let paddedId = id.toString().padStart(3, '0')
+	const { types, imageUrl, imageAlt, name, id } = useFetchPokemon(pokemonName)
 
 	return (
 		<Box
-			bgGradient={`linear(to-tl, ${typesArr[0]}.default, ${
-				typesArr[1] ? typesArr[1] + '.default' : typesArr[0] + '.light'
+			bgGradient={`linear(to-tl, ${types[0]}.default, ${
+				types[1] ? types[1] + '.default' : types[0] + '.light'
 			})`}
 			p='2px'
 			rounded={8}
@@ -59,7 +51,7 @@ const PokemonCard = ({ pokemonName }) => {
 					height='auto'
 				>
 					<Text opacity={0.4} px={1} align='start' zIndex={1}>
-						{paddedId}
+						{id}
 					</Text>
 					<Box mt='-15px'>
 						<FallBackImage
@@ -83,12 +75,12 @@ const PokemonCard = ({ pokemonName }) => {
 						letterSpacing={1}
 						align='left'
 					>
-						{formattedName}
+						{name}
 					</Heading>
 					<HStack>
 						<Stack>
 							<HStack>
-								{typesArr.map((type, index) => (
+								{types.map((type, index) => (
 									<Image
 										key={index}
 										boxSize='23%'
@@ -119,10 +111,8 @@ const PokemonCard = ({ pokemonName }) => {
 								width: '100%',
 								left: '0',
 								height: '2px',
-								bgGradient: `linear(to-r, ${typesArr[0]}.default, ${
-									typesArr[1]
-										? typesArr[1] + '.default'
-										: typesArr[0] + '.light'
+								bgGradient: `linear(to-r, ${types[0]}.default, ${
+									types[1] ? types[1] + '.default' : types[0] + '.light'
 								})`
 							}}
 						>

@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { getPokemonGeneration, isNumber } from '../utils/helpers'
-import { getAllPokemonNames } from '../utils/axios'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { api } from '../utils/axios'
@@ -12,26 +11,10 @@ export const useInput = closeModal => {
 			.then(res => res.data.results.map(el => el.name))
 	)
 
-	//const [pokemon, setPokemon] = useState([])
 	const [filteredList, setFilteredList] = useState([])
 	const [activeIndex, setActiveIndex] = useState(0)
-	//const log = useRef(true)
 
 	const router = useRouter()
-
-	// useEffect(() => {
-	// 	if (log.current) {
-	// 		const fetchData = async () => {
-	// 			const res = await getAllPokemonNames()
-	// 			setPokemon(res)
-	// 		}
-	// 		fetchData()
-	// 	}
-
-	// 	return () => {
-	// 		log.current = false
-	// 	}
-	// }, [])
 
 	const onChangeHandler = e => {
 		setActiveIndex(0)

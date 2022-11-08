@@ -1,14 +1,15 @@
 import useSWR from 'swr'
-import { api } from '../utils/axios'
+import { formatNames, capitalFirstLetter } from '../utils/helpers'
 
 export const useFetchPokemon = pokemon => {
-	const { data, error } = useSWR(`/pokemon/${pokemon}`, () =>
-		api.get(`/pokemon/${pokemon}`).then(res => res.data)
-	)
+	const { data } = useSWR(`/pokemon/${pokemon}`)
+
+	if (!data) return <div>loading</div>
 
 	return {
-		pokemon: data,
-		isLoading: !error && !data,
-		isError: error
+		...data,
+		types: data.typesArr,
+		name: capitalFirstLetter(formatNames(pokemon)),
+		id: data.id.toString().padStart(3, '0')
 	}
 }

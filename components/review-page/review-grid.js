@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { SimpleGrid } from '@chakra-ui/react'
 import ReviewGridItem from './review-grid-item'
-import { useReview } from '../../hooks/useReview'
+import { useMutation } from '../../hooks/useMutation'
 import ReviewModal from '../pokemon-page/review-modal'
 
 const ReviewGrid = ({ reviews }) => {
@@ -16,7 +16,7 @@ const ReviewGrid = ({ reviews }) => {
 		allReviews,
 		editReview,
 		onSubmit
-	} = useReview(reviews, pokemonName)
+	} = useMutation(reviews, pokemonName)
 
 	return (
 		<SimpleGrid columns={[1, 2, 2, 3]} spacing={4} py={4}>

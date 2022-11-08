@@ -2,8 +2,10 @@ import React from 'react'
 import { HStack, Button } from '@chakra-ui/react'
 import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
 import { useFavorite } from '../../hooks/useFavorite'
+import { getSession, useSession } from 'next-auth/react'
 
-const ActionButtons = ({ session, onOpen, pokemonName, favorite }) => {
+const ActionButtons = ({ onOpen, pokemonName, favorite }) => {
+	const session = useSession()
 	const { favoriteClickHandler, favoritedByUser, pokemonData } = useFavorite(
 		pokemonName,
 		favorite

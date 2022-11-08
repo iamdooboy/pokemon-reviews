@@ -8,10 +8,12 @@ import {
 	getRandomPokemonNum,
 	getPokemonGeneration
 } from '../../utils/helpers'
+import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { api } from '../../utils/axios'
 
-const NavSection = ({ pokemonName, router }) => {
+const NavSection = ({ pokemonName }) => {
+	const router = useRouter()
 	const { data } = useSWR(`/pokemon/${pokemonName}`)
 
 	const id = data?.id

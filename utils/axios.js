@@ -35,7 +35,7 @@ export const getPokemon = async pokemon => {
 		imageAlt: pokemon
 	}
 
-	return { id, typesArr, ...imageData }
+	return { name: pokemon, id, typesArr, ...imageData }
 }
 
 const getLimitAndOffset = gen => {

@@ -1,8 +1,8 @@
 import ReviewBox from '../pokemon-page/review-box'
-import { useReview } from '../../hooks/useReview'
+import { useMutation } from '../../hooks/useMutation'
 
 const ReviewList = ({ pokemonName, onOpen, setSelected }) => {
-	const { reviews, isLoading, isError, mutate } = useReview(pokemonName, onOpen)
+	const { reviews, isLoading } = useMutation(pokemonName)
 
 	if (isLoading) return <div>loading</div>
 
@@ -15,7 +15,6 @@ const ReviewList = ({ pokemonName, onOpen, setSelected }) => {
 					setSelected={setSelected}
 					onOpen={onOpen}
 					reviews={reviews}
-					mutate={mutate}
 					pokemonName={pokemonName}
 				/>
 			))}
