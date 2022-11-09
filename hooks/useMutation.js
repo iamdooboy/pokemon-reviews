@@ -65,6 +65,7 @@ export const useMutation = pokemonName => {
 					...res
 				}
 			})
+
 			message = 'Review updated.'
 		}
 		setIsLoading(false)

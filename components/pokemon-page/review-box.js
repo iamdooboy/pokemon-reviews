@@ -1,32 +1,14 @@
 import React from 'react'
-import {
-	Box,
-	Flex,
-	Avatar,
-	Text,
-	Spacer,
-	Icon,
-	Button,
-	Popover,
-	PopoverTrigger,
-	PopoverContent,
-	PopoverBody,
-	PopoverArrow
-} from '@chakra-ui/react'
-import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
+import { Box, Flex, Avatar, Text, Spacer } from '@chakra-ui/react'
 import AddOn from './add-on'
-import { AiOutlineEllipsis } from 'react-icons/ai'
 import ReadMore from '../read-more'
 import useSWR from 'swr'
-import axios from 'axios'
-import { useMutation } from '../../hooks/useMutation'
 import { EllipsisButton } from '../ellipsis-button'
 
-const ReviewBox = ({ review, setSelected, onOpen, reviews, pokemonName }) => {
+const ReviewBox = ({ review, setSelected, onOpen, pokemonName }) => {
 	const { data: user } = useSWR('/api/user')
 
-	const { id, description, rating, author, favorite, favoritedByCurrentUser } =
-		review
+	const { description, author } = review
 
 	return (
 		<Box
@@ -47,11 +29,7 @@ const ReviewBox = ({ review, setSelected, onOpen, reviews, pokemonName }) => {
 						<Spacer />
 						{user.id === author.id && (
 							<EllipsisButton
-								setSelected={setSelected}
-								review={review}
-								onOpen={onOpen}
-								reviews={reviews}
-								pokemonName={pokemonName}
+								{...{ setSelected, review, onOpen, pokemonName }}
 							/>
 						)}
 					</Flex>

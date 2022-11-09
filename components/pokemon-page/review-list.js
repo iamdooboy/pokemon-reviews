@@ -14,7 +14,6 @@ const ReviewList = ({ pokemonName, onOpen, setSelected }) => {
 					review={review}
 					setSelected={setSelected}
 					onOpen={onOpen}
-					reviews={reviews}
 					pokemonName={pokemonName}
 				/>
 			))}

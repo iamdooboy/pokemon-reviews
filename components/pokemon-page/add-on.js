@@ -1,4 +1,3 @@
-import React from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 import { FaThumbsUp, FaRegThumbsUp } from 'react-icons/fa'
 import { StarIcon } from '@chakra-ui/icons'

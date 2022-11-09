@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { Flex, Icon } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { LinkOverlay } from '../../components/link-overlay'
 
 export const SidebarContent = () => {
@@ -24,7 +24,7 @@ export const SidebarContent = () => {
 }
 
 const NavItem = props => {
-	const { active, icon, children, ...rest } = props
+	const { active, children, ...rest } = props
 	return (
 		<Flex
 			pl={{ base: 6, md: 0 }}

@@ -10,60 +10,33 @@ import Sidebar from '../../../components/sidebar/sidebar'
 import { prisma } from '../../../lib/prisma'
 import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
 import { useState } from 'react'
-import { PokemonCardSkeleton } from '../../../components/loading/pokemon-card-skeleton'
-import { ReviewBoxSkeleton } from '../../../components/loading/review-box-skeleton'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from '../../api/auth/[...nextauth]'
 import { SWRConfig } from 'swr'
 
-const Empty = ({ pokemonName }) => {
-	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
-	return (
-		<Box
-			fontWeight='600'
-			maxW='xs'
-			rounded={8}
-			borderWidth={1}
-			align='center'
-			mt={3}
-			mx='auto'
-			p={3}
-			bg='rgba(17, 25, 40, 0.75)'
-		>
-			Be the first to review {formatName}!
-		</Box>
-	)
-}
+// const Empty = ({ pokemonName }) => {
+// 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+// 	return (
+// 		<Box
+// 			fontWeight='600'
+// 			maxW='xs'
+// 			rounded={8}
+// 			borderWidth={1}
+// 			align='center'
+// 			mt={3}
+// 			mx='auto'
+// 			p={3}
+// 			bg='rgba(17, 25, 40, 0.75)'
+// 		>
+// 			Be the first to review {formatName}!
+// 		</Box>
+// 	)
+// }
 
 const Pokemon = ({ fallback, pokemonName, favorite, gen }) => {
-	//const [isLoaded, setIsLoaded] = useState(true)
 	const [selected, setSelected] = useState({ description: '', rating: 0 })
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const initialRef = useRef()
-
-	// useEffect(() => {
-	// 	const handleStart = url => {
-	// 		if (url === '/reviews' || url === '/favorites' || url === '/settings') {
-	// 			setIsLoaded(true)
-	// 			return
-	// 		}
-	// 		setIsLoaded(false)
-	// 	}
-
-	// 	const handleStop = () => {
-	// 		setIsLoaded(true)
-	// 	}
-
-	// 	router.events.on('routeChangeStart', handleStart)
-	// 	router.events.on('routeChangeComplete', handleStop)
-	// 	router.events.on('routeChangeError', handleStop)
-
-	// 	return () => {
-	// 		router.events.off('routeChangeStart', handleStart)
-	// 		router.events.off('routeChangeComplete', handleStop)
-	// 		router.events.off('routeChangeError', handleStop)
-	// 	}
-	// }, [router])
 
 	return (
 		<SWRConfig value={{ fallback }}>
@@ -106,45 +79,6 @@ const Pokemon = ({ fallback, pokemonName, favorite, gen }) => {
 								setSelected
 							}}
 						/>
-
-						{/*{isLoaded ? (
-							<PokemonCard pokemonName={pokemonName} />
-						) : (
-							<PokemonCardSkeleton />
-						)}
-						<ActionButtons
-							{...{
-								favoriteClickHandler,
-								numberOfFavorites,
-								favorite,
-								session,
-								onOpen
-							}}
-						/>
-						{isLoaded ? (
-							allReviews.length === 0 ? (
-								<Empty {...{ pokemonName }} />
-							) : (
-								allReviews.map(review => (
-									<ReviewBox
-										key={review.id}
-										{...{ user, review, onEdit, onDelete }}
-									/>
-								))
-							)
-						) : (
-							<ReviewBoxSkeleton />
-						)}
-						<ReviewModal
-							{...{
-								pokemonName,
-								isOpen,
-								onClose,
-								initialRef,
-								editReview,
-								onSubmit
-							}}
-						/> */}
 					</Container>
 				</chakra.div>
 			</Flex>

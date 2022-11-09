@@ -1,12 +1,10 @@
-import useSWR from 'swr'
+import { SWRConfig } from 'swr'
 import { Flex, Box } from '@chakra-ui/react'
 import PokemonGrid from '../../../components/gen-page/pokemon-grid'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
 import { isNumber, getLimitAndOffset } from '../../../utils/helpers'
-import { GenPageSkeleton } from '../../../components/loading/gen-page-skeleton'
 import { api } from '../../../utils/axios'
-import { SWRConfig } from 'swr'
 
 const GenerationPage = ({ fallback, gen }) => {
 	return (
@@ -28,12 +26,6 @@ const GenerationPage = ({ fallback, gen }) => {
 						they are looking for your feedback.
 					</Heading> */}
 						<PokemonGrid gen={gen} />
-						{/* {!data ? (
-							<GenPageSkeleton />
-						) : (
-							
-							<PokemonGrid {...{ gen, data, api }} />
-						)} */}
 					</Box>
 				</Flex>
 			</Layout>

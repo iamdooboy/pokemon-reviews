@@ -1,4 +1,5 @@
 import {
+	chakra,
 	Box,
 	Icon,
 	Button,
@@ -16,19 +17,9 @@ export const EllipsisButton = ({
 	setSelected,
 	review,
 	onOpen,
-	reviews,
 	pokemonName
 }) => {
 	const { onMutate } = useMutation(pokemonName)
-	const updateFn = async (reviews, data) => {
-		const res = await axios
-			.delete('/api/reviews', {
-				data: data
-			})
-			.then(res => res.data)
-
-		return reviews.filter(rev => rev.id !== res.id)
-	}
 
 	const deleteHandler = async () => {
 		const data = { id: review.id, api: 'DELETE' }
@@ -38,9 +29,9 @@ export const EllipsisButton = ({
 	return (
 		<Popover isLazy>
 			<PopoverTrigger>
-				<button>
+				<chakra.button>
 					<Icon as={AiOutlineEllipsis} />
-				</button>
+				</chakra.button>
 			</PopoverTrigger>
 			<PopoverContent w='150px'>
 				<PopoverArrow />

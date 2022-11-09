@@ -10,6 +10,7 @@ import { CustomRating } from '../rating'
 import useSWR from 'swr'
 import axios from 'axios'
 import { api } from '../../utils/axios'
+import { GridItemSkeleton } from '../loading/gen-page-skeleton'
 
 const PokemonGridItem = ({ name }) => {
 	const { data: review } = useSWR(`/api/review/${name}`, () =>
@@ -25,7 +26,7 @@ const PokemonGridItem = ({ name }) => {
 	)
 
 	if (!review || !pokemon) {
-		return <div>loading</div>
+		return <GridItemSkeleton />
 	}
 
 	if (error) {
