@@ -1,52 +1,27 @@
+import axios from 'axios'
 import { chakra, Box, GridItem, Text } from '@chakra-ui/react'
 import { FallBackImage } from '../../utils/fallback-image'
-import {
-	formatNames,
-	capitalFirstLetter,
-	getPokemonImageUrl
-} from '../../utils/helpers'
 import { motion } from 'framer-motion'
 import { CustomRating } from '../rating'
-import useSWR from 'swr'
-import axios from 'axios'
-import { api } from '../../utils/axios'
 import { GridItemSkeleton } from '../loading/gen-page-skeleton'
+import { usePokeAPI } from '../../hooks/usePokeAPI'
+import { useFetchReviews } from '../../hooks/useFetchReviews'
 
-const PokemonGridItem = ({ name }) => {
-	const { data: review } = useSWR(`/api/review/${name}`, () =>
-		axios
-			.get('/api/reviews', {
-				params: { pokemon: name }
-			})
-			.then(res => res.data)
-	)
+const PokemonGridItem = ({ pokemonName }) => {
+	const fetcher = url =>
+		axios.get(url, { params: { pokemon: pokemonName } }).then(res => res.data)
 
-	const { data: pokemon, error } = useSWR(`/${name}`, () =>
-		api.get(`/pokemon/${name}`).then(res => res.data)
-	)
+	const review = useFetchReviews(`/api/reviews/${pokemonName}`, fetcher)
 
-	if (!review || !pokemon) {
+	const data = usePokeAPI(pokemonName)
+
+	if (!review || !data) {
 		return <GridItemSkeleton />
 	}
 
-	if (error) {
-		return <div>error</div>
-	}
+	const { count, rating } = review
 
-	const imageUrl = getPokemonImageUrl(pokemon.id)
-	const imageAlt = formatNames(name)
-	const formattedName = capitalFirstLetter(formatNames(name))
-	const formattedId = pokemon.id.toString().padStart(3, '0')
-
-	const totalRating = review
-		? review.reduce((sum, obj) => sum + obj.rating, 0)
-		: 0
-
-	let averageRating = totalRating ? totalRating / review.length : 0
-
-	averageRating = Math.round(averageRating * 10) / 10
-
-	const reviewCount = review.length
+	const { url, alt, name, id } = data
 
 	return (
 		<GridItem>
@@ -60,7 +35,7 @@ const PokemonGridItem = ({ name }) => {
 				_hover={{ borderColor: 'whiteAlpha.800', bg: 'gray.700' }}
 			>
 				<Text pr={1} align='right' color='gray.600'>
-					{formattedId}
+					{id}
 				</Text>
 				<Box align='center' pos='relative' zIndex={1}>
 					<FallBackImage
@@ -68,11 +43,11 @@ const PokemonGridItem = ({ name }) => {
 						h='auto'
 						width='100px'
 						height='100px'
-						src={imageUrl}
-						alt={imageAlt}
+						src={url}
+						alt={alt}
 						fallbackSrc='/fallback.png'
 						placeholder='blur'
-						blurDataURL={imageUrl}
+						blurDataURL={url}
 					/>
 				</Box>
 				<Box>
@@ -83,14 +58,14 @@ const PokemonGridItem = ({ name }) => {
 						noOfLines={1}
 						align='center'
 					>
-						{formattedName}
+						{name}
 					</Text>
 					<Box justifyContent='center' align='center'>
 						<chakra.div my={1} maxW={100}>
-							<CustomRating value={averageRating} readOnly />
+							<CustomRating value={rating} readOnly />
 						</chakra.div>
 						<Box color='gray.600' fontSize='sm' align='center' mb={2}>
-							{reviewCount} ratings
+							{count} ratings
 						</Box>
 					</Box>
 				</Box>
