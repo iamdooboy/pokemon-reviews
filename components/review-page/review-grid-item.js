@@ -33,46 +33,73 @@ import {
 	capitalFirstLetter
 } from '../../utils/helpers'
 import { motion } from 'framer-motion'
+import { useLike } from '../../hooks/useLike'
+import { useLikeTest } from '../../hooks/useLikeTest'
+import useSWR, { mutate } from 'swr'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+
 const ReviewGridItem = ({
-	id,
-	description,
-	rating,
-	createdAt,
-	pokemon,
-	favorite,
-	favoritedByCurrentUser,
-	onEdit,
-	onDelete,
-	setPokemonName
+	review
+	// id,
+	// description,
+	// rating,
+	// createdAt,
+	// pokemon,
+	// favorite,
+	// favoritedByCurrentUser
+	// onEdit,
+	// onDelete,
+	// setPokemonName
 }) => {
-	const log = useRef(true)
-	const [path, setPath] = useState('/')
+	// const log = useRef(true)
+	// const [path, setPath] = useState('/')
 
-	useEffect(() => {
-		if (log.current) {
-			const getPath = async () => {
-				const res = await getAllPokemonNames()
-				const index = res.indexOf(pokemon) + 1
-				const gen = getPokemonGeneration(index)
+	// useEffect(() => {
+	// 	if (log.current) {
+	// 		const getPath = async () => {
+	// 			const res = await getAllPokemonNames()
+	// 			const index = res.indexOf(pokemon) + 1
+	// 			const gen = getPokemonGeneration(index)
 
-				setPath(`gen/${gen}/${pokemon}`)
-			}
-			getPath()
-		}
+	// 			setPath(`gen/${gen}/${pokemon}`)
+	// 		}
+	// 		getPath()
+	// 	}
 
-		return () => {
-			log.current = false
-		}
-	}, [])
+	// 	return () => {
+	// 		log.current = false
+	// 	}
+	// }, [])
 
-	const { pokemon: allPokemon } = useInput()
+	// const {
+	// 	favoriteClickHandler,
+	// 	numberOfFavorites,
+	// 	favorite: didUserFavorite
+	// } = useFavorite('review', id, favorite, favoritedByCurrentUser)
 	const {
-		favoriteClickHandler,
-		numberOfFavorites,
-		favorite: didUserFavorite
-	} = useFavorite('review', id, favorite, favoritedByCurrentUser)
+		id,
+		description,
+		rating,
+		createdAt,
+		pokemon,
+		favorite,
+		favoritedByCurrentUser
+	} = review
 
-	const favoriteIcon = didUserFavorite ? (
+	const fetcher = () => axios.get('/api/reviews/')
+
+	const { onLike } = useLikeTest(review, '/api/reviews/', fetcher)
+	//const { onLike } = useLike(review, '/api/reviews/')
+	const { pokemon: allPokemon } = useInput()
+
+	if (!allPokemon) return <div>loading</div>
+
+	const index = allPokemon.indexOf(pokemon) + 1
+	const gen = getPokemonGeneration(index)
+	const href = `gen/${gen}/${pokemon}`
+
+	const favoriteIcon = favoritedByCurrentUser ? (
 		<FaThumbsUp color='#38B2AC' />
 	) : (
 		<FaRegThumbsUp />
@@ -80,13 +107,17 @@ const ReviewGridItem = ({
 
 	const src = getPokemonImageUrl(allPokemon.indexOf(pokemon) + 1)
 
-	let formattedName = formatNames(pokemon)
-	formattedName = capitalFirstLetter(formattedName)
+	const formattedName = capitalFirstLetter(formatNames(pokemon))
 
 	const onClickHandler = () => {
-		setPokemonName(formattedName)
-		onEdit({ id, description, rating })
+		//setPokemonName(formattedName)
+		//onEdit({ id, description, rating })
 	}
+
+	// const prefetch = () => {
+	// 	console.log('prefetching')
+	// 	mutate(`/api/reviews/${pokemon}`)
+	// }
 
 	return (
 		<GridItem>
@@ -105,13 +136,7 @@ const ReviewGridItem = ({
 			>
 				<Stack direction='column' maxW='2xl'>
 					<HStack spacing={3}>
-						<LinkOverlay
-							href={path}
-							display='flex'
-							gap={2}
-							onClick={() => console.log('home')}
-							cursor='pointer'
-						>
+						<LinkOverlay href={href} display='flex' gap={2} cursor='pointer'>
 							<Avatar bg='gray.700' size='md' name={pokemon} src={src} />
 							<Flex direction='column'>
 								<Text fontWeight='bold' fontSize='md'>
@@ -130,10 +155,10 @@ const ReviewGridItem = ({
 						>
 							<Flex gap={3}>
 								<Flex gap={1}>
-									<chakra.button onClick={() => favoriteClickHandler()}>
+									<chakra.button onClick={() => onLike(review)}>
 										{favoriteIcon}
 									</chakra.button>
-									<Text fontSize='md'>{numberOfFavorites}</Text>
+									<Text fontSize='md'>{favorite}</Text>
 								</Flex>
 								<Button
 									size='xs'
@@ -198,10 +223,10 @@ const ReviewGridItem = ({
 								</PopoverContent>
 							</Popover>
 							<Flex gap={1}>
-								<chakra.button onClick={() => favoriteClickHandler()}>
+								<chakra.button onClick={() => onLike(review)}>
 									{favoriteIcon}
 								</chakra.button>
-								<Text fontSize='sm'>{numberOfFavorites}</Text>
+								<Text fontSize='sm'>{favorite}</Text>
 							</Flex>
 						</Flex>
 					</HStack>

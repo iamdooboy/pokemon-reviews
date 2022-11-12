@@ -3,12 +3,8 @@ import { useToast } from '@chakra-ui/react'
 import { useAsyncToast } from './useAsyncToast'
 import useSWR from 'swr'
 
-export const useMutation = key => {
-	const {
-		data: reviews,
-		error,
-		mutate
-	} = useSWR(key, { revalidateOnMount: true })
+export const useTest = (key, fetcher) => {
+	const { data: reviews, error, mutate } = useSWR(key, fetcher)
 	//const { data: reviews, error, mutate } = useSWR(`/api/reviews/${pokemonName}`)
 	const toast = useToast()
 	const [_, setIsLoading] = useAsyncToast(false, {

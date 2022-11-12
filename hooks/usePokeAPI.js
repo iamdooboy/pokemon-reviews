@@ -1,37 +1,111 @@
-import useSWR from 'swr'
+import useSWRImmutable from 'swr/immutable'
 import { api } from '../utils/axios'
 import {
 	getPokemonImageUrl,
 	formatNames,
-	capitalFirstLetter
+	capitalFirstLetter,
+	getLimitAndOffset
 } from '../utils/helpers'
 
-export const usePokeAPI = pokemon => {
-	const fetcher = url => api.get(url).then(res => res.data)
+export const usePokeAPI = () => {
+	const fetchOnePokemon = args => {
+		const fetcher = url => api.get(url).then(res => res.data)
 
-	const options = {
-		revalidateIfStale: false,
-		revalidateOnFocus: false,
-		revalidateOnReconnect: false
+		const { data } = useSWRImmutable(`/pokemon/${args}`, fetcher)
+
+		const formatData = apiData => {
+			const { id, types } = apiData
+			const typesArr = types.map(el => el.type.name)
+			const imageUrl = getPokemonImageUrl(id)
+			const imageAlt = formatNames(args)
+			const formattedName = capitalFirstLetter(formatNames(args))
+			const formattedId = id.toString().padStart(3, '0')
+
+			return {
+				types: typesArr,
+				url: imageUrl,
+				alt: imageAlt,
+				name: formattedName,
+				id: formattedId
+			}
+		}
+
+		return {
+			data,
+			isLoading: !data,
+			formatData
+		}
 	}
 
-	const { data } = useSWR(`/pokemon/${pokemon}`, fetcher, options)
+	const fetchAllPokemon = args => {
+		const { limit, offset } = getLimitAndOffset(args)
 
-	if (!data) return false
+		const fetcher = () =>
+			api
+				.get(`/pokemon?limit=${limit}&offset=${offset}`)
+				.then(res => res.data.results.map(el => el.name))
 
-	const { id, types } = data
+		const { data } = useSWRImmutable(`/gen/${args}`, fetcher)
 
-	const typesArr = types.map(el => el.type.name)
-	const imageUrl = getPokemonImageUrl(id)
-	const imageAlt = formatNames(pokemon)
-	const formattedName = capitalFirstLetter(formatNames(pokemon))
-	const formattedId = id.toString().padStart(3, '0')
-
-	return {
-		types: typesArr,
-		url: imageUrl,
-		alt: imageAlt,
-		name: formattedName,
-		id: formattedId
+		return {
+			data,
+			isLoading: !data
+		}
 	}
+
+	return [fetchOnePokemon, fetchAllPokemon]
+
+	// if (!data) return false
+
+	// const { id, types } = data
+
+	// const typesArr = types.map(el => el.type.name)
+	// const imageUrl = getPokemonImageUrl(id)
+	// const imageAlt = formatNames(pokemon)
+	// const formattedName = capitalFirstLetter(formatNames(pokemon))
+	// const formattedId = id.toString().padStart(3, '0')
+
+	// return {
+	// 	types: typesArr,
+	// 	url: imageUrl,
+	// 	alt: imageAlt,
+	// 	name: formattedName,
+	// 	id: formattedId
+	// }
+	// if (fetchOnePokemon) {
+	// 	const fetcher = url => api.get(url).then(res => res.data)
+
+	// 	const { data } = useSWRImmutable(`/pokemon/${pokemon}`, fetcher)
+
+	// 	if (!data) return false
+
+	// 	const { id, types } = data
+
+	// 	const typesArr = types.map(el => el.type.name)
+	// 	const imageUrl = getPokemonImageUrl(id)
+	// 	const imageAlt = formatNames(pokemon)
+	// 	const formattedName = capitalFirstLetter(formatNames(pokemon))
+	// 	const formattedId = id.toString().padStart(3, '0')
+
+	// 	return {
+	// 		types: typesArr,
+	// 		url: imageUrl,
+	// 		alt: imageAlt,
+	// 		name: formattedName,
+	// 		id: formattedId
+	// 	}
+	// } else {
+	// 	const gen = pokemon
+
+	// 	const { limit, offset } = getLimitAndOffset(gen)
+
+	// 	const fetcher = () =>
+	// 		api
+	// 			.get(`/pokemon?limit=${limit}&offset=${offset}`)
+	// 			.then(res => res.data.results.map(el => el.name))
+
+	// 	const { data } = useSWRImmutable(`/gen/${gen}`, fetcher)
+
+	// 	return data
+	// }
 }

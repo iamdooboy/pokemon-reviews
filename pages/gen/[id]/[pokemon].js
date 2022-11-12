@@ -39,50 +39,44 @@ const Pokemon = ({ fallback, pokemonName, favorite, gen }) => {
 	const initialRef = useRef()
 
 	return (
-		<SWRConfig value={{ fallback }}>
-			<Flex pt={16}>
-				<Sidebar id={gen} />
-				<chakra.div
-					flex={1}
-					px='5'
-					overflow='auto'
-					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
+		// <SWRConfig value={{ fallback }}>
+		<Flex pt={16}>
+			<Sidebar id={gen} />
+			<chakra.div
+				flex={1}
+				px='5'
+				overflow='auto'
+				maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
+			>
+				<Container
+					maxW='container.xl'
+					px={{ base: 5, md: 12 }}
+					margin='0 auto'
+					align='center'
+					justify='center'
 				>
-					<Container
-						maxW='container.xl'
-						px={{ base: 5, md: 12 }}
-						margin='0 auto'
-						align='center'
-						justify='center'
-					>
-						<NavSection pokemonName={pokemonName} />
-						<PokemonCard pokemonName={pokemonName} />
-						<ActionButtons
-							{...{
-								onOpen,
-								pokemonName,
-								favorite
-							}}
-						/>
-						<ReviewList
-							pokemonName={pokemonName}
-							onOpen={onOpen}
-							setSelected={setSelected}
-						/>
-						<ReviewModal
-							{...{
-								pokemonName,
-								isOpen,
-								onClose,
-								initialRef,
-								selected,
-								setSelected
-							}}
-						/>
-					</Container>
-				</chakra.div>
-			</Flex>
-		</SWRConfig>
+					<NavSection pokemonName={pokemonName} gen={gen} />
+					<PokemonCard pokemonName={pokemonName} />
+					<ActionButtons onOpen={onOpen} pokemonName={pokemonName} />
+					<ReviewList
+						pokemonName={pokemonName}
+						onOpen={onOpen}
+						setSelected={setSelected}
+					/>
+					<ReviewModal
+						{...{
+							pokemonName,
+							isOpen,
+							onClose,
+							initialRef,
+							selected,
+							setSelected
+						}}
+					/>
+				</Container>
+			</chakra.div>
+		</Flex>
+		// </SWRConfig>
 	)
 }
 
@@ -150,12 +144,12 @@ export const getServerSideProps = async context => {
 
 	return {
 		props: {
-			fallback: {
-				[`/pokemon/${pokemon}`]: response,
-				[`/api/pokemon/${pokemon}`]: selectedPokemon,
-				[`/api/reviews/${pokemon}`]: JSON.parse(JSON.stringify(reviews)),
-				['/api/user']: JSON.parse(JSON.stringify(user))
-			},
+			// fallback: {
+			// 	[`/pokemon/${pokemon}`]: response,
+			// 	[`/api/pokemon/${pokemon}`]: selectedPokemon,
+			// 	[`/api/reviews/${pokemon}`]: JSON.parse(JSON.stringify(reviews)),
+			// 	['/api/user']: JSON.parse(JSON.stringify(user))
+			// },
 			pokemonName: pokemon,
 			favorite,
 			gen

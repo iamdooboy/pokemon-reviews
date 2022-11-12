@@ -23,66 +23,31 @@ export default async function handler(req, res) {
 	}
 
 	if (req.method === 'PUT') {
-		if (req.body.api === 'PUT_REVIEW') {
-			const { id, description, rating, favoritedByCurrentUser } = req.body
-			let updatedData = await prisma.review.update({
-				where: {
-					id
-				},
-				data: {
-					description,
-					rating
-				},
-				include: {
-					//return all fields from user model
-					author: true
-				}
-			})
-
-			updatedData = {
-				...updatedData,
-				favoritedByCurrentUser
+		const { id, description, rating, favoritedByCurrentUser } = req.body
+		let updatedData = await prisma.review.update({
+			where: {
+				id
+			},
+			data: {
+				description,
+				rating
+			},
+			include: {
+				//return all fields from user model
+				author: true
 			}
+		})
 
-			// const favoritedBy = updatedData.favoritedBy.some(el => el.id === user.id)
-
-			// updatedData = { ...updatedData, favoritedByCurrentUser: favoritedBy }
-
-			res.status(200).json(updatedData)
-		} else {
-			const { favorite, id, favoritedByCurrentUser } = req.body
-			const toggleFunction = {
-				[favoritedByCurrentUser ? 'connect' : 'disconnect']: {
-					id: user.id
-				}
-			}
-			let updatedData = await prisma.review.update({
-				where: {
-					id
-				},
-				data: {
-					favorite,
-					favoritedBy: {
-						...toggleFunction
-					}
-				},
-				include: {
-					//return all fields from user model
-					author: true
-				}
-			})
-
-			updatedData = {
-				...updatedData,
-				favoritedByCurrentUser
-			}
-
-			// const favoritedBy = updatedData.favoritedBy.some(el => el.id === user.id)
-
-			// updatedData = { ...updatedData, favoritedByCurrentUser: favoritedBy }
-
-			res.status(200).json(updatedData)
+		updatedData = {
+			...updatedData,
+			favoritedByCurrentUser
 		}
+
+		// const favoritedBy = updatedData.favoritedBy.some(el => el.id === user.id)
+
+		// updatedData = { ...updatedData, favoritedByCurrentUser: favoritedBy }
+
+		res.status(200).json(updatedData)
 	}
 
 	if (req.method === 'POST') {
@@ -109,21 +74,13 @@ export default async function handler(req, res) {
 
 	if (req.method === 'GET') {
 		try {
-			// const reviews = await prisma.review.findMany({
-			// 	where: {
-			// 		pokemon: req.query.pokemon
-			// 	}
-			// })
 			let reviews = await prisma.review.findMany({
-				//return all reviews for current user
 				where: {
-					authorId: user.id
+					pokemon: req.query.pokemon
 				},
 				include: {
+					author: true,
 					favoritedBy: true
-				},
-				orderBy: {
-					createdAt: 'desc'
 				}
 			})
 

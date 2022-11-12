@@ -1,8 +1,20 @@
 import ReviewBox from '../pokemon-page/review-box'
-import { useMutation } from '../../hooks/useMutation'
+import { useFetchReviews } from '../../hooks/useFetchReviews'
+import axios from 'axios'
 
 const ReviewList = ({ pokemonName, onOpen, setSelected }) => {
-	const { reviews, isLoading } = useMutation(pokemonName)
+	const fetcher = url =>
+		axios
+			.get(url, {
+				params: {
+					pokemon: pokemonName
+				}
+			})
+			.then(res => res.data)
+
+	const key = `/api/reviews/${pokemonName}`
+
+	const { reviews, isLoading } = useFetchReviews(key, fetcher)
 
 	if (isLoading) return <div>loading</div>
 
@@ -11,10 +23,7 @@ const ReviewList = ({ pokemonName, onOpen, setSelected }) => {
 			{reviews.map((review, index) => (
 				<ReviewBox
 					key={index}
-					review={review}
-					setSelected={setSelected}
-					onOpen={onOpen}
-					pokemonName={pokemonName}
+					{...{ review, setSelected, onOpen, pokemonName }}
 				/>
 			))}
 		</>

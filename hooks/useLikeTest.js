@@ -1,8 +1,8 @@
-import { useMutation } from './useMutation'
+import { useTest } from './useTest'
 import { useState } from 'react'
 
-export const useLike = (review, key) => {
-	const { onMutate } = useMutation(key)
+export const useLikeTest = (review, key, fetcher) => {
+	const { onMutate } = useTest(key, fetcher)
 
 	const [favByUser, setFavByUser] = useState(review.favoritedByCurrentUser)
 	const [numOfFav, setNumOfFav] = useState(review.favorite)

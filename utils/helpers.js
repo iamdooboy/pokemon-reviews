@@ -171,7 +171,9 @@ export const getLimitAndOffset = gen => {
 		return { limit: 72, offset: 649, gen: 6 }
 	} else if (gen === 7) {
 		return { limit: 88, offset: 721, gen: 7 }
-	} else {
+	} else if (gen === 8) {
 		return { limit: 96, offset: 809, gen: 8 }
+	} else {
+		return { limit: 905, offset: 0 }
 	}
 }

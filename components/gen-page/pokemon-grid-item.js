@@ -11,17 +11,21 @@ const PokemonGridItem = ({ pokemonName }) => {
 	const fetcher = url =>
 		axios.get(url, { params: { pokemon: pokemonName } }).then(res => res.data)
 
-	const review = useFetchReviews(`/api/reviews/${pokemonName}`, fetcher)
+	const key = `/api/reviews/${pokemonName}`
 
-	const data = usePokeAPI(pokemonName)
+	const { reviews, isLoading, calcRatings } = useFetchReviews(key, fetcher)
 
-	if (!review || !data) {
+	const [fetchOnePokemon] = usePokeAPI()
+
+	const { data, isLoading: loading, formatData } = fetchOnePokemon(pokemonName)
+
+	if (isLoading || loading) {
 		return <GridItemSkeleton />
 	}
 
-	const { count, rating } = review
+	const { count, rating } = calcRatings(reviews)
 
-	const { url, alt, name, id } = data
+	const { url, alt, name, id } = formatData(data)
 
 	return (
 		<GridItem>

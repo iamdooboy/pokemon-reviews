@@ -4,9 +4,14 @@ import AddOn from './add-on'
 import ReadMore from '../read-more'
 import useSWR from 'swr'
 import { EllipsisButton } from '../ellipsis-button'
+import axios from 'axios'
+import useSWRImmutable from 'swr/immutable'
 
 const ReviewBox = ({ review, setSelected, onOpen, pokemonName }) => {
-	const { data: user } = useSWR('/api/user')
+	const fetcher = url => axios.get(url).then(res => res.data)
+	const { data: user } = useSWRImmutable('/api/user', fetcher)
+
+	if (!user) return <div>loading</div>
 
 	const { description, author } = review
 

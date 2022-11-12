@@ -11,18 +11,19 @@ import {
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { api } from '../../utils/axios'
+import { useFetchPokemon } from '../../hooks/useFetchPokemon'
+import { usePokeAPI } from '../../hooks/usePokeAPI'
 
 const NavSection = ({ pokemonName }) => {
 	const router = useRouter()
-	const { data } = useSWR(`/pokemon/${pokemonName}`)
 
-	const id = data?.id
+	const [fetchOnePokemon, fetchAllPokemon] = usePokeAPI()
 
-	const { data: pokemon } = useSWR('/pokemon?limit=905', () =>
-		api
-			.get('/pokemon?limit=905&offset=0')
-			.then(res => res.data.results.map(el => el.name))
-	)
+	const { data, isLoading: loading } = fetchOnePokemon(pokemonName)
+
+	const { data: pokemon, isLoading } = fetchAllPokemon()
+
+	if (isLoading || loading) return <div>loading</div>
 
 	const onClickHandler = () => {
 		const random = getRandomPokemonNum()
@@ -31,42 +32,40 @@ const NavSection = ({ pokemonName }) => {
 		router.push(`/gen/${gen}/${name}`)
 	}
 
-	if (pokemon) {
-		return (
-			<HStack
-				align='center'
-				justify='space-between'
-				mt={5}
-				mb={3}
-				maxW='xs'
-				w='full'
-			>
-				<NavButton
-					id={id === 1 ? 905 : id - 1}
-					name={id === 1 ? pokemon[904] : pokemon[id - 2]}
-					leftIcon={<ArrowBackIcon />}
-				>
-					{id === 1
-						? capitalFirstLetter(formatNames(pokemon[904]))
-						: capitalFirstLetter(formatNames(pokemon[id - 2]))}
-				</NavButton>
+	const id = parseInt(data.id)
 
-				<RandomButton w='full' size='sm' onClick={onClickHandler}>
-					Surprise me
-				</RandomButton>
-
-				<NavButton
-					id={id === 905 ? 1 : id + 1}
-					name={id === 905 ? pokemon[0] : pokemon[id]}
-					rightIcon={<ArrowForwardIcon />}
-				>
-					{id === 905
-						? capitalFirstLetter(formatNames(pokemon[0]))
-						: capitalFirstLetter(formatNames(pokemon[id]))}
-				</NavButton>
-			</HStack>
-		)
+	const prev = {
+		id: id === 1 ? 905 : id - 1,
+		name: id === 1 ? pokemon[904] : pokemon[id - 2],
+		leftIcon: <ArrowBackIcon />
 	}
+
+	const next = {
+		id: id === 905 ? 1 : id + 1,
+		name: id === 905 ? pokemon[0] : pokemon[id],
+		rightIcon: <ArrowForwardIcon />
+	}
+
+	return (
+		<HStack
+			align='center'
+			justify='space-between'
+			mt={5}
+			mb={3}
+			maxW='xs'
+			w='full'
+		>
+			<NavButton {...prev}>
+				{capitalFirstLetter(formatNames(prev.name))}
+			</NavButton>
+			<RandomButton w='full' size='sm' onClick={onClickHandler}>
+				Surprise me
+			</RandomButton>
+			<NavButton {...next}>
+				{capitalFirstLetter(formatNames(next.name))}
+			</NavButton>
+		</HStack>
+	)
 }
 
 export default NavSection

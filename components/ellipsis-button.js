@@ -19,7 +19,7 @@ export const EllipsisButton = ({
 	onOpen,
 	pokemonName
 }) => {
-	const { onMutate } = useMutation(pokemonName)
+	const { onMutate } = useMutation(`/api/reviews/${pokemonName}`)
 
 	const deleteHandler = async () => {
 		const data = { id: review.id, api: 'DELETE' }

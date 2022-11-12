@@ -46,7 +46,7 @@ const ReviewModal = ({
 	selected,
 	setSelected
 }) => {
-	const { onMutate } = useMutation(pokemonName)
+	const { onMutate } = useMutation(`/api/reviews/${pokemonName}`)
 	const [rating, setRating] = useState(0)
 	const [description, setDescription] = useState('')
 
@@ -63,11 +63,10 @@ const ReviewModal = ({
 		let data = { description, rating, pokemon: pokemonName, api: 'POST' }
 
 		if (selected.description) {
-			data = { id: selected.id, description, rating, api: 'PUT_REVIEW' }
+			data = { ...selected, description, rating, api: 'PUT_REVIEW' }
 		}
 
 		onMutate(data)
-
 		onCloseHandler()
 	}
 

@@ -4,7 +4,6 @@ import { prisma } from '../../lib/prisma'
 export default async function handler(req, res) {
 	// Check if user is authenticated
 	const session = await getSession({ req })
-
 	if (!session) {
 		return res.status(401).json({ message: 'Unauthorized.' })
 	}
@@ -14,32 +13,28 @@ export default async function handler(req, res) {
 	})
 
 	if (req.method === 'GET') {
-		res.status(200).send(user)
-	}
-
-	if (req.method === 'PUT') {
 		try {
-			const { numberOfFavorites, id, toggle } = req.body
-
-			const toggleFunction = {
-				[!toggle ? 'connect' : 'disconnect']: {
-					id: user.id
-				}
-			}
-
-			const updatedPokemon = await prisma.pokemon.update({
+			let reviews = await prisma.review.findMany({
 				where: {
-					id: id
+					pokemon: req.query.pokemon
 				},
-				data: {
-					favorite: numberOfFavorites,
-					favoritedBy: {
-						...toggleFunction
-					}
+				include: {
+					author: true,
+					favoritedBy: true
 				}
-				//select: { id: true, pokemon: true, favoritedBy: true }
 			})
-			res.status(200).json(updatedPokemon)
+
+			reviews = reviews.map(review => {
+				const favoritedByCurrentUser = review.favoritedBy.some(
+					el => el.id === user.id
+				)
+
+				delete review.favoritedBy
+
+				return { ...review, favoritedByCurrentUser }
+			})
+
+			res.status(200).json(reviews)
 		} catch (e) {
 			res.status(500).json({ message: 'Something went wrong' })
 		}
