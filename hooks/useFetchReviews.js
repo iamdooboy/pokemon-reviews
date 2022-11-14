@@ -1,8 +1,22 @@
 import useSWR from 'swr'
 import axios from 'axios'
+import { useToast } from '@chakra-ui/react'
+import { useAsyncToast } from './useAsyncToast'
 
 export const useFetchReviews = (key, fetcher) => {
-	const { data, mutate } = useSWR(key, fetcher)
+	const { data: reviews, mutate } = useSWR(key, fetcher)
+
+	const toast = useToast()
+	const [_, setIsLoading] = useAsyncToast(false, {
+		title: 'Loading...',
+		position: 'bottom-right'
+	})
+
+	let options = {
+		rollbackOnError: true,
+		populateCache: true,
+		revalidate: false
+	}
 
 	const calcRatings = review => {
 		const reviewCount = review.length
@@ -21,12 +35,23 @@ export const useFetchReviews = (key, fetcher) => {
 		}
 	}
 
-	const updateFn = async newData => {
+	const postFn = async data => {
+		setIsLoading(true)
+		const res = await axios.post('/api/reviews', data).then(res => res.data)
+		const newData = [...reviews, res]
+		displayConfirmationToast('Review created')
+		return newData
+	}
+
+	const updateFn = async (data, path = '') => {
+		if (!path) {
+			setIsLoading(true)
+		}
 		const res = await axios
-			.put('/api/reviews/like', newData)
+			.put(`/api/reviews/${path}`, data)
 			.then(res => res.data)
 
-		const updatedData = data.map(review => {
+		const updatedData = reviews.map(review => {
 			if (review.id !== res.id) {
 				return review
 			}
@@ -35,7 +60,21 @@ export const useFetchReviews = (key, fetcher) => {
 			}
 		})
 
+		if (!path) {
+			displayConfirmationToast('Review updated')
+		}
+
 		return updatedData
+	}
+
+	const deleteFn = async data => {
+		setIsLoading(true)
+		const res = await axios
+			.delete('/api/reviews', { data })
+			.then(res => res.data)
+		displayConfirmationToast('Review deleted')
+
+		return reviews.filter(review => review.id !== res.id)
 	}
 
 	const like = selected => {
@@ -47,7 +86,7 @@ export const useFetchReviews = (key, fetcher) => {
 			favoritedByCurrentUser: !favoritedByCurrentUser
 		}
 
-		const optimisticData = data.map(review => {
+		const optimisticData = reviews.map(review => {
 			if (id !== review.id) {
 				return review
 			}
@@ -58,66 +97,67 @@ export const useFetchReviews = (key, fetcher) => {
 			}
 		})
 
-		const options = {
+		options = {
 			optimisticData,
-			rollbackOnError: true,
-			populateCache: true,
-			revalidate: false
+			...options
 		}
 
-		mutate(updateFn(newData), options)
+		mutate(updateFn(newData, 'like'), options)
+	}
+
+	const update = data => {
+		const { id, description, rating } = data
+
+		const optimisticData = reviews.map(review => {
+			if (id !== review.id) {
+				return review
+			}
+			return { ...review, description, rating }
+		})
+
+		options = {
+			optimisticData,
+			...options
+		}
+
+		const path = '/api/reviews/'
+
+		mutate(updateFn(data), options)
+	}
+
+	const create = data => {
+		mutate(postFn(data), options)
+	}
+
+	const remove = data => {
+		const optimisticData = reviews.filter(review => review.id !== data.id)
+
+		options = {
+			optimisticData,
+			...options
+		}
+
+		mutate(deleteFn(data), options)
+	}
+
+	const displayConfirmationToast = message => {
+		setIsLoading(false)
+		toast({
+			title: message,
+			position: 'bottom-right',
+			status: 'success',
+			duration: 1500,
+			isClosable: true
+		})
 	}
 
 	return {
-		reviews: data,
-		isLoading: !data,
+		reviews,
+		isLoading: !reviews,
 		calcRatings,
-		like
+		like,
+		create,
+		update,
+		remove
 	}
-
-	// if (!data) return data
-
-	// const reviewCount = data.length
-
-	// const totalRating = data ? data.reduce((sum, obj) => sum + obj.rating, 0) : 0
-
-	// let averageRating = totalRating ? totalRating / reviewCount : 0
-
-	// averageRating = Math.round(averageRating * 10) / 10
-
-	// return {
-	// 	count: reviewCount,
-	// 	rating: averageRating
-	// }
 }
-
-// export const useFetchReviews = (pokemonName, fetchOneReview = true) => {
-// 	if (fetchOneReview) {
-// 		const fetcher = url =>
-// 			axios.get(url, { params: { pokemon: pokemonName } }).then(res => res.data)
-
-// 		const { data } = useSWR(`/api/reviews/${pokemonName}`, fetcher)
-
-// 		//if (!data) return false
-
-// 		const reviewCount = data?.length
-
-// 		const totalRating = data
-// 			? data.reduce((sum, obj) => sum + obj.rating, 0)
-// 			: 0
-
-// 		let averageRating = totalRating ? totalRating / reviewCount : 0
-
-// 		averageRating = Math.round(averageRating * 10) / 10
-
-// 		return {
-// 			count: reviewCount,
-// 			rating: averageRating
-// 		}
-// 	} else {
-// 		return {
-// 			count: 1,
-// 			rating: 2
-// 		}
-// 	}
-// }

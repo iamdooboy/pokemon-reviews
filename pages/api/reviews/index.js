@@ -51,25 +51,17 @@ export default async function handler(req, res) {
 	}
 
 	if (req.method === 'POST') {
-		try {
-			const user = await prisma.user.findUnique({
-				where: { email: session.user.email }
-			})
+		const { description, rating, pokemon } = req.body
 
-			const { description, rating, pokemon } = req.body
-
-			const savedReview = await prisma.review.create({
-				// data: { ...reviewData, authorId: user.id },
-				data: { description, rating, pokemon, authorId: user.id },
-				include: {
-					//return all fields from user model
-					author: true
-				}
-			})
-			res.status(200).json(savedReview)
-		} catch (e) {
-			res.status(500).json({ message: 'Something went wrong' })
-		}
+		const savedReview = await prisma.review.create({
+			// data: { ...reviewData, authorId: user.id },
+			data: { description, rating, pokemon, authorId: user.id },
+			include: {
+				//return all fields from user model
+				author: true
+			}
+		})
+		res.status(200).json(savedReview)
 	}
 
 	if (req.method === 'GET') {

@@ -19,7 +19,8 @@ import {
 import ResizeTextarea from 'react-textarea-autosize'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 import { CustomRating } from '../rating'
-import { useMutation } from '../../hooks/useMutation'
+import { useFetchReviews } from '../../hooks/useFetchReviews'
+import axios from 'axios'
 
 const AutoResizeTextarea = React.forwardRef((props, ref) => {
 	return (
@@ -46,7 +47,12 @@ const ReviewModal = ({
 	selected,
 	setSelected
 }) => {
-	const { onMutate } = useMutation(`/api/reviews/${pokemonName}`)
+	const fetcher = url =>
+		axios.get(url, { params: { pokemon: pokemonName } }).then(res => res.data)
+
+	const key = `/api/reviews/${pokemonName}`
+
+	const { create, update } = useFetchReviews(key, fetcher)
 	const [rating, setRating] = useState(0)
 	const [description, setDescription] = useState('')
 
@@ -59,14 +65,13 @@ const ReviewModal = ({
 
 	const onSubmitHandler = async e => {
 		e.preventDefault()
-
-		let data = { description, rating, pokemon: pokemonName, api: 'POST' }
-
 		if (selected.description) {
-			data = { ...selected, description, rating, api: 'PUT_REVIEW' }
+			const data = { ...selected, description, rating }
+			update(data)
+		} else {
+			const data = { description, rating, pokemon: pokemonName }
+			create(data)
 		}
-
-		onMutate(data)
 		onCloseHandler()
 	}
 
@@ -74,7 +79,6 @@ const ReviewModal = ({
 		setRating(0)
 		setDescription('')
 		setSelected({ description: '', rating: 0 })
-
 		onClose()
 	}
 
