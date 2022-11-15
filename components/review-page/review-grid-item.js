@@ -1,4 +1,3 @@
-import React, { useState, useRef, useEffect } from 'react'
 import {
 	chakra,
 	Box,
@@ -8,75 +7,26 @@ import {
 	Stack,
 	HStack,
 	Avatar,
-	Icon,
 	Spacer,
-	Popover,
-	PopoverTrigger,
-	PopoverContent,
-	PopoverBody,
-	PopoverArrow,
 	Button
 } from '@chakra-ui/react'
-import { useInput } from '../../hooks/useInput'
 import { getPokemonImageUrl } from '../../utils/helpers'
 import ReadMore from '../read-more'
-import { AiOutlineEllipsis } from 'react-icons/ai'
 import { FaThumbsUp, FaRegThumbsUp } from 'react-icons/fa'
-import { useFavorite } from '../../hooks/useFavorite'
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import { LinkOverlay } from '../link-overlay'
-import { getAllPokemonNames } from '../../utils/axios'
+import { motion } from 'framer-motion'
+import { EllipsisButton } from '../ellipsis-button'
+import { usePokeAPI } from '../../hooks/usePokeAPI'
 import {
 	getPokemonGeneration,
 	formatNames,
 	timeOffset,
 	capitalFirstLetter
 } from '../../utils/helpers'
-import { motion } from 'framer-motion'
-import { useLike } from '../../hooks/useLike'
-import { useLikeTest } from '../../hooks/useLikeTest'
-import useSWR, { mutate } from 'swr'
-import axios from 'axios'
-import { useRouter } from 'next/router'
+import { CustomRating } from '../rating'
 
-const ReviewGridItem = ({
-	review
-	// id,
-	// description,
-	// rating,
-	// createdAt,
-	// pokemon,
-	// favorite,
-	// favoritedByCurrentUser
-	// onEdit,
-	// onDelete,
-	// setPokemonName
-}) => {
-	// const log = useRef(true)
-	// const [path, setPath] = useState('/')
-
-	// useEffect(() => {
-	// 	if (log.current) {
-	// 		const getPath = async () => {
-	// 			const res = await getAllPokemonNames()
-	// 			const index = res.indexOf(pokemon) + 1
-	// 			const gen = getPokemonGeneration(index)
-
-	// 			setPath(`gen/${gen}/${pokemon}`)
-	// 		}
-	// 		getPath()
-	// 	}
-
-	// 	return () => {
-	// 		log.current = false
-	// 	}
-	// }, [])
-
-	// const {
-	// 	favoriteClickHandler,
-	// 	numberOfFavorites,
-	// 	favorite: didUserFavorite
-	// } = useFavorite('review', id, favorite, favoritedByCurrentUser)
+const ReviewGridItem = ({ review, like, remove, onOpen, setSelected }) => {
 	const {
 		id,
 		description,
@@ -87,37 +37,27 @@ const ReviewGridItem = ({
 		favoritedByCurrentUser
 	} = review
 
-	const fetcher = () => axios.get('/api/reviews/')
+	const [_, fetchAllPokemon] = usePokeAPI()
 
-	const { onLike } = useLikeTest(review, '/api/reviews/', fetcher)
-	//const { onLike } = useLike(review, '/api/reviews/')
-	const { pokemon: allPokemon } = useInput()
+	const { data: allPokemon, isLoading } = fetchAllPokemon('all')
 
-	if (!allPokemon) return <div>loading</div>
+	if (isLoading) return <div>loading</div>
 
-	const index = allPokemon.indexOf(pokemon) + 1
+	const index = allPokemon?.indexOf(pokemon) + 1
 	const gen = getPokemonGeneration(index)
 	const href = `gen/${gen}/${pokemon}`
+	const src = getPokemonImageUrl(index)
+	const formattedName = capitalFirstLetter(formatNames(pokemon))
 
 	const favoriteIcon = favoritedByCurrentUser ? (
 		<FaThumbsUp color='#38B2AC' />
 	) : (
 		<FaRegThumbsUp />
 	)
-
-	const src = getPokemonImageUrl(allPokemon.indexOf(pokemon) + 1)
-
-	const formattedName = capitalFirstLetter(formatNames(pokemon))
-
 	const onClickHandler = () => {
-		//setPokemonName(formattedName)
-		//onEdit({ id, description, rating })
+		setSelected(review)
+		onOpen()
 	}
-
-	// const prefetch = () => {
-	// 	console.log('prefetching')
-	// 	mutate(`/api/reviews/${pokemon}`)
-	// }
 
 	return (
 		<GridItem>
@@ -132,7 +72,7 @@ const ReviewGridItem = ({
 				overflow='auto'
 				whileHover={{ y: -7 }}
 				transition='0.08s linear'
-				_hover={{ borderColor: 'whiteAlpha.700', bg: 'gray.800' }}
+				_hover={{ borderColor: 'whiteAlpha.700', bg: 'gray.700' }}
 			>
 				<Stack direction='column' maxW='2xl'>
 					<HStack spacing={3}>
@@ -155,7 +95,7 @@ const ReviewGridItem = ({
 						>
 							<Flex gap={3}>
 								<Flex gap={1}>
-									<chakra.button onClick={() => onLike(review)}>
+									<chakra.button onClick={() => like(review)}>
 										{favoriteIcon}
 									</chakra.button>
 									<Text fontSize='md'>{favorite}</Text>
@@ -174,7 +114,7 @@ const ReviewGridItem = ({
 									leftIcon={<DeleteIcon />}
 									colorScheme='red'
 									variant='outline'
-									onClick={() => onDelete(id)}
+									onClick={() => remove({ id })}
 								>
 									Delete
 								</Button>
@@ -184,60 +124,18 @@ const ReviewGridItem = ({
 							direction='column'
 							display={['inline', 'inline', 'inline-block', 'none']}
 						>
-							<Popover isLazy>
-								<PopoverTrigger>
-									<chakra.button onClick={() => setPokemonName(pokemon)}>
-										<Icon
-											align='right'
-											justify='right'
-											as={AiOutlineEllipsis}
-										/>
-									</chakra.button>
-								</PopoverTrigger>
-								<PopoverContent w='150px'>
-									<PopoverArrow />
-									<PopoverBody p={0}>
-										<Box>
-											<Button
-												onClick={() => onEdit({ id, description, rating })}
-												leftIcon={<EditIcon />}
-												variant='ghost'
-												w='full'
-												rounded='none'
-												justifyContent='start'
-											>
-												Edit
-											</Button>
-											<Button
-												onClick={() => onDelete(id)}
-												leftIcon={<DeleteIcon />}
-												variant='ghost'
-												w='full'
-												rounded='none'
-												justifyContent='start'
-											>
-												Delete
-											</Button>
-										</Box>
-									</PopoverBody>
-								</PopoverContent>
-							</Popover>
+							<EllipsisButton {...{ setSelected, review, onOpen, remove }} />
 							<Flex gap={1}>
-								<chakra.button onClick={() => onLike(review)}>
+								<chakra.button onClick={() => like(review)}>
 									{favoriteIcon}
 								</chakra.button>
 								<Text fontSize='sm'>{favorite}</Text>
 							</Flex>
 						</Flex>
 					</HStack>
-					<Flex my={3} alignItems='center' justify='start'>
-						{Array.from(Array(rating).keys()).map(id => {
-							return <Star key={id} fillColor='#EACA4E' />
-						})}
-						{Array.from(Array(5 - rating).keys()).map(id => {
-							return <Star key={id} fillColor='#e2e8f0' />
-						})}
-					</Flex>
+					<chakra.div my={1} maxW={100}>
+						<CustomRating value={rating} readOnly />
+					</chakra.div>
 					<ReadMore noOfLines={3}>{description}</ReadMore>
 				</Stack>
 			</Box>

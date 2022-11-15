@@ -9,9 +9,6 @@ import {
 	getPokemonGeneration
 } from '../../utils/helpers'
 import { useRouter } from 'next/router'
-import useSWR from 'swr'
-import { api } from '../../utils/axios'
-import { useFetchPokemon } from '../../hooks/useFetchPokemon'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
 
 const NavSection = ({ pokemonName }) => {
@@ -21,7 +18,7 @@ const NavSection = ({ pokemonName }) => {
 
 	const { data, isLoading: loading } = fetchOnePokemon(pokemonName)
 
-	const { data: pokemon, isLoading } = fetchAllPokemon()
+	const { data: pokemon, isLoading } = fetchAllPokemon('all')
 
 	if (isLoading || loading) return <div>loading</div>
 

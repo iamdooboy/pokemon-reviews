@@ -8,7 +8,6 @@ import {
 	FormLabel,
 	FormHelperText,
 	Input,
-	Heading,
 	Avatar,
 	SimpleGrid,
 	Button,
@@ -19,6 +18,7 @@ import Layout from '../components/layout'
 import Sidebar from '../components/sidebar/sidebar'
 import { unstable_getServerSession } from 'next-auth/next'
 import { useAsyncToast } from '../hooks/useAsyncToast'
+import { FallBackImage } from '../utils/fallback-image'
 
 const avatars = [
 	{ type: 'bug', src: '/avatar/bug.svg' },
@@ -73,10 +73,14 @@ const Settings = ({ user }) => {
 		<Layout>
 			<Flex pt={16}>
 				<Sidebar />
-				<Container color='white'>
-					<Heading as='h1' size='lg' align='left' py={8}>
-						Settings
-					</Heading>
+				<Container
+					pt={8}
+					color='white'
+					flex={1}
+					px='5'
+					overflow='auto'
+					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
+				>
 					<Box
 						borderWidth={1}
 						p={4}
@@ -85,7 +89,7 @@ const Settings = ({ user }) => {
 						as='form'
 						onSubmit={onSubmitHandler}
 					>
-						<Avatar size='2xl' name='test' src={avatar.src} my={10} />
+						<Avatar size='xl' name='test' src={avatar.src} my={10} />
 						<FormControl>
 							<FormLabel>Name</FormLabel>
 							<Input
@@ -94,19 +98,20 @@ const Settings = ({ user }) => {
 								onChange={e => setName(e.target.value)}
 							/>
 							<FormHelperText align='left'>
-								This is a your public display name when leaving reviews
+								This is your public display name when leaving reviews
 							</FormHelperText>
 
 							<FormLabel mt={5}>Avatar</FormLabel>
 							<SimpleGrid columns={[2, 3, 3, 6]} spacing={6} py={4}>
 								{avatars.map(a => (
 									<Box align='center' justify='center' key={a.type}>
-										<Avatar
+										<FallBackImage
 											onClick={() => setAvatar(a)}
 											opacity={avatar.src === a.src ? 0.3 : 1}
-											size='md'
-											name={a.type}
+											alt={a.type}
 											src={a.src}
+											width={40}
+											height={40}
 											cursor='pointer'
 										/>
 									</Box>

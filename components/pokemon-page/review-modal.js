@@ -19,8 +19,6 @@ import {
 import ResizeTextarea from 'react-textarea-autosize'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 import { CustomRating } from '../rating'
-import { useFetchReviews } from '../../hooks/useFetchReviews'
-import axios from 'axios'
 
 const AutoResizeTextarea = React.forwardRef((props, ref) => {
 	return (
@@ -45,14 +43,10 @@ const ReviewModal = ({
 	onClose,
 	initialRef,
 	selected,
-	setSelected
+	setSelected,
+	create,
+	update
 }) => {
-	const fetcher = url =>
-		axios.get(url, { params: { pokemon: pokemonName } }).then(res => res.data)
-
-	const key = `/api/reviews/${pokemonName}`
-
-	const { create, update } = useFetchReviews(key, fetcher)
 	const [rating, setRating] = useState(0)
 	const [description, setDescription] = useState('')
 
@@ -82,7 +76,9 @@ const ReviewModal = ({
 		onClose()
 	}
 
-	let formattedName = formatNames(pokemonName)
+	let formattedName = formatNames(
+		selected.description ? selected.pokemon : pokemonName
+	)
 	formattedName = capitalFirstLetter(formattedName)
 
 	return (

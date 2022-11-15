@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import React, { useRef } from 'react'
 import {
 	chakra,
@@ -94,21 +93,14 @@ const Navbar = () => {
 			zIndex={2}
 		>
 			<Flex display={{ base: 'none', md: 'inline' }}>
-				<Link href='/' passHref>
-					<Tag
-						px={0}
-						as='a'
-						size='lg'
-						variant='ghost'
-						colorScheme='blue'
-						display='flex'
-					>
+				<LinkOverlay href='/'>
+					<Tag px={0} size='lg' variant='ghost' colorScheme='blue'>
 						<TagLeftIcon boxSize='30px' as={MdCatchingPokemon} />
 						<TagLabel display={{ base: 'inline-flex' }}>
 							Pokemon Reviews
 						</TagLabel>
 					</Tag>
-				</Link>
+				</LinkOverlay>
 			</Flex>
 
 			<Flex justify={{ base: 'left', md: 'right' }}>

@@ -2,12 +2,11 @@ import React from 'react'
 import { Box, Flex, Avatar, Text, Spacer } from '@chakra-ui/react'
 import AddOn from './add-on'
 import ReadMore from '../read-more'
-import useSWR from 'swr'
 import { EllipsisButton } from '../ellipsis-button'
 import axios from 'axios'
 import useSWRImmutable from 'swr/immutable'
 
-const ReviewBox = ({ review, setSelected, onOpen, pokemonName }) => {
+const ReviewBox = ({ review, setSelected, onOpen, remove, like }) => {
 	const fetcher = url => axios.get(url).then(res => res.data)
 	const { data: user } = useSWRImmutable('/api/user', fetcher)
 
@@ -33,13 +32,11 @@ const ReviewBox = ({ review, setSelected, onOpen, pokemonName }) => {
 						<Text color='gray.500'>{author.name}</Text>
 						<Spacer />
 						{user.id === author.id && (
-							<EllipsisButton
-								{...{ setSelected, review, onOpen, pokemonName }}
-							/>
+							<EllipsisButton {...{ setSelected, review, onOpen, remove }} />
 						)}
 					</Flex>
 					<ReadMore noOfLines={4}>{description}</ReadMore>
-					<AddOn pokemonName={pokemonName} review={review} />
+					<AddOn like={like} review={review} />
 				</Box>
 			</Flex>
 		</Box>

@@ -30,6 +30,7 @@ export const FallBackImage = chakra(NextFallBack, {
 			'height',
 			'src',
 			'alt',
-			'fallback'
+			'fallback',
+			'onClick'
 		].includes(prop)
 })

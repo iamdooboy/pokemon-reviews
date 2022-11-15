@@ -1,8 +1,13 @@
 import ReviewBox from '../pokemon-page/review-box'
+import ReviewModal from './review-modal'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
 import axios from 'axios'
+import { useState, useRef } from 'react'
 
-const ReviewList = ({ pokemonName, onOpen, setSelected }) => {
+const ReviewList = ({ pokemonName, isOpen, onOpen, onClose }) => {
+	const [selected, setSelected] = useState({ description: '', rating: 0 })
+	const initialRef = useRef()
+
 	const fetcher = url =>
 		axios
 			.get(url, {
@@ -14,7 +19,10 @@ const ReviewList = ({ pokemonName, onOpen, setSelected }) => {
 
 	const key = `/api/reviews/${pokemonName}`
 
-	const { reviews, isLoading } = useFetchReviews(key, fetcher)
+	const { reviews, isLoading, create, update, remove, like } = useFetchReviews(
+		key,
+		fetcher
+	)
 
 	if (isLoading) return <div>loading</div>
 
@@ -23,9 +31,22 @@ const ReviewList = ({ pokemonName, onOpen, setSelected }) => {
 			{reviews.map((review, index) => (
 				<ReviewBox
 					key={index}
-					{...{ review, setSelected, onOpen, pokemonName }}
+					{...{ review, setSelected, onOpen, remove, like }}
 				/>
 			))}
+
+			<ReviewModal
+				{...{
+					pokemonName,
+					isOpen,
+					onClose,
+					initialRef,
+					selected,
+					setSelected,
+					create,
+					update
+				}}
+			/>
 		</>
 	)
 }

@@ -1,18 +1,14 @@
-import { useRef } from 'react'
-import { chakra, Container, Box, Flex, useDisclosure } from '@chakra-ui/react'
+import { chakra, Container, Flex, useDisclosure } from '@chakra-ui/react'
 import ReviewList from '../../../components/pokemon-page/review-list'
-import ReviewModal from '../../../components/pokemon-page/review-modal'
 import PokemonCard from '../../../components/pokemon-page/pokemon-card'
 import NavSection from '../../../components/pokemon-page/nav-section'
 import ActionButtons from '../../../components/pokemon-page/action-buttons'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
-import { prisma } from '../../../lib/prisma'
-import { getPokemon, getAllPokemonFromGen } from '../../../utils/axios'
-import { useState } from 'react'
-import { unstable_getServerSession } from 'next-auth/next'
-import { authOptions } from '../../api/auth/[...nextauth]'
-import { SWRConfig } from 'swr'
+import { getAllPokemonFromGen } from '../../../utils/axios'
+//import { prisma } from '../../../lib/prisma'
+// import { unstable_getServerSession } from 'next-auth/next'
+// import { authOptions } from '../../api/auth/[...nextauth]'
 
 // const Empty = ({ pokemonName }) => {
 // 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
@@ -33,11 +29,8 @@ import { SWRConfig } from 'swr'
 // 	)
 // }
 
-const Pokemon = ({ fallback, pokemonName, favorite, gen }) => {
-	const [selected, setSelected] = useState({ description: '', rating: 0 })
+const Pokemon = ({ pokemonName, gen }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
-	const initialRef = useRef()
-
 	return (
 		// <SWRConfig value={{ fallback }}>
 		<Flex pt={16}>
@@ -60,18 +53,9 @@ const Pokemon = ({ fallback, pokemonName, favorite, gen }) => {
 					<ActionButtons onOpen={onOpen} pokemonName={pokemonName} />
 					<ReviewList
 						pokemonName={pokemonName}
+						isOpen={isOpen}
 						onOpen={onOpen}
-						setSelected={setSelected}
-					/>
-					<ReviewModal
-						{...{
-							pokemonName,
-							isOpen,
-							onClose,
-							initialRef,
-							selected,
-							setSelected
-						}}
+						onClose={onClose}
 					/>
 				</Container>
 			</chakra.div>
@@ -97,50 +81,50 @@ export const getServerSideProps = async context => {
 
 	///////////////////////////////////////////////
 
-	const session = await unstable_getServerSession(
-		context.req,
-		context.res,
-		authOptions
-	)
+	// const session = await unstable_getServerSession(
+	// 	context.req,
+	// 	context.res,
+	// 	authOptions
+	// )
 
-	const user = await prisma.user.findUnique({
-		where: { email: session.user.email }
-	})
+	// const user = await prisma.user.findUnique({
+	// 	where: { email: session.user.email }
+	// })
 
-	const response = await getPokemon(pokemon)
+	//const response = await getPokemon(pokemon)
 
-	const selectedPokemon = await prisma.pokemon.findUnique({
-		where: {
-			pokemon: pokemon
-		},
-		select: {
-			id: true,
-			favorite: true,
-			favoritedBy: true
-		}
-	})
+	// const selectedPokemon = await prisma.pokemon.findUnique({
+	// 	where: {
+	// 		pokemon: pokemon
+	// 	},
+	// 	select: {
+	// 		id: true,
+	// 		favorite: true,
+	// 		favoritedBy: true
+	// 	}
+	// })
 
-	const favorite = selectedPokemon.favoritedBy.some(el => el.id === user.id)
+	// const favorite = selectedPokemon.favoritedBy.some(el => el.id === user.id)
 
-	let reviews = await prisma.review.findMany({
-		where: {
-			pokemon: pokemon
-		},
-		include: {
-			author: true,
-			favoritedBy: true
-		}
-	})
+	// let reviews = await prisma.review.findMany({
+	// 	where: {
+	// 		pokemon: pokemon
+	// 	},
+	// 	include: {
+	// 		author: true,
+	// 		favoritedBy: true
+	// 	}
+	// })
 
-	reviews = reviews.map(review => {
-		const favoritedByCurrentUser = review.favoritedBy.some(
-			el => el.id === user.id
-		)
+	// reviews = reviews.map(review => {
+	// 	const favoritedByCurrentUser = review.favoritedBy.some(
+	// 		el => el.id === user.id
+	// 	)
 
-		delete review.favoritedBy
+	// 	delete review.favoritedBy
 
-		return { ...review, favoritedByCurrentUser }
-	})
+	// 	return { ...review, favoritedByCurrentUser }
+	// })
 
 	return {
 		props: {
@@ -151,7 +135,7 @@ export const getServerSideProps = async context => {
 			// 	['/api/user']: JSON.parse(JSON.stringify(user))
 			// },
 			pokemonName: pokemon,
-			favorite,
+			//favorite,
 			gen
 		}
 	}

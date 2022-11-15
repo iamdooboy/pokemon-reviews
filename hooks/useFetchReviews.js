@@ -120,8 +120,6 @@ export const useFetchReviews = (key, fetcher) => {
 			...options
 		}
 
-		const path = '/api/reviews/'
-
 		mutate(updateFn(data), options)
 	}
 

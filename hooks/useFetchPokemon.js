@@ -1,41 +1,78 @@
 import useSWR from 'swr'
 import axios from 'axios'
 
-export const useFetchPokemon = pokemonName => {
-	const fetcher = url =>
-		axios.get(url, { params: { pokemon: pokemonName } }).then(res => res.data)
+export const useFetchPokemon = (key, fetcher, swrOptions) => {
+	const { data, mutate } = useSWR(key, fetcher, swrOptions)
 
-	const { data, mutate } = useSWR(`/api/pokemon/${pokemonName}`, fetcher)
+	let options = {
+		rollbackOnError: true,
+		populateCache: true,
+		revalidate: false
+	}
 
-	if (!data) return false
+	const updateFn = async newData => {
+		const res = await axios.put(key, newData).then(res => res.data)
 
-	const { favorite, favoritedByCurrentUser, id } = data
+		if (!swrOptions.revalidateOnFocus) {
+			const updatedData = data.map(el => {
+				if (el.id === res.id) {
+					return res
+				}
+				return el
+			})
 
-	const updateFn = async data => {
-		const res = await axios.put('/api/pokemon', data).then(res => res.data)
+			return updatedData
+		}
+
 		return res
 	}
 
-	const onClick = () => {
+	const onFavorite = selected => {
+		const { favorite, favoritedByCurrentUser, id } = selected
+
 		const newData = {
 			id,
 			favorite: favoritedByCurrentUser ? favorite - 1 : favorite + 1,
 			favoritedByCurrentUser: !favoritedByCurrentUser
 		}
 
-		const options = {
+		options = {
 			optimisticData: newData,
-			rollbackOnError: true,
-			populateCache: true,
-			revalidate: false
+			...options
+		}
+
+		mutate(updateFn(newData), options)
+	}
+
+	const onFav = obj => {
+		const { id, favorite, favoritedByCurrentUser } = obj
+
+		const newData = {
+			id,
+			favorite: favoritedByCurrentUser ? favorite - 1 : favorite + 1,
+			favoritedByCurrentUser: !favoritedByCurrentUser
+		}
+
+		const optimisticData = data.map(el => {
+			if (el.id === id) {
+				return { ...el, ...newData }
+			}
+			return el
+		})
+
+		options = {
+			optimisticData,
+			populateCache: false,
+			...options
 		}
 
 		mutate(updateFn(newData), options)
 	}
 
 	return {
-		favorite,
-		favoritedByCurrentUser,
-		onClick
+		data,
+		isLoading: !data,
+		onFavorite,
+		onFav
 	}
 }

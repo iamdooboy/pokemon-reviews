@@ -1,15 +1,10 @@
 import { ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons'
-import {
-	IconButton,
-	chakra,
-	useDisclosure,
-	Tooltip,
-	Box
-} from '@chakra-ui/react'
+import { IconButton, chakra, Tooltip, Box } from '@chakra-ui/react'
 import { SidebarContent } from './sidebar-content'
+import { useAppContext } from '../../context/state'
 
 const Sidebar = () => {
-	const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: true })
+	const { isOpen, onClose, onOpen } = useAppContext()
 
 	const onClickHandler = () => {
 		if (!isOpen) {

@@ -14,24 +14,21 @@ export default async function handler(req, res) {
 	})
 
 	if (req.method === 'GET') {
-		const selectedPokemon = await prisma.pokemon.findUnique({
+		let favoritedPokemon = await prisma.pokemon.findMany({
 			where: {
-				pokemon: req.query.pokemon
-			},
-			select: {
-				id: true,
-				favorite: true,
-				favoritedBy: true
+				favoritedBy: {
+					some: {
+						id: user.id
+					}
+				}
 			}
 		})
 
-		const favoritedByCurrentUser = selectedPokemon.favoritedBy.some(
-			el => el.id === user.id
-		)
+		favoritedPokemon = favoritedPokemon.map(fav => {
+			return { ...fav, favoritedByCurrentUser: true }
+		})
 
-		delete selectedPokemon.favoritedBy
-
-		res.status(200).json({ ...selectedPokemon, favoritedByCurrentUser })
+		res.status(200).json(favoritedPokemon)
 	}
 
 	if (req.method === 'PUT') {
@@ -53,7 +50,7 @@ export default async function handler(req, res) {
 					...toggleFunction
 				}
 			},
-			select: { id: true, favoritedBy: true, favorite: true }
+			select: { id: true, pokemon: true, favoritedBy: true, favorite: true }
 		})
 
 		const fav = updatedPokemon.favoritedBy.some(el => el.id === user.id)

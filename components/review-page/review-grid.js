@@ -1,48 +1,48 @@
-import React, { useState } from 'react'
-import { SimpleGrid } from '@chakra-ui/react'
+import React, { useState, useRef } from 'react'
+import { SimpleGrid, useDisclosure } from '@chakra-ui/react'
 import ReviewGridItem from './review-grid-item'
-import { useMutation } from '../../hooks/useMutation'
 import ReviewModal from '../pokemon-page/review-modal'
-import useSWR from 'swr'
 import axios from 'axios'
-import { useTest } from '../../hooks/useTest'
+import { useFetchReviews } from '../../hooks/useFetchReviews'
+
 const ReviewGrid = () => {
+	const [selected, setSelected] = useState({ description: '', rating: 0 })
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	const initialRef = useRef()
+
 	const fetcher = url => axios.get(url).then(res => res.data)
 
-	//const { reviews } = useMutation('/api/reviews/')
-	//const { data: reviews } = useSWR('/api/reviews/', fetcher)
+	const key = '/api/reviews/'
 
-	const { reviews } = useTest('/api/reviews/', fetcher)
+	const { reviews, isLoading, update, like, remove } = useFetchReviews(
+		key,
+		fetcher
+	)
 
-	//const [pokemonName, setPokemonName] = useState('')
+	if (isLoading) return <div>loading</div>
 
-	// const {
-	// 	initialRef,
-	// 	isOpen,
-	// 	onClose,
-	// 	onEdit,
-	// 	onDelete,
-	// 	allReviews,
-	// 	editReview,
-	// 	onSubmit
-	// } = useMutation(reviews, pokemonName)
-
-	if (!reviews) return <div>loading</div>
-	// console.log(reviews)
-	// return <div>loading</div>
 	return (
 		<SimpleGrid columns={[1, 2, 2, 3]} spacing={4} py={4}>
 			{reviews.map((review, index) => (
 				<ReviewGridItem
 					key={index}
 					review={review}
-					// {...review}
-					// {...{ onEdit, onDelete, setPokemonName }}
+					like={like}
+					remove={remove}
+					onOpen={onOpen}
+					setSelected={setSelected}
 				/>
 			))}
-			{/* <ReviewModal
-				{...{ initialRef, isOpen, onClose, editReview, onSubmit, pokemonName }}
-			/> */}
+			<ReviewModal
+				{...{
+					isOpen,
+					onClose,
+					initialRef,
+					selected,
+					setSelected,
+					update
+				}}
+			/>
 		</SimpleGrid>
 	)
 }

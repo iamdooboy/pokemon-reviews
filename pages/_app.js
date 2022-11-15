@@ -3,6 +3,7 @@ import { SessionProvider } from 'next-auth/react'
 import theme from '../lib/theme'
 import NextNProgress from 'nextjs-progressbar'
 import '@smastrom/react-rating/style.css'
+import { AppProvider } from '../context/state'
 
 const Website = ({
 	Component,
@@ -13,12 +14,14 @@ const Website = ({
 	return (
 		<SessionProvider session={session}>
 			<ChakraProvider theme={theme}>
-				{getLayout(
-					<>
-						<NextNProgress color='#38B2AC' options={{ showSpinner: false }} />
-						<Component key={router.asPath} {...pageProps} />
-					</>
-				)}
+				<AppProvider>
+					{getLayout(
+						<>
+							<NextNProgress color='#38B2AC' options={{ showSpinner: false }} />
+							<Component key={router.asPath} {...pageProps} />
+						</>
+					)}
+				</AppProvider>
 			</ChakraProvider>
 		</SessionProvider>
 	)

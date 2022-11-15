@@ -2,19 +2,13 @@ import React, { useState, useEffect } from 'react'
 import FavoritesGrid from '../components/favorites/favorites-grid'
 import Layout from '../components/layout'
 import Sidebar from '../components/sidebar/sidebar'
-import { Box, Heading, Flex } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { getSession } from 'next-auth/react'
 import { getPokemon } from '../utils/axios'
 import { prisma } from '../lib/prisma'
 import { FavoritePokemonGridSkeleton } from '../components/loading/favorite-pokemon-skeleton'
 
 const Favorites = ({ data = [] }) => {
-	const [isLoaded, setIsLoaded] = useState(false)
-
-	useEffect(() => {
-		setIsLoaded(true)
-	}, [data])
-
 	return (
 		<Layout>
 			<Flex pt={16}>
@@ -25,14 +19,7 @@ const Favorites = ({ data = [] }) => {
 					overflow='auto'
 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
 				>
-					<Heading as='h1' size='lg' align='left' py={8}>
-						Your Favorite Pokemon
-					</Heading>
-					{!isLoaded ? (
-						<FavoritePokemonGridSkeleton />
-					) : (
-						<FavoritesGrid data={data} />
-					)}
+					<FavoritesGrid />
 				</Box>
 			</Flex>
 		</Layout>
