@@ -87,62 +87,62 @@ const Page = () => {
 		router.push(`/gen/${gen}/${name}`)
 	}
 
-	if (genPageLoading) {
-		return (
-			<Layout>
-				<Flex pt={16}>
-					<Box
-						flex={1}
-						px='5'
-						overflow='auto'
-						maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-					>
-						<GenPageSkeleton />
-					</Box>
-				</Flex>
-			</Layout>
-		)
-	}
+	// if (genPageLoading) {
+	// 	return (
+	// 		<Layout>
+	// 			<Flex pt={16}>
+	// 				<Box
+	// 					flex={1}
+	// 					px='5'
+	// 					overflow='auto'
+	// 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
+	// 				>
+	// 					<GenPageSkeleton />
+	// 				</Box>
+	// 			</Flex>
+	// 		</Layout>
+	// 	)
+	// }
 
-	if (pokemonPageLoading) {
-		return (
-			<Layout>
-				<Flex pt={16}>
-					<chakra.div
-						flex={1}
-						px='5'
-						overflow='auto'
-						maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-					>
-						<Container
-							maxW='container.xl'
-							px={{ base: 5, md: 12 }}
-							margin='0 auto'
-							align='center'
-							justify='center'
-						>
-							<NavSection id={randomId} pokemon={pokemon} />
-							<PokemonCardSkeleton />
-							<HStack align='center' justify='center' mt={3} maxW='xs'>
-								<Button
-									isLoading
-									variant='outline'
-									w='20%'
-									colorScheme='blue'
-									spinner={<Spinner size='xs' />}
-								/>
+	// if (pokemonPageLoading) {
+	// 	return (
+	// 		<Layout>
+	// 			<Flex pt={16}>
+	// 				<chakra.div
+	// 					flex={1}
+	// 					px='5'
+	// 					overflow='auto'
+	// 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
+	// 				>
+	// 					<Container
+	// 						maxW='container.xl'
+	// 						px={{ base: 5, md: 12 }}
+	// 						margin='0 auto'
+	// 						align='center'
+	// 						justify='center'
+	// 					>
+	// 						<NavSection id={randomId} pokemon={pokemon} />
+	// 						<PokemonCardSkeleton />
+	// 						<HStack align='center' justify='center' mt={3} maxW='xs'>
+	// 							<Button
+	// 								isLoading
+	// 								variant='outline'
+	// 								w='20%'
+	// 								colorScheme='blue'
+	// 								spinner={<Spinner size='xs' />}
+	// 							/>
 
-								<Button leftIcon={<MdOutlineEdit />} colorScheme='blue' w='80%'>
-									Leave a review
-								</Button>
-							</HStack>
-							<ReviewBoxSkeleton />
-						</Container>
-					</chakra.div>
-				</Flex>
-			</Layout>
-		)
-	}
+	// 							<Button leftIcon={<MdOutlineEdit />} colorScheme='blue' w='80%'>
+	// 								Leave a review
+	// 							</Button>
+	// 						</HStack>
+	// 						<ReviewBoxSkeleton />
+	// 					</Container>
+	// 				</chakra.div>
+	// 			</Flex>
+	// 		</Layout>
+	// 	)
+	// }
 
 	return (
 		<Layout>

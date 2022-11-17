@@ -60,14 +60,12 @@ const Navbar = () => {
 	const finalRef = useRef(null)
 	const ref = useRef(null)
 	const signOutHandler = () => {
-		if (
-			router.asPath === '/setting' ||
-			router.asPath === '/favorites' ||
-			router.asPath === '/reviews'
-		) {
+		if (/settings|favorites|reviews/.test(router.asPath)) {
 			signOut({ callbackUrl: '/' })
-		} else {
+		} else if (/[1-9]$/.test(router.asPath) || /\/$/.test(router.asPath)) {
 			signOut({ redirect: false })
+		} else {
+			signOut({ redirect: true })
 		}
 	}
 
@@ -151,7 +149,7 @@ const Navbar = () => {
 							</Flex>
 						</MenuButton>
 						<MenuList>
-							<MenuItem>
+							<MenuItem cursor='default'>
 								<VStack justify='start' alignItems='left'>
 									<Text fontWeight='500'>
 										{user.name ? user.name : splitEmail(user.email)}
@@ -221,7 +219,6 @@ const Navbar = () => {
 							</Text>
 						</Flex>
 					</LinkOverlay>
-
 					<SidebarContent w='full' borderRight='none' />
 				</DrawerContent>
 			</Drawer>

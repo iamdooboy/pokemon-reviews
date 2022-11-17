@@ -15,6 +15,7 @@ import { getPokemonGeneration } from '../../utils/helpers'
 import { LinkOverlay } from '../link-overlay'
 import { motion } from 'framer-motion'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
+import { FavoritePokemonGridItemSkeleton } from '../loading/favorite-pokemon-skeleton'
 
 const FavoritesGridItem = ({
 	id,
@@ -26,7 +27,7 @@ const FavoritesGridItem = ({
 	const [fetchOnePokemon] = usePokeAPI()
 	const { data, isLoading, formatData } = fetchOnePokemon(pokemon)
 
-	if (isLoading) return <div>loading</div>
+	if (isLoading) return <FavoritePokemonGridItemSkeleton />
 
 	const favoriteIcon = favoritedByCurrentUser ? (
 		<Icon

@@ -2,10 +2,10 @@ import { Box, Flex } from '@chakra-ui/react'
 import Layout from '../components/layout'
 import Sidebar from '../components/sidebar/sidebar'
 import ReviewGrid from '../components/review-page/review-grid'
+import { unstable_getServerSession } from 'next-auth/next'
+import { authOptions } from '../pages/api/auth/[...nextauth]'
 //import { prisma } from '../lib/prisma'
 // import { ReviewGridSkeleton } from '../components/loading/review-box-skeleton'
-// import { unstable_getServerSession } from 'next-auth/next'
-// import { authOptions } from '../pages/api/auth/[...nextauth]'
 // import { SWRConfig } from 'swr'
 // import axios from 'axios'
 
@@ -29,55 +29,54 @@ const MyReviews = () => {
 	)
 }
 
-// export const getServerSideProps = async context => {
-// 	const session = await unstable_getServerSession(
-// 		context.req,
-// 		context.res,
-// 		authOptions
-// 	)
+export const getServerSideProps = async context => {
+	const session = await unstable_getServerSession(
+		context.req,
+		context.res,
+		authOptions
+	)
 
-// 	if (!session) {
-// 		return {
-// 			notFound: true
-// 		}
-// 	}
+	if (!session) {
+		return {
+			notFound: true
+		}
+	}
 
-// 	const user = await prisma.user.findUnique({
-// 		where: { email: session.user.email }
-// 	})
+	// const user = await prisma.user.findUnique({
+	// 	where: { email: session.user.email }
+	// })
 
-// 	let reviews = await prisma.review.findMany({
-// 		//return all reviews for current user
-// 		where: {
-// 			authorId: user.id
-// 		},
-// 		include: {
-// 			favoritedBy: true
-// 		},
-// 		orderBy: {
-// 			createdAt: 'desc'
-// 		}
-// 	})
+	// let reviews = await prisma.review.findMany({
+	// 	//return all reviews for current user
+	// 	where: {
+	// 		authorId: user.id
+	// 	},
+	// 	include: {
+	// 		favoritedBy: true
+	// 	},
+	// 	orderBy: {
+	// 		createdAt: 'desc'
+	// 	}
+	// })
 
-// 	reviews = reviews.map(review => {
-// 		const favoritedByCurrentUser = review.favoritedBy.some(
-// 			el => el.id === user.id
-// 		)
+	// reviews = reviews.map(review => {
+	// 	const favoritedByCurrentUser = review.favoritedBy.some(
+	// 		el => el.id === user.id
+	// 	)
 
-// 		delete review.favoritedBy
+	// 	delete review.favoritedBy
 
-// 		return { ...review, favoritedByCurrentUser }
-// 	})
+	// 	return { ...review, favoritedByCurrentUser }
+	// })
 
-// 	console.log('from review page')
-// 	console.log(reviews)
-// 	return {
-// 		props: {
-// 			fallback: {
-// 				['/api/reviews/']: JSON.parse(JSON.stringify(reviews))
-// 			}
-// 		}
-// 	}
-// }
+	return {
+		props: {
+			session
+			// fallback: {
+			// 	['/api/reviews/']: JSON.parse(JSON.stringify(reviews))
+			// }
+		}
+	}
+}
 
 export default MyReviews

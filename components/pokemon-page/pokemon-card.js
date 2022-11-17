@@ -13,6 +13,7 @@ import { usePokeAPI } from '../../hooks/usePokeAPI'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
 import { CustomRating } from '../rating'
 import axios from 'axios'
+import { PokemonCardSkeleton } from '../loading/pokemon-card-skeleton'
 
 const PokemonCard = ({ pokemonName }) => {
 	const fetcher = url =>
@@ -20,13 +21,17 @@ const PokemonCard = ({ pokemonName }) => {
 
 	const key = `/api/reviews/${pokemonName}`
 
-	const { reviews, isLoading, calcRatings } = useFetchReviews(key, fetcher)
+	const {
+		reviews,
+		isLoading: reviewsAreLoading,
+		calcRatings
+	} = useFetchReviews(key, fetcher)
 
 	const [fetchOnePokemon] = usePokeAPI()
 
-	const { data, isLoading: loading, formatData } = fetchOnePokemon(pokemonName)
+	const { data, isLoading, formatData } = fetchOnePokemon(pokemonName)
 
-	if (isLoading || loading) return <div>loading</div>
+	if (reviewsAreLoading || isLoading) return <PokemonCardSkeleton />
 
 	const { count, rating } = calcRatings(reviews)
 

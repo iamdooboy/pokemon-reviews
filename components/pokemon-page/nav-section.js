@@ -10,36 +10,35 @@ import {
 } from '../../utils/helpers'
 import { useRouter } from 'next/router'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
+import { PulseLoader } from 'react-spinners'
 
 const NavSection = ({ pokemonName }) => {
 	const router = useRouter()
 
 	const [fetchOnePokemon, fetchAllPokemon] = usePokeAPI()
 
-	const { data, isLoading: loading } = fetchOnePokemon(pokemonName)
+	const { data: one, isLoading: oneIsLoading } = fetchOnePokemon(pokemonName)
 
-	const { data: pokemon, isLoading } = fetchAllPokemon('all')
-
-	if (isLoading || loading) return <div>loading</div>
+	const { data: allPokemon, isLoading: allIsLoading } = fetchAllPokemon('all')
 
 	const onClickHandler = () => {
 		const random = getRandomPokemonNum()
 		const gen = getPokemonGeneration(random)
-		const name = pokemon[random - 1]
+		const name = allPokemon[random - 1]
 		router.push(`/gen/${gen}/${name}`)
 	}
 
-	const id = parseInt(data.id)
+	const id = parseInt(one?.id)
 
 	const prev = {
 		id: id === 1 ? 905 : id - 1,
-		name: id === 1 ? pokemon[904] : pokemon[id - 2],
+		name: id === 1 ? allPokemon?.[904] : allPokemon?.[id - 2],
 		leftIcon: <ArrowBackIcon />
 	}
 
 	const next = {
 		id: id === 905 ? 1 : id + 1,
-		name: id === 905 ? pokemon[0] : pokemon[id],
+		name: id === 905 ? allPokemon?.[0] : allPokemon?.[id],
 		rightIcon: <ArrowForwardIcon />
 	}
 
@@ -52,13 +51,28 @@ const NavSection = ({ pokemonName }) => {
 			maxW='xs'
 			w='full'
 		>
-			<NavButton {...prev}>
+			<NavButton
+				{...prev}
+				isLoading={allIsLoading || oneIsLoading}
+				spinner={<PulseLoader color='#36d7b7' speedMultiplier={0.4} size={5} />}
+			>
 				{capitalFirstLetter(formatNames(prev.name))}
 			</NavButton>
-			<RandomButton w='full' size='sm' onClick={onClickHandler}>
+			<RandomButton
+				w='full'
+				size='sm'
+				onClick={onClickHandler}
+				isLoading={allIsLoading || oneIsLoading}
+				loadingText='Loading...'
+				spinner={null}
+			>
 				Surprise me
 			</RandomButton>
-			<NavButton {...next}>
+			<NavButton
+				{...next}
+				isLoading={allIsLoading || oneIsLoading}
+				spinner={<PulseLoader color='#36d7b7' speedMultiplier={0.4} size={5} />}
+			>
 				{capitalFirstLetter(formatNames(next.name))}
 			</NavButton>
 		</HStack>

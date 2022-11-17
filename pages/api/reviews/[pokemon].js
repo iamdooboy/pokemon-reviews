@@ -4,13 +4,6 @@ import { prisma } from '../../../lib/prisma'
 export default async function handler(req, res) {
 	// Check if user is authenticated
 	const session = await getSession({ req })
-	if (!session) {
-		return res.status(401).json({ message: 'Unauthorized.' })
-	}
-
-	const user = await prisma.user.findUnique({
-		where: { email: session.user.email }
-	})
 
 	let reviews = await prisma.review.findMany({
 		where: {
@@ -20,6 +13,24 @@ export default async function handler(req, res) {
 			author: true,
 			favoritedBy: true
 		}
+	})
+
+	if (!session) {
+		// User is not authenticated
+		reviews = reviews.map(review => {
+			const favoritedByCurrentUser = false
+
+			delete review.favoritedBy
+
+			return { ...review, favoritedByCurrentUser }
+		})
+
+		return res.status(200).json(reviews)
+	}
+	////////////////////////////////////////////////////////////////
+
+	const user = await prisma.user.findUnique({
+		where: { email: session.user.email }
 	})
 
 	reviews = reviews.map(review => {
@@ -32,5 +43,5 @@ export default async function handler(req, res) {
 		return { ...review, favoritedByCurrentUser }
 	})
 
-	res.status(200).json(reviews)
+	return res.status(200).json(reviews)
 }

@@ -18,9 +18,7 @@ const ActionButtons = ({ onOpen, pokemonName }) => {
 	}
 	const { data, isLoading, onFavorite } = useFetchPokemon(key, fetcher, options)
 
-	if (isLoading) return <div>loading</div>
-
-	const { favorite, favoritedByCurrentUser } = data
+	const { favorite, favoritedByCurrentUser } = data || {}
 
 	const favoriteIcon = favoritedByCurrentUser ? (
 		<MdFavorite color='#E53E3E' />
@@ -31,17 +29,27 @@ const ActionButtons = ({ onOpen, pokemonName }) => {
 	return (
 		<HStack align='center' justify='center' mt={3} maxW='xs'>
 			<Button
+				isLoading={isLoading}
 				leftIcon={favoriteIcon}
 				variant='outline'
 				w='20%'
-				onClick={() => onFavorite(data)}
+				onClick={
+					session.data
+						? () => onFavorite(data)
+						: () => alert('please login to favorite')
+				}
 				colorScheme='blue'
+				cursor={session.data ? 'pointer' : 'not-allowed'}
 			>
 				{favorite}
 			</Button>
 			<Button
+				isLoading={isLoading}
+				loadingText='Leave a review'
+				spinner={null}
 				leftIcon={<MdOutlineEdit />}
-				onClick={session ? onOpen : () => alert('please login to review')}
+				onClick={session.data ? onOpen : () => alert('please login to review')}
+				cursor={session.data ? 'pointer' : 'not-allowed'}
 				colorScheme='blue'
 				w='80%'
 			>

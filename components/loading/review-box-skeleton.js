@@ -15,13 +15,19 @@ export const ReviewBoxSkeleton = () => {
 		>
 			<Stack isInline align='center'>
 				<Box>
-					<Skeleton size='sm' width='2em' height='2em' borderRadius='50%' />
+					<Skeleton
+						size='sm'
+						width='2em'
+						height='2em'
+						borderRadius='50%'
+						speed={3}
+					/>
 				</Box>
-				<Skeleton height='14px' width='30%' />
+				<Skeleton height='14px' width='40%' speed={3} />
 			</Stack>
 			<Box pl='2.5em' align='left'>
-				<Skeleton my={2} height='16px' width='100%' />
-				<Skeleton my={2} height='14px' width='40%' />
+				<Skeleton my={2} height='16px' width='100%' speed={3} />
+				<Skeleton my={2} height='14px' width='100%' speed={3} />
 			</Box>
 		</Box>
 	)
@@ -30,13 +36,13 @@ export const ReviewBoxSkeleton = () => {
 export const ReviewGridSkeleton = () => {
 	return (
 		<SimpleGrid columns={[1, 2, 2, 3]} spacing={4} py={4}>
-			{[...Array(6)].map((_, index) => (
+			{[...Array(9)].map((_, index) => (
 				<GridItem key={index}>
 					<Box
 						rounded={8}
 						p={3}
 						h='full'
-						maxHeight='205px'
+						maxHeight='200px'
 						overflow='auto'
 						bg='gray.500'
 					>
@@ -48,16 +54,18 @@ export const ReviewGridSkeleton = () => {
 										width='2em'
 										height='2em'
 										borderRadius='50%'
+										speed={3}
 									/>
 								</Box>
 								<Box w='full'>
-									<Skeleton height='14px' width='30%' mb={2} />
-									<Skeleton height='14px' width='50%' />
+									<Skeleton height='14px' width='30%' mb={2} speed={3} />
+									<Skeleton height='14px' width='30%' speed={3} />
 								</Box>
 							</Stack>
 							<Box pl='2.5em' align='left'>
-								<Skeleton my={2} height='16px' width='100%' />
-								<Skeleton my={2} height='16px' width='100%' />
+								<Skeleton my={2} height='16px' width='50%' speed={3} />
+								<Skeleton my={2} height='16px' width='100%' speed={3} />
+								<Skeleton my={2} height='16px' width='100%' speed={3} />
 							</Box>
 						</Stack>
 					</Box>

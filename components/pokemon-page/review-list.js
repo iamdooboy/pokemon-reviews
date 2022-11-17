@@ -3,6 +3,7 @@ import ReviewModal from './review-modal'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
 import axios from 'axios'
 import { useState, useRef } from 'react'
+import { ReviewBoxSkeleton } from '../loading/review-box-skeleton'
 
 const ReviewList = ({ pokemonName, isOpen, onOpen, onClose }) => {
 	const [selected, setSelected] = useState({ description: '', rating: 0 })
@@ -24,7 +25,7 @@ const ReviewList = ({ pokemonName, isOpen, onOpen, onClose }) => {
 		fetcher
 	)
 
-	if (isLoading) return <div>loading</div>
+	if (isLoading) return <ReviewBoxSkeleton />
 
 	return (
 		<>

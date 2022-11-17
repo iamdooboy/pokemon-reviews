@@ -1,19 +1,19 @@
 import { SimpleGrid } from '@chakra-ui/react'
 import PokemonGridItem from '../gen-page/pokemon-grid-item'
-import { LinkOverlay } from '../../components/link-overlay'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
+import { GenPageSkeleton } from '../loading/gen-page-skeleton'
 
 const PokemonGrid = ({ gen }) => {
 	const [_, fetchAllPokemon] = usePokeAPI()
 
-	const { data: names } = fetchAllPokemon(gen)
+	const { data: names, isLoading } = fetchAllPokemon(gen)
+
+	if (isLoading) return <GenPageSkeleton />
 
 	return (
 		<SimpleGrid columns={[2, 3, 3, 6]} spacing={6} py={4}>
-			{names?.map(name => (
-				<LinkOverlay key={name} href={`/gen/${gen}/${name}`}>
-					<PokemonGridItem pokemonName={name} />
-				</LinkOverlay>
+			{names.map(name => (
+				<PokemonGridItem key={name} pokemonName={name} gen={gen} />
 			))}
 		</SimpleGrid>
 	)

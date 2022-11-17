@@ -4,15 +4,14 @@ import { prisma } from '../../../lib/prisma'
 export default async function handler(req, res) {
 	const session = await getSession({ req })
 
-	if (!session) {
-		return res.status(401).json({ message: 'Unauthorized.' })
-	}
-
-	const user = await prisma.user.findUnique({
-		where: { email: session.user.email }
-	})
-
 	if (req.method === 'PUT') {
+		if (!session) {
+			return res.status(401).json({ message: 'Unauthorized.' })
+		}
+
+		const user = await prisma.user.findUnique({
+			where: { email: session.user.email }
+		})
 		const { id, favorite, favoritedByCurrentUser } = req.body
 
 		const toggleFunction = {
@@ -52,12 +51,23 @@ export default async function handler(req, res) {
 				favoritedBy: true
 			}
 		})
+
+		if (!session) {
+			return res
+				.status(200)
+				.json({ ...selectedPokemon, favoritedByCurrentUser: false })
+		}
+
+		const user = await prisma.user.findUnique({
+			where: { email: session.user.email }
+		})
+
 		const favoritedByCurrentUser = selectedPokemon.favoritedBy.some(
 			el => el.id === user.id
 		)
 
 		delete selectedPokemon.favoritedBy
 
-		res.status(200).json({ ...selectedPokemon, favoritedByCurrentUser })
+		return res.status(200).json({ ...selectedPokemon, favoritedByCurrentUser })
 	}
 }

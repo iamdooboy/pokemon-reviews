@@ -4,6 +4,7 @@ import ReviewGridItem from './review-grid-item'
 import ReviewModal from '../pokemon-page/review-modal'
 import axios from 'axios'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
+import { ReviewGridSkeleton } from '../loading/review-box-skeleton'
 
 const ReviewGrid = () => {
 	const [selected, setSelected] = useState({ description: '', rating: 0 })
@@ -19,7 +20,7 @@ const ReviewGrid = () => {
 		fetcher
 	)
 
-	if (isLoading) return <div>loading</div>
+	if (isLoading) return <ReviewGridSkeleton />
 
 	return (
 		<SimpleGrid columns={[1, 2, 2, 3]} spacing={4} py={4}>
