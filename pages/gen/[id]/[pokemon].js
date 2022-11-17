@@ -6,33 +6,10 @@ import ActionButtons from '../../../components/pokemon-page/action-buttons'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
 import { getAllPokemonFromGen } from '../../../utils/axios'
-//import { prisma } from '../../../lib/prisma'
-// import { unstable_getServerSession } from 'next-auth/next'
-// import { authOptions } from '../../api/auth/[...nextauth]'
-
-// const Empty = ({ pokemonName }) => {
-// 	const formatName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
-// 	return (
-// 		<Box
-// 			fontWeight='600'
-// 			maxW='xs'
-// 			rounded={8}
-// 			borderWidth={1}
-// 			align='center'
-// 			mt={3}
-// 			mx='auto'
-// 			p={3}
-// 			bg='rgba(17, 25, 40, 0.75)'
-// 		>
-// 			Be the first to review {formatName}!
-// 		</Box>
-// 	)
-// }
 
 const Pokemon = ({ pokemonName, gen }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	return (
-		// <SWRConfig value={{ fallback }}>
 		<Flex pt={16}>
 			<Sidebar id={gen} />
 			<chakra.div
@@ -60,7 +37,6 @@ const Pokemon = ({ pokemonName, gen }) => {
 				</Container>
 			</chakra.div>
 		</Flex>
-		// </SWRConfig>
 	)
 }
 
@@ -79,63 +55,9 @@ export const getServerSideProps = async context => {
 		}
 	}
 
-	///////////////////////////////////////////////
-
-	// const session = await unstable_getServerSession(
-	// 	context.req,
-	// 	context.res,
-	// 	authOptions
-	// )
-
-	// const user = await prisma.user.findUnique({
-	// 	where: { email: session.user.email }
-	// })
-
-	//const response = await getPokemon(pokemon)
-
-	// const selectedPokemon = await prisma.pokemon.findUnique({
-	// 	where: {
-	// 		pokemon: pokemon
-	// 	},
-	// 	select: {
-	// 		id: true,
-	// 		favorite: true,
-	// 		favoritedBy: true
-	// 	}
-	// })
-
-	// const favorite = selectedPokemon.favoritedBy.some(el => el.id === user.id)
-
-	// let reviews = await prisma.review.findMany({
-	// 	where: {
-	// 		pokemon: pokemon
-	// 	},
-	// 	include: {
-	// 		author: true,
-	// 		favoritedBy: true
-	// 	}
-	// })
-
-	// reviews = reviews.map(review => {
-	// 	const favoritedByCurrentUser = review.favoritedBy.some(
-	// 		el => el.id === user.id
-	// 	)
-
-	// 	delete review.favoritedBy
-
-	// 	return { ...review, favoritedByCurrentUser }
-	// })
-
 	return {
 		props: {
-			// fallback: {
-			// 	[`/pokemon/${pokemon}`]: response,
-			// 	[`/api/pokemon/${pokemon}`]: selectedPokemon,
-			// 	[`/api/reviews/${pokemon}`]: JSON.parse(JSON.stringify(reviews)),
-			// 	['/api/user']: JSON.parse(JSON.stringify(user))
-			// },
 			pokemonName: pokemon,
-			//favorite,
 			gen
 		}
 	}

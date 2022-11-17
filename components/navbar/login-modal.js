@@ -22,6 +22,7 @@ import { HiOutlineMailOpen } from 'react-icons/hi'
 const LoginModal = ({ isOpen, onClose, finalRef, signIn }) => {
 	const [login, setLogin] = useState(false)
 	const [input, setInput] = useState('')
+	const [error, setError] = useState(false)
 	const [confirm, setConfirm] = useState(false)
 	const toast = useToast()
 
@@ -31,6 +32,30 @@ const LoginModal = ({ isOpen, onClose, finalRef, signIn }) => {
 	})
 
 	const signInWithEmail = async () => {
+		if (!input) {
+			setError(true)
+			toast({
+				title: 'Unable to sign up',
+				description: 'Please enter an email.',
+				status: 'error',
+				duration: 3000,
+				isClosable: true,
+				position: 'top'
+			})
+			return
+		}
+		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input)) {
+			setError(true)
+			toast({
+				title: 'Unable to sign up',
+				description: 'Please enter a valid email.',
+				status: 'error',
+				duration: 3000,
+				isClosable: true,
+				position: 'top'
+			})
+			return
+		}
 		try {
 			setIsLoading(true)
 			const { error } = await signIn('email', {
@@ -44,12 +69,15 @@ const LoginModal = ({ isOpen, onClose, finalRef, signIn }) => {
 			setConfirm(true)
 			setIsLoading(false)
 		} catch (error) {
+			setIsLoading(false)
+			setError(true)
 			toast({
 				title: 'Unable to sign in',
 				description: 'Something went wrong',
 				status: 'error',
-				duration: 9000,
-				isClosable: true
+				duration: 3000,
+				isClosable: true,
+				position: 'top'
 			})
 		}
 	}
@@ -57,6 +85,7 @@ const LoginModal = ({ isOpen, onClose, finalRef, signIn }) => {
 	const onCloseHandler = () => {
 		setInput('')
 		setConfirm(false)
+		setError(false)
 		onClose()
 	}
 	return (
@@ -119,7 +148,7 @@ const LoginModal = ({ isOpen, onClose, finalRef, signIn }) => {
 											Sign {login ? 'in' : 'up'} with Google
 										</Text>
 									</Button>
-									<FormControl id='email' h='46px'>
+									<FormControl id='email' h='46px' isInvalid={error}>
 										<Input
 											onChange={e => setInput(e.target.value)}
 											type='email'
