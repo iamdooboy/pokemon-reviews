@@ -21,6 +21,9 @@ export default async function handler(req, res) {
 						id: user.id
 					}
 				}
+			},
+			orderBy: {
+				updatedAt: 'desc'
 			}
 		})
 

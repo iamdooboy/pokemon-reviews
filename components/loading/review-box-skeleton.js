@@ -58,14 +58,14 @@ export const ReviewGridSkeleton = () => {
 									/>
 								</Box>
 								<Box w='full'>
-									<Skeleton height='14px' width='30%' mb={2} speed={3} />
+									<Skeleton height='14px' width='30%' mb={4} speed={3} />
 									<Skeleton height='14px' width='30%' speed={3} />
 								</Box>
 							</Stack>
 							<Box pl='2.5em' align='left'>
-								<Skeleton my={2} height='16px' width='50%' speed={3} />
-								<Skeleton my={2} height='16px' width='100%' speed={3} />
-								<Skeleton my={2} height='16px' width='100%' speed={3} />
+								<Skeleton my={4} height='16px' width='50%' speed={3} />
+								<Skeleton my={4} height='16px' width='100%' speed={3} />
+								<Skeleton my={4} height='16px' width='100%' speed={3} />
 							</Box>
 						</Stack>
 					</Box>

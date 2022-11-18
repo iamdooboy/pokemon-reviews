@@ -110,23 +110,30 @@ const Navbar = () => {
 					size='md'
 					mr={3}
 				/>
-				<chakra.button
-					w={{ base: 'full', md: '50%', lg: '32%' }}
-					mr={3}
-					type='button'
-					display='flex'
-					alignItems='center'
-					color='whiteAlpha.400'
-					bg='gray.700'
-					px='4'
-					rounded='md'
-					onClick={onOpenSearch}
-				>
-					<SearchIcon color='white' />
-					<Text px={{ base: 2, sm: 4 }} textAlign='left' flex='1' noOfLines={1}>
-						Arceus, 493
-					</Text>
-				</chakra.button>
+				{router.asPath !== '/' && (
+					<chakra.button
+						w={{ base: 'full', md: '50%', lg: '32%' }}
+						mr={3}
+						type='button'
+						display='flex'
+						alignItems='center'
+						color='whiteAlpha.400'
+						bg='gray.700'
+						px='4'
+						rounded='md'
+						onClick={onOpenSearch}
+					>
+						<SearchIcon color='white' />
+						<Text
+							px={{ base: 2, sm: 4 }}
+							textAlign='left'
+							flex='1'
+							noOfLines={1}
+						>
+							Arceus, 493
+						</Text>
+					</chakra.button>
+				)}
 
 				{isLoadingUser ? (
 					LoadingButton

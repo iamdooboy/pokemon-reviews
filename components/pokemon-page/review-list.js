@@ -5,9 +5,10 @@ import axios from 'axios'
 import { useState, useRef } from 'react'
 import { ReviewBoxSkeleton } from '../loading/review-box-skeleton'
 import { Box } from '@chakra-ui/react'
+import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 
 const Empty = ({ pokemonName }) => {
-	const name = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+	const name = capitalFirstLetter(formatNames(pokemonName))
 	return (
 		<Box
 			fontWeight='600'

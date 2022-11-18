@@ -2,7 +2,6 @@ import { getSession } from 'next-auth/react'
 import { prisma } from '../../../lib/prisma'
 
 export default async function handler(req, res) {
-	// Check if user is authenticated
 	const session = await getSession({ req })
 	if (!session) {
 		return res.status(401).json({ message: 'Unauthorized.' })
@@ -43,10 +42,6 @@ export default async function handler(req, res) {
 			favoritedByCurrentUser
 		}
 
-		// const favoritedBy = updatedData.favoritedBy.some(el => el.id === user.id)
-
-		// updatedData = { ...updatedData, favoritedByCurrentUser: favoritedBy }
-
 		res.status(200).json(updatedData)
 	}
 
@@ -74,7 +69,7 @@ export default async function handler(req, res) {
 				favoritedBy: true
 			},
 			orderBy: {
-				createdAt: 'desc'
+				createdAt: 'asc'
 			}
 		})
 

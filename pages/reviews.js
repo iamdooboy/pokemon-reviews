@@ -11,7 +11,6 @@ import { authOptions } from '../pages/api/auth/[...nextauth]'
 
 const MyReviews = () => {
 	return (
-		// <SWRConfig value={{ fallback }}>
 		<Layout>
 			<Flex pt={16}>
 				<Sidebar />
@@ -25,7 +24,6 @@ const MyReviews = () => {
 				</Box>
 			</Flex>
 		</Layout>
-		// </SWRConfig>
 	)
 }
 
@@ -42,39 +40,9 @@ export const getServerSideProps = async context => {
 		}
 	}
 
-	// const user = await prisma.user.findUnique({
-	// 	where: { email: session.user.email }
-	// })
-
-	// let reviews = await prisma.review.findMany({
-	// 	//return all reviews for current user
-	// 	where: {
-	// 		authorId: user.id
-	// 	},
-	// 	include: {
-	// 		favoritedBy: true
-	// 	},
-	// 	orderBy: {
-	// 		createdAt: 'desc'
-	// 	}
-	// })
-
-	// reviews = reviews.map(review => {
-	// 	const favoritedByCurrentUser = review.favoritedBy.some(
-	// 		el => el.id === user.id
-	// 	)
-
-	// 	delete review.favoritedBy
-
-	// 	return { ...review, favoritedByCurrentUser }
-	// })
-
 	return {
 		props: {
 			session
-			// fallback: {
-			// 	['/api/reviews/']: JSON.parse(JSON.stringify(reviews))
-			// }
 		}
 	}
 }

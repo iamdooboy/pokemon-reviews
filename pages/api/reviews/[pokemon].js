@@ -12,11 +12,13 @@ export default async function handler(req, res) {
 		include: {
 			author: true,
 			favoritedBy: true
+		},
+		orderBy: {
+			createdAt: 'asc'
 		}
 	})
 
 	if (!session) {
-		// User is not authenticated
 		reviews = reviews.map(review => {
 			const favoritedByCurrentUser = false
 

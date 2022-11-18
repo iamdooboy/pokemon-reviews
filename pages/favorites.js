@@ -4,10 +4,6 @@ import Sidebar from '../components/sidebar/sidebar'
 import { Box, Flex } from '@chakra-ui/react'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from '../pages/api/auth/[...nextauth]'
-// import { getSession } from 'next-auth/react'
-// import { getPokemon } from '../utils/axios'
-// import { prisma } from '../lib/prisma'
-// import { FavoritePokemonGridSkeleton } from '../components/loading/favorite-pokemon-skeleton'
 
 const Favorites = () => {
 	return (
@@ -39,38 +35,6 @@ export const getServerSideProps = async context => {
 			notFound: true
 		}
 	}
-	////////////////////////////////////////////////////////////////////////////
-
-	// const user = await prisma.user.findUnique({
-	// 	where: { email: session.user.email }
-	// })
-
-	// const favoritedPokemon = await prisma.pokemon.findMany({
-	// 	where: {
-	// 		favoritedBy: {
-	// 			some: {
-	// 				id: user.id
-	// 			}
-	// 		}
-	// 	}
-	// })
-
-	// const data = await Promise.all(
-	// 	favoritedPokemon.map(async fav => {
-	// 		const response = await getPokemon(fav.pokemon)
-	// 		const { id: num, typesArr, imageUrl, imageAlt } = response
-
-	// 		const data = {
-	// 			...fav,
-	// 			num,
-	// 			typesArr,
-	// 			imageUrl,
-	// 			imageAlt
-	// 		}
-
-	// 		return data
-	// 	})
-	// )
 
 	return {
 		props: {
