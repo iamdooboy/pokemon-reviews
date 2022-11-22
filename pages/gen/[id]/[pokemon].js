@@ -5,6 +5,7 @@ import NavSection from '../../../components/pokemon-page/nav-section'
 import ActionButtons from '../../../components/pokemon-page/action-buttons'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
+import Sort from '../../../components/pokemon-page/sort'
 import { getAllPokemonFromGen } from '../../../utils/axios'
 
 const Pokemon = ({ pokemonName, gen }) => {
@@ -28,6 +29,7 @@ const Pokemon = ({ pokemonName, gen }) => {
 					<NavSection pokemonName={pokemonName} gen={gen} />
 					<PokemonCard pokemonName={pokemonName} />
 					<ActionButtons onOpen={onOpen} pokemonName={pokemonName} />
+					<Sort />
 					<ReviewList
 						pokemonName={pokemonName}
 						isOpen={isOpen}

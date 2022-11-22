@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import {
 	chakra,
 	Flex,
@@ -46,6 +46,7 @@ const LoadingButton = (
 )
 
 const Navbar = () => {
+	const [login, setLogin] = useState(false)
 	const { data: session, status } = useSession()
 	const router = useRouter()
 	const { isOpen, onOpen, onClose } = useDisclosure()
@@ -59,14 +60,22 @@ const Navbar = () => {
 	const isLoadingUser = status === 'loading'
 	const finalRef = useRef(null)
 	const ref = useRef(null)
+
 	const signOutHandler = () => {
 		if (/settings|favorites|reviews/.test(router.asPath)) {
 			signOut({ callbackUrl: '/' })
-		} else if (/[1-9]$/.test(router.asPath) || /\/$/.test(router.asPath)) {
+		} else if (/[1-9]$|\/$/.test(router.asPath)) {
 			signOut({ redirect: false })
 		} else {
 			signOut({ redirect: true })
 		}
+	}
+
+	const onClickHandler = e => {
+		if (e.target.innerText === 'Log in') {
+			setLogin(true)
+		}
+		onOpen()
 	}
 
 	return (
@@ -110,30 +119,23 @@ const Navbar = () => {
 					size='md'
 					mr={3}
 				/>
-				{router.asPath !== '/' && (
-					<chakra.button
-						w={{ base: 'full', md: '50%', lg: '32%' }}
-						mr={3}
-						type='button'
-						display='flex'
-						alignItems='center'
-						color='whiteAlpha.400'
-						bg='gray.700'
-						px='4'
-						rounded='md'
-						onClick={onOpenSearch}
-					>
-						<SearchIcon color='white' />
-						<Text
-							px={{ base: 2, sm: 4 }}
-							textAlign='left'
-							flex='1'
-							noOfLines={1}
-						>
-							Arceus, 493
-						</Text>
-					</chakra.button>
-				)}
+				<chakra.button
+					w={{ base: 'full', md: '50%', lg: '32%' }}
+					mr={3}
+					type='button'
+					display='flex'
+					alignItems='center'
+					color='whiteAlpha.400'
+					bg='gray.700'
+					px='4'
+					rounded='md'
+					onClick={onOpenSearch}
+				>
+					<SearchIcon color='white' />
+					<Text px={{ base: 2, sm: 4 }} textAlign='left' flex='1' noOfLines={1}>
+						Arceus, 493
+					</Text>
+				</chakra.button>
 
 				{isLoadingUser ? (
 					LoadingButton
@@ -192,9 +194,19 @@ const Navbar = () => {
 						</MenuList>
 					</Menu>
 				) : (
-					<Button colorScheme='blue' onClick={onOpen}>
-						Log in
-					</Button>
+					<>
+						<Button
+							colorScheme='blue'
+							onClick={onClickHandler}
+							variant='outline'
+							mr={3}
+						>
+							Log in
+						</Button>
+						<Button colorScheme='blue' onClick={onClickHandler}>
+							Sign up
+						</Button>
+					</>
 				)}
 			</Flex>
 			<SearchModal isOpen={isOpenSearch} onClose={onCloseSearch} />
@@ -203,6 +215,8 @@ const Navbar = () => {
 				onClose={onClose}
 				finalRef={finalRef}
 				signIn={signIn}
+				login={login}
+				setLogin={setLogin}
 			/>
 			<Drawer
 				isOpen={sidebar.isOpen}

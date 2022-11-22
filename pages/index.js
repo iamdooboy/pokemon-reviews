@@ -220,7 +220,8 @@ const Page = () => {
 												rounded='md'
 												px={5}
 												py={2}
-												bg='gray.700'
+												colorScheme='gray'
+												_hover={{ bg: '#6A7DB3' }}
 												onClick={() => setGenPageLoading(true)}
 											>
 												Gen {gen.num}
