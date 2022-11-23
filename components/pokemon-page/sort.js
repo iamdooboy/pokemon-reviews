@@ -1,36 +1,58 @@
-import { HStack, Button, Heading, ButtonGroup } from '@chakra-ui/react'
-import { useRef } from 'react'
-const Sort = () => {
+import { Tabs, TabList, Tab, HStack, Heading } from '@chakra-ui/react'
+import { useAppContext } from '../../context/state'
+import { useFetchReviews } from '../../hooks/useFetchReviews'
+
+const TABS = ['Latest', 'Popular']
+
+const Sort = ({ pokemonName }) => {
+	const { setSortOrder } = useAppContext()
+	const fetcher = url =>
+		axios
+			.get(url, {
+				params: {
+					pokemon: pokemonName
+				}
+			})
+			.then(res => res.data)
+
+	const key = `/api/reviews/${pokemonName}`
+
+	const { reviews } = useFetchReviews(key, fetcher)
+
 	return (
-		<HStack align='center' justify='space-between' mt={3} maxW='xs'>
-			<Heading as='h5' size='md'>
-				53 Reviews
-			</Heading>
-			<ButtonGroup variant='ghost' spacing={1}>
-				<Button
-					autoFocus
-					_hover={{ bg: 'transparent' }}
-					_focus={{
-						outline: '1px solid #3A404B',
-						outlineOffset: 0,
-						bg: 'rgba(17, 25, 40, 0.75)'
-					}}
-				>
-					Latest
-				</Button>
-				<Button
-					_hover={{ bg: 'transparent' }}
-					_focus={{
-						outline: '1px solid #3A404B',
-						outlineOffset: 0,
-						bg: 'rgba(17, 25, 40, 0.75)'
-					}}
-					variant='ghost'
-				>
-					Top
-				</Button>
-			</ButtonGroup>
-		</HStack>
+		<>
+			{reviews?.length > 0 && (
+				<HStack align='center' justify='space-between' mt={3} maxW='xs'>
+					<Heading as='h5' size='md'>
+						{reviews?.length} Reviews
+					</Heading>
+					<Tabs
+						variant='unstyled'
+						onChange={index => {
+							setSortOrder(index)
+						}}
+					>
+						<TabList>
+							{TABS.map(tab => (
+								<Tab
+									key={tab}
+									id={tab}
+									aria-controls={tab}
+									_selected={{
+										outline: '1px solid #3A404B',
+										outlineOffset: 0,
+										bg: 'rgba(17, 25, 40, 0.75)',
+										rounded: 'md'
+									}}
+								>
+									{tab}
+								</Tab>
+							))}
+						</TabList>
+					</Tabs>
+				</HStack>
+			)}
+		</>
 	)
 }
 

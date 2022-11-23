@@ -6,6 +6,7 @@ import { useState, useRef } from 'react'
 import { ReviewBoxSkeleton } from '../loading/review-box-skeleton'
 import { Box } from '@chakra-ui/react'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
+import { useAppContext } from '../../context/state'
 
 const Empty = ({ pokemonName }) => {
 	const name = capitalFirstLetter(formatNames(pokemonName))
@@ -27,6 +28,7 @@ const Empty = ({ pokemonName }) => {
 }
 
 const ReviewList = ({ pokemonName, isOpen, onOpen, onClose }) => {
+	const { sortOrder } = useAppContext()
 	const [selected, setSelected] = useState({ description: '', rating: 0 })
 	const initialRef = useRef()
 
@@ -41,12 +43,12 @@ const ReviewList = ({ pokemonName, isOpen, onOpen, onClose }) => {
 
 	const key = `/api/reviews/${pokemonName}`
 
-	const { reviews, isLoading, create, update, remove, like } = useFetchReviews(
-		key,
-		fetcher
-	)
+	const { reviews, isLoading, create, update, remove, like, sortReviews } =
+		useFetchReviews(key, fetcher)
 
 	if (isLoading) return <ReviewBoxSkeleton />
+
+	sortReviews(sortOrder)
 
 	return (
 		<>

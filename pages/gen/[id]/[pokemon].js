@@ -29,7 +29,7 @@ const Pokemon = ({ pokemonName, gen }) => {
 					<NavSection pokemonName={pokemonName} gen={gen} />
 					<PokemonCard pokemonName={pokemonName} />
 					<ActionButtons onOpen={onOpen} pokemonName={pokemonName} />
-					<Sort />
+					<Sort pokemonName={pokemonName} />
 					<ReviewList
 						pokemonName={pokemonName}
 						isOpen={isOpen}

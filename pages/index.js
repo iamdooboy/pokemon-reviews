@@ -9,8 +9,8 @@ import {
 	HStack,
 	Container,
 	Button,
-	Image,
-	Spinner
+	Image
+	//Spinner
 } from '@chakra-ui/react'
 import { useInput } from '../hooks/useInput'
 import {
@@ -23,13 +23,13 @@ import CustomInputResults from '../components/custom-input-results'
 import CustomInput from '../components/custom-input'
 import { LinkOverlay } from '../components/link-overlay'
 import RandomButton from '../components/random-button'
-import { useState } from 'react'
-import { GenPageSkeleton } from '../components/loading/gen-page-skeleton'
-import { ReviewBoxSkeleton } from '../components/loading/review-box-skeleton'
-import { PokemonCardSkeleton } from '../components/loading/pokemon-card-skeleton'
 import { useRouter } from 'next/router'
-import { MdOutlineEdit } from 'react-icons/md'
-import NavSection from '../components/pokemon-page/nav-section'
+import { useState } from 'react'
+// import { GenPageSkeleton } from '../components/loading/gen-page-skeleton'
+// import { ReviewBoxSkeleton } from '../components/loading/review-box-skeleton'
+// import { PokemonCardSkeleton } from '../components/loading/pokemon-card-skeleton'
+// import { MdOutlineEdit } from 'react-icons/md'
+// import NavSection from '../components/pokemon-page/nav-section'
 
 const generations = [
 	{ num: 1, color1: '#F2844B', color2: '#61CCEF' },
@@ -59,8 +59,8 @@ const Page = () => {
 	const [image, setImage] = useState(down)
 	const [randomId, setRandomId] = useState('')
 	const [imageUrl, setImageUrl] = useState('')
-	const [genPageLoading, setGenPageLoading] = useState(false)
-	const [pokemonPageLoading, setPokemonPageLoading] = useState(false)
+	// const [genPageLoading, setGenPageLoading] = useState(false)
+	// const [pokemonPageLoading, setPokemonPageLoading] = useState(false)
 
 	const onMouseEnterHandler = () => {
 		setImage(up)
@@ -77,7 +77,7 @@ const Page = () => {
 	}
 
 	const onClickHandler = () => {
-		setPokemonPageLoading(true)
+		//setPokemonPageLoading(true)
 		if (!randomId) {
 			randomId = getRandomPokemonNum()
 		}
@@ -222,7 +222,7 @@ const Page = () => {
 												py={2}
 												colorScheme='gray'
 												_hover={{ bg: '#6A7DB3' }}
-												onClick={() => setGenPageLoading(true)}
+												//onClick={() => setGenPageLoading(true)}
 											>
 												Gen {gen.num}
 											</Button>

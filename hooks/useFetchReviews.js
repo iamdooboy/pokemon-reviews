@@ -18,6 +18,18 @@ export const useFetchReviews = (key, fetcher) => {
 		revalidate: false
 	}
 
+	const sortReviews = sortOrder => {
+		if (sortOrder === 1) {
+			reviews.sort((a, b) => {
+				return b.favorite - a.favorite
+			})
+		} else {
+			reviews.sort((a, b) => {
+				return new Date(b.createdAt) - new Date(a.createdAt)
+			})
+		}
+	}
+
 	const calcRatings = review => {
 		const reviewCount = review.length
 
@@ -156,6 +168,7 @@ export const useFetchReviews = (key, fetcher) => {
 		like,
 		create,
 		update,
-		remove
+		remove,
+		sortReviews
 	}
 }
