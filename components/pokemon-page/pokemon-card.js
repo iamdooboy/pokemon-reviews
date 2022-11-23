@@ -12,14 +12,10 @@ import { FallBackImage } from '../../utils/fallback-image'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
 import { CustomRating } from '../rating'
-import axios from 'axios'
 import { PokemonCardSkeleton } from '../loading/pokemon-card-skeleton'
 
-const PokemonCard = ({ pokemonName }) => {
-	const fetcher = url =>
-		axios.get(url, { params: { pokemon: pokemonName } }).then(res => res.data)
-
-	const key = `/api/reviews/${pokemonName}`
+const PokemonCard = ({ swrData }) => {
+	const { pokemon, key, fetcher } = swrData
 
 	const {
 		reviews,
@@ -29,7 +25,7 @@ const PokemonCard = ({ pokemonName }) => {
 
 	const [fetchOnePokemon] = usePokeAPI()
 
-	const { data, isLoading, formatData } = fetchOnePokemon(pokemonName)
+	const { data, isLoading, formatData } = fetchOnePokemon(pokemon)
 
 	if (reviewsAreLoading || isLoading) return <PokemonCardSkeleton />
 

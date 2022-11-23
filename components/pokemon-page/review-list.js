@@ -1,15 +1,14 @@
 import ReviewBox from '../pokemon-page/review-box'
 import ReviewModal from './review-modal'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
-import axios from 'axios'
 import { useState, useRef } from 'react'
 import { ReviewBoxSkeleton } from '../loading/review-box-skeleton'
 import { Box } from '@chakra-ui/react'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 import { useAppContext } from '../../context/state'
 
-const Empty = ({ pokemonName }) => {
-	const name = capitalFirstLetter(formatNames(pokemonName))
+const Empty = ({ pokemon }) => {
+	const name = capitalFirstLetter(formatNames(pokemon))
 	return (
 		<Box
 			fontWeight='600'
@@ -27,21 +26,11 @@ const Empty = ({ pokemonName }) => {
 	)
 }
 
-const ReviewList = ({ pokemonName, isOpen, onOpen, onClose }) => {
-	const { sortOrder } = useAppContext()
+const ReviewList = ({ swrData, isOpen, onOpen, onClose, sortOrder }) => {
+	const { pokemon, key, fetcher } = swrData
+
 	const [selected, setSelected] = useState({ description: '', rating: 0 })
 	const initialRef = useRef()
-
-	const fetcher = url =>
-		axios
-			.get(url, {
-				params: {
-					pokemon: pokemonName
-				}
-			})
-			.then(res => res.data)
-
-	const key = `/api/reviews/${pokemonName}`
 
 	const { reviews, isLoading, create, update, remove, like, sortReviews } =
 		useFetchReviews(key, fetcher)
@@ -52,7 +41,7 @@ const ReviewList = ({ pokemonName, isOpen, onOpen, onClose }) => {
 
 	return (
 		<>
-			{reviews.length === 0 && <Empty pokemonName={pokemonName} />}
+			{reviews.length === 0 && <Empty pokemon={pokemon} />}
 			{reviews.map((review, index) => (
 				<ReviewBox
 					key={index}
@@ -62,7 +51,7 @@ const ReviewList = ({ pokemonName, isOpen, onOpen, onClose }) => {
 
 			<ReviewModal
 				{...{
-					pokemonName,
+					pokemon,
 					isOpen,
 					onClose,
 					initialRef,

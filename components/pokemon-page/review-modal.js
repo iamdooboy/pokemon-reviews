@@ -38,7 +38,7 @@ const AutoResizeTextarea = React.forwardRef((props, ref) => {
 AutoResizeTextarea.displayName = 'AutoResizeTextarea'
 
 const ReviewModal = ({
-	pokemonName,
+	pokemon,
 	isOpen,
 	onClose,
 	initialRef,
@@ -63,7 +63,7 @@ const ReviewModal = ({
 			const data = { ...selected, description, rating }
 			update(data)
 		} else {
-			const data = { description, rating, pokemon: pokemonName }
+			const data = { description, rating, pokemon }
 			create(data)
 		}
 		onCloseHandler()
@@ -77,7 +77,7 @@ const ReviewModal = ({
 	}
 
 	let formattedName = formatNames(
-		selected.description ? selected.pokemon : pokemonName
+		selected.description ? selected.pokemon : pokemon
 	)
 	formattedName = capitalFirstLetter(formattedName)
 

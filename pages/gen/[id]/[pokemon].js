@@ -5,14 +5,29 @@ import NavSection from '../../../components/pokemon-page/nav-section'
 import ActionButtons from '../../../components/pokemon-page/action-buttons'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
-import Sort from '../../../components/pokemon-page/sort'
+import SortSection from '../../../components/pokemon-page/sort-section'
 import { getAllPokemonFromGen } from '../../../utils/axios'
+import axios from 'axios'
+import { useState } from 'react'
 
 const Pokemon = ({ pokemonName, gen }) => {
+	const [sortOrder, setSortOrder] = useState(0)
 	const { isOpen, onOpen, onClose } = useDisclosure()
+	const swrData = {
+		pokemon: pokemonName,
+		key: `/api/reviews/${pokemonName}`,
+		fetcher: url =>
+			axios
+				.get(url, {
+					params: {
+						pokemon: pokemonName
+					}
+				})
+				.then(res => res.data)
+	}
 	return (
 		<Flex pt={16}>
-			<Sidebar id={gen} />
+			<Sidebar />
 			<chakra.div
 				flex={1}
 				px='5'
@@ -27,14 +42,15 @@ const Pokemon = ({ pokemonName, gen }) => {
 					justify='center'
 				>
 					<NavSection pokemonName={pokemonName} gen={gen} />
-					<PokemonCard pokemonName={pokemonName} />
+					<PokemonCard swrData={swrData} />
 					<ActionButtons onOpen={onOpen} pokemonName={pokemonName} />
-					<Sort pokemonName={pokemonName} />
+					<SortSection swrData={swrData} setSortOrder={setSortOrder} />
 					<ReviewList
-						pokemonName={pokemonName}
+						swrData={swrData}
 						isOpen={isOpen}
 						onOpen={onOpen}
 						onClose={onClose}
+						sortOrder={sortOrder}
 					/>
 				</Container>
 			</chakra.div>

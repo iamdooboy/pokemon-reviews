@@ -4,10 +4,6 @@ import Sidebar from '../components/sidebar/sidebar'
 import ReviewGrid from '../components/review-page/review-grid'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from '../pages/api/auth/[...nextauth]'
-//import { prisma } from '../lib/prisma'
-// import { ReviewGridSkeleton } from '../components/loading/review-box-skeleton'
-// import { SWRConfig } from 'swr'
-// import axios from 'axios'
 
 const MyReviews = () => {
 	return (
