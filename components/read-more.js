@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Text } from '@chakra-ui/react'
 
 const ReadMore = ({ noOfLines, children }) => {

@@ -1,7 +1,7 @@
 import { SimpleGrid } from '@chakra-ui/react'
-import PokemonGridItem from '../gen-page/pokemon-grid-item'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
 import { GenPageSkeleton } from '../loading/gen-page-skeleton'
+import PokemonGridItem from '../gen-page/pokemon-grid-item'
 
 const PokemonGrid = ({ gen }) => {
 	const [_, fetchAllPokemon] = usePokeAPI()

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { SimpleGrid, useDisclosure } from '@chakra-ui/react'
 import ReviewGridItem from './review-grid-item'
 import ReviewModal from '../pokemon-page/review-modal'

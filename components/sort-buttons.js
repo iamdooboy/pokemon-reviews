@@ -4,7 +4,6 @@ const SortButtons = ({ setSortOrder }) => {
 	const TABS = ['Latest', 'Popular']
 	return (
 		<Tabs
-			py={4}
 			variant='unstyled'
 			onChange={index => {
 				setSortOrder(index)

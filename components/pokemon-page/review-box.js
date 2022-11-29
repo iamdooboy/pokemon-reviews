@@ -1,4 +1,3 @@
-import React from 'react'
 import { Box, Flex, Avatar, Text, Spacer } from '@chakra-ui/react'
 import AddOn from './add-on'
 import ReadMore from '../read-more'

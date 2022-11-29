@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { forwardRef, useState, useEffect } from 'react'
 import {
 	Modal,
 	ModalOverlay,
@@ -20,7 +20,7 @@ import ResizeTextarea from 'react-textarea-autosize'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 import { CustomRating } from '../rating'
 
-const AutoResizeTextarea = React.forwardRef((props, ref) => {
+const AutoResizeTextarea = forwardRef((props, ref) => {
 	return (
 		<Textarea
 			minH='unset'

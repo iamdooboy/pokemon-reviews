@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import axios from 'axios'
 import { authOptions } from './api/auth/[...nextauth]'
 import {
@@ -152,7 +152,7 @@ export const getServerSideProps = async context => {
 
 	return {
 		props: {
-			user: user
+			user
 		}
 	}
 }

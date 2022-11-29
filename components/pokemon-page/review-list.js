@@ -5,7 +5,6 @@ import { useState, useRef } from 'react'
 import { ReviewBoxSkeleton } from '../loading/review-box-skeleton'
 import { Box } from '@chakra-ui/react'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
-import { useAppContext } from '../../context/state'
 
 const Empty = ({ pokemon }) => {
 	const name = capitalFirstLetter(formatNames(pokemon))

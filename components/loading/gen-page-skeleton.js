@@ -1,4 +1,3 @@
-import React from 'react'
 import { Box, Skeleton, Stack, SimpleGrid, GridItem } from '@chakra-ui/react'
 
 export const GridItemSkeleton = () => {

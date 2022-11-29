@@ -40,9 +40,5 @@ export default async function handler(req, res) {
 		favoritedByCurrentUser
 	}
 
-	// const favoritedBy = updatedData.favoritedBy.some(el => el.id === user.id)
-
-	// updatedData = { ...updatedData, favoritedByCurrentUser: favoritedBy }
-
 	res.status(200).json(updatedData)
 }
