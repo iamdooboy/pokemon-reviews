@@ -46,17 +46,20 @@ export default async function handler(req, res) {
 	}
 
 	if (req.method === 'POST') {
-		const { description, rating, pokemon } = req.body
+		try {
+			const { description, rating, pokemon } = req.body
 
-		const savedReview = await prisma.review.create({
-			// data: { ...reviewData, authorId: user.id },
-			data: { description, rating, pokemon, authorId: user.id },
-			include: {
-				//return all fields from user model
-				author: true
-			}
-		})
-		res.status(200).json(savedReview)
+			const savedReview = await prisma.review.create({
+				data: { description, rating, pokemon, authorId: user.id },
+				include: {
+					//return all fields from user model
+					author: true
+				}
+			})
+			res.status(200).json(savedReview)
+		} catch (e) {
+			throw e
+		}
 	}
 
 	if (req.method === 'GET') {

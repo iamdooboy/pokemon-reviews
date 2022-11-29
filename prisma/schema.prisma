@@ -66,6 +66,8 @@ model Review {
   favorite    Int?     @default(0)
   favoritedBy User[]
   updatedAt   DateTime @default(now())
+
+  @@unique([authorId, pokemon])
 }
 
 model Pokemon {

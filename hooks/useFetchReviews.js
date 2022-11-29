@@ -48,11 +48,20 @@ export const useFetchReviews = (key, fetcher) => {
 	}
 
 	const postFn = async data => {
-		setIsLoading(true)
-		const res = await axios.post('/api/reviews', data).then(res => res.data)
-		const newData = [...reviews, res]
-		displayConfirmationToast('Review created')
-		return newData
+		try {
+			setIsLoading(true)
+			const res = await axios.post('/api/reviews', data).then(res => res.data)
+			const newData = [...reviews, res]
+			displayConfirmationToast('Review created')
+			return newData
+		} catch (error) {
+			displayConfirmationToast(
+				'You already posted a review for this pokemon.',
+				'error',
+				5000
+			)
+			return reviews
+		}
 	}
 
 	const updateFn = async (data, path = '') => {
@@ -150,13 +159,17 @@ export const useFetchReviews = (key, fetcher) => {
 		mutate(deleteFn(data), options)
 	}
 
-	const displayConfirmationToast = message => {
+	const displayConfirmationToast = (
+		message,
+		status = 'success',
+		duration = 1500
+	) => {
 		setIsLoading(false)
 		toast({
 			title: message,
 			position: 'bottom-right',
-			status: 'success',
-			duration: 1500,
+			status,
+			duration,
 			isClosable: true
 		})
 	}
