@@ -43,7 +43,7 @@ const Pokemon = ({ pokemonName, gen }) => {
 				>
 					<NavSection pokemonName={pokemonName} gen={gen} />
 					<PokemonCard swrData={swrData} />
-					<ActionButtons onOpen={onOpen} pokemonName={pokemonName} />
+					<ActionButtons onOpen={onOpen} swrData={swrData} />
 					<SortSection swrData={swrData} setSortOrder={setSortOrder} />
 					<ReviewList
 						swrData={swrData}

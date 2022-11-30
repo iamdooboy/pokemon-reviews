@@ -21,10 +21,11 @@ export default async function handler(req, res) {
 	if (!session) {
 		reviews = reviews.map(review => {
 			const favoritedByCurrentUser = false
+			const reviewedThisPokemon = false
 
 			delete review.favoritedBy
 
-			return { ...review, favoritedByCurrentUser }
+			return { ...review, favoritedByCurrentUser, reviewedThisPokemon }
 		})
 
 		return res.status(200).json(reviews)
@@ -40,9 +41,11 @@ export default async function handler(req, res) {
 			el => el.id === user.id
 		)
 
+		const reviewedThisPokemon = review.authorId === user.id
+
 		delete review.favoritedBy
 
-		return { ...review, favoritedByCurrentUser }
+		return { ...review, favoritedByCurrentUser, reviewedThisPokemon }
 	})
 
 	return res.status(200).json(reviews)
