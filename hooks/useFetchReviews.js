@@ -15,7 +15,7 @@ export const useFetchReviews = (key, fetcher) => {
 	let options = {
 		rollbackOnError: true,
 		populateCache: true,
-		revalidate: false
+		revalidate: true
 	}
 
 	const sortReviews = sortOrder => {

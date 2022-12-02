@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { SimpleGrid, useDisclosure } from '@chakra-ui/react'
+import { SimpleGrid, useDisclosure, HStack, Heading } from '@chakra-ui/react'
 import ReviewGridItem from './review-grid-item'
 import ReviewModal from '../pokemon-page/review-modal'
 import axios from 'axios'
@@ -25,7 +25,14 @@ const ReviewGrid = () => {
 
 	return (
 		<>
-			{reviews?.length > 0 && <SortButtons setSortOrder={setSortOrder} />}
+			{reviews.length > 0 && (
+				<HStack align='center' justify='space-between' mt={3} w='full'>
+					<Heading as='h5' size='md'>
+						{reviews?.length} Reviews
+					</Heading>
+					<SortButtons setSortOrder={setSortOrder} />
+				</HStack>
+			)}
 			<SimpleGrid columns={[1, 2, 2, 3]} spacing={4} py={4}>
 				{reviews.map((review, index) => (
 					<ReviewGridItem

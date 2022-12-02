@@ -5,10 +5,15 @@ import axios from 'axios'
 import { useFetchPokemon } from '../../hooks/useFetchPokemon'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
 import ErrorModal from './error-modal'
+import { useState } from 'react'
 
 const ActionButtons = ({ onOpen, swrData }) => {
 	const session = useSession()
-	const error = useDisclosure()
+	const errorModal = useDisclosure()
+	const [error, setError] = useState({
+		title: 'Authorization Error',
+		message: 'Please sign up or log in to review this pokemon.'
+	})
 	const { pokemon: pokemonName } = swrData
 	const fetcher = url =>
 		axios.get(url, { params: { pokemon: pokemonName } }).then(res => res.data)
@@ -24,7 +29,6 @@ const ActionButtons = ({ onOpen, swrData }) => {
 
 	const posted = reviews?.some(review => review.reviewedThisPokemon === true)
 
-	console.log(session.data)
 	const { favorite, favoritedByCurrentUser } = data || {}
 
 	const favoriteIcon = favoritedByCurrentUser ? (
@@ -35,13 +39,17 @@ const ActionButtons = ({ onOpen, swrData }) => {
 
 	const onClickHandler = () => {
 		if (posted) {
-			error.onOpen()
+			setError({
+				title: 'Duplicate Error',
+				message: 'You already posted a review for this Pokemon.'
+			})
+			errorModal.onOpen()
 			return
 		}
 		if (session.data) {
 			onOpen()
 		} else {
-			alert('please login to review')
+			errorModal.onOpen()
 		}
 	}
 
@@ -54,9 +62,7 @@ const ActionButtons = ({ onOpen, swrData }) => {
 					variant='outline'
 					w='20%'
 					onClick={
-						session.data
-							? () => onFavorite(data)
-							: () => alert('please login to favorite')
+						session.data ? () => onFavorite(data) : () => errorModal.onOpen()
 					}
 					colorScheme='blue'
 					cursor={session.data ? 'pointer' : 'not-allowed'}
@@ -68,10 +74,7 @@ const ActionButtons = ({ onOpen, swrData }) => {
 					loadingText='Leave a review'
 					spinner={null}
 					leftIcon={<MdOutlineEdit />}
-					onClick={
-						// session.data ? onOpen : () => alert('please login to review')
-						onClickHandler
-					}
+					onClick={onClickHandler}
 					cursor={session.data ? 'pointer' : 'not-allowed'}
 					colorScheme='blue'
 					w='80%'
@@ -79,7 +82,7 @@ const ActionButtons = ({ onOpen, swrData }) => {
 					Leave a review
 				</Button>
 			</HStack>
-			<ErrorModal error={error} />
+			<ErrorModal errorModal={errorModal} error={error} />
 		</>
 	)
 }
