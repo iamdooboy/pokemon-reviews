@@ -7,28 +7,27 @@ const Psyduck = ({ deg }) => {
 		<>
 			<Box
 				pos='absolute'
-				left='46px'
-				bottom='387px'
+				left='80px'
+				bottom='194px'
 				zIndex={2}
 				transform={`rotate(${deg}deg)`}
 			>
-				<NextImage src='/left.png' height='3px' width='3px' />
+				<NextImage src='/left.png' height='8px' width='8px' />
 			</Box>
 			<Box
 				pos='absolute'
-				left='108px'
-				bottom='393px'
+				left='176px'
+				bottom='194px'
 				zIndex={2}
-				transform={`rotate(${deg}deg)`}
+				//transform={`rotate(${deg}deg)`}
 			>
-				<NextImage src='/right.png' height='4px' width='4px' />
+				<NextImage src='/right.png' height='8px' width='8px' />
 			</Box>
 			<Box
-				pos='absolute'
-				left='-70px'
-				bottom='71px'
+				//pos='absolute'
+				// left='-70px'
+				// bottom='71px'
 				zIndex={1}
-				transform='rotate(31deg)'
 				id='anchor'
 			>
 				<NextImage src='/psyduck.png' height='300px' width='300px' />
