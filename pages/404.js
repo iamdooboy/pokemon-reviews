@@ -1,20 +1,24 @@
-import { Heading, Flex, Box } from '@chakra-ui/react'
+import { Heading, Box, Container, Button } from '@chakra-ui/react'
 import Layout from '../components/layout'
-import Psyduck from '../components/eye-tracking/psyduck'
-import { useMousePosition } from '../hooks/useMousePosition'
 import NextImage from 'next/image'
+import { LinkOverlay } from '../components/link-overlay'
 
 const Custom404 = () => {
-	//const deg = useMousePosition()
-
 	return (
 		<Layout>
-			<Flex pt={16}>
-				<Heading>
-					We’re sorry. We can’t find the page you’re looking for.
-				</Heading>
-				<NextImage src='/psyduck.png' height='300px' width='300px' />
-			</Flex>
+			<Container maxW='xl'>
+				<Box pt={40} align='center'>
+					<Heading size='lg' mb={4}>
+						This page could not be found.
+					</Heading>
+					<NextImage src='/psyduck.png' height='300px' width='200px' />
+					<Box mt={4}>
+						<LinkOverlay href='/'>
+							<Button colorScheme='teal'>Return to Home</Button>
+						</LinkOverlay>
+					</Box>
+				</Box>
+			</Container>
 		</Layout>
 	)
 }
