@@ -65,8 +65,15 @@ const LoginModal = ({ isOpen, onClose, finalRef, signIn, login, setLogin }) => {
 			if (error) {
 				throw new Error(error)
 			}
-			setConfirm(true)
 			setIsLoading(false)
+			setConfirm(true)
+			toast({
+				title: 'Email Sent',
+				status: 'success',
+				duration: 2000,
+				isClosable: true,
+				position: 'top'
+			})
 		} catch (error) {
 			setIsLoading(false)
 			setError(true)
