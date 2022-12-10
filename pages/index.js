@@ -9,8 +9,8 @@ import {
 	HStack,
 	Container,
 	Button,
-	Image
-	//Spinner
+	Image,
+	Spinner
 } from '@chakra-ui/react'
 import { useInput } from '../hooks/useInput'
 import {
@@ -25,11 +25,11 @@ import { LinkOverlay } from '../components/link-overlay'
 import RandomButton from '../components/random-button'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-// import { GenPageSkeleton } from '../components/loading/gen-page-skeleton'
-// import { ReviewBoxSkeleton } from '../components/loading/review-box-skeleton'
-// import { PokemonCardSkeleton } from '../components/loading/pokemon-card-skeleton'
-// import { MdOutlineEdit } from 'react-icons/md'
-// import NavSection from '../components/pokemon-page/nav-section'
+import { GenPageSkeleton } from '../components/loading/gen-page-skeleton'
+import { ReviewBoxSkeleton } from '../components/loading/review-box-skeleton'
+import { PokemonCardSkeleton } from '../components/loading/pokemon-card-skeleton'
+import { MdOutlineEdit } from 'react-icons/md'
+import NavSection from '../components/pokemon-page/nav-section'
 
 const generations = [
 	{ num: 1, color1: '#F2844B', color2: '#61CCEF' },
@@ -59,8 +59,8 @@ const Page = () => {
 	const [image, setImage] = useState(down)
 	const [randomId, setRandomId] = useState('')
 	const [imageUrl, setImageUrl] = useState('')
-	// const [genPageLoading, setGenPageLoading] = useState(false)
-	// const [pokemonPageLoading, setPokemonPageLoading] = useState(false)
+	const [genPageLoading, setGenPageLoading] = useState(false)
+	const [pokemonPageLoading, setPokemonPageLoading] = useState(false)
 
 	const onMouseEnterHandler = () => {
 		setImage(up)
@@ -77,7 +77,7 @@ const Page = () => {
 	}
 
 	const onClickHandler = () => {
-		//setPokemonPageLoading(true)
+		setPokemonPageLoading(true)
 		if (!randomId) {
 			randomId = getRandomPokemonNum()
 		}
@@ -87,62 +87,56 @@ const Page = () => {
 		router.push(`/gen/${gen}/${name}`)
 	}
 
-	// if (genPageLoading) {
-	// 	return (
-	// 		<Layout>
-	// 			<Flex pt={16}>
-	// 				<Box
-	// 					flex={1}
-	// 					px='5'
-	// 					overflow='auto'
-	// 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-	// 				>
-	// 					<GenPageSkeleton />
-	// 				</Box>
-	// 			</Flex>
-	// 		</Layout>
-	// 	)
-	// }
+	if (genPageLoading || pokemonPageLoading) {
+		return (
+			<Layout>
+				<Flex pt={14}>
+					<Box
+						flex={1}
+						px='5'
+						overflow='auto'
+						maxH='calc(100vh - var(--chakra-sizes-16))'
+					>
+						{genPageLoading ? (
+							<GenPageSkeleton />
+						) : (
+							<Container
+								maxW='container.xl'
+								px={{ base: 5, md: 12 }}
+								margin='0 auto'
+								align='center'
+								justify='center'
+							>
+								<NavSection id={randomId} pokemon={pokemon} />
+								<PokemonCardSkeleton />
+								<HStack align='center' justify='center' mt={3} maxW='xs'>
+									<Button
+										isLoading
+										variant='outline'
+										w='20%'
+										colorScheme='blue'
+										spinner={<Spinner size='xs' />}
+									/>
 
-	// if (pokemonPageLoading) {
-	// 	return (
-	// 		<Layout>
-	// 			<Flex pt={16}>
-	// 				<chakra.div
-	// 					flex={1}
-	// 					px='5'
-	// 					overflow='auto'
-	// 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-	// 				>
-	// 					<Container
-	// 						maxW='container.xl'
-	// 						px={{ base: 5, md: 12 }}
-	// 						margin='0 auto'
-	// 						align='center'
-	// 						justify='center'
-	// 					>
-	// 						<NavSection id={randomId} pokemon={pokemon} />
-	// 						<PokemonCardSkeleton />
-	// 						<HStack align='center' justify='center' mt={3} maxW='xs'>
-	// 							<Button
-	// 								isLoading
-	// 								variant='outline'
-	// 								w='20%'
-	// 								colorScheme='blue'
-	// 								spinner={<Spinner size='xs' />}
-	// 							/>
-
-	// 							<Button leftIcon={<MdOutlineEdit />} colorScheme='blue' w='80%'>
-	// 								Leave a review
-	// 							</Button>
-	// 						</HStack>
-	// 						<ReviewBoxSkeleton />
-	// 					</Container>
-	// 				</chakra.div>
-	// 			</Flex>
-	// 		</Layout>
-	// 	)
-	// }
+									<Button
+										isLoading={true}
+										loadingText='Leave a review'
+										spinner={null}
+										leftIcon={<MdOutlineEdit />}
+										colorScheme='blue'
+										w='80%'
+									>
+										Leave a review
+									</Button>
+								</HStack>
+								<ReviewBoxSkeleton />
+							</Container>
+						)}
+					</Box>
+				</Flex>
+			</Layout>
+		)
+	}
 
 	return (
 		<Layout>
@@ -222,7 +216,7 @@ const Page = () => {
 												py={2}
 												colorScheme='gray'
 												_hover={{ bg: '#6A7DB3' }}
-												//onClick={() => setGenPageLoading(true)}
+												onClick={() => setGenPageLoading(true)}
 											>
 												Gen {gen.num}
 											</Button>

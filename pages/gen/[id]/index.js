@@ -6,6 +6,7 @@ import { isNumber } from '../../../utils/helpers'
 import { api } from '../../../utils/axios'
 import { getLimitAndOffset } from '../../../utils/helpers'
 import { SWRConfig } from 'swr'
+import axios from 'axios'
 
 const GenerationPage = ({ fallback, gen }) => {
 	return (
@@ -51,9 +52,11 @@ export const getServerSideProps = async context => {
 
 	const { limit, offset } = getLimitAndOffset(id)
 
-	const data = await api
-		.get(`/pokemon?limit=${limit}&offset=${offset}`)
-		.then(res => res.data.results.map(el => el.name))
+	// const data = await api
+	// 	.get(`/pokemon?limit=${limit}&offset=${offset}`)
+	// 	.then(res => res.data.results.map(el => el.name))
+
+	const data = await axios.get(`https://poke-api.up.railway.app/api/gen/${id}`).then(res => res.data.map(el => el.name))
 
 	return {
 		props: {

@@ -9,6 +9,7 @@ import SortSection from '../../../components/pokemon-page/sort-section'
 import { getAllPokemonFromGen } from '../../../utils/axios'
 import axios from 'axios'
 import { useState } from 'react'
+import Forms from '../../../components/pokemon-page/forms'
 
 const Pokemon = ({ pokemonName, gen }) => {
 	const [sortOrder, setSortOrder] = useState(0)
@@ -43,6 +44,7 @@ const Pokemon = ({ pokemonName, gen }) => {
 				>
 					<NavSection pokemonName={pokemonName} gen={gen} />
 					<PokemonCard swrData={swrData} />
+					<Forms />
 					<ActionButtons onOpen={onOpen} swrData={swrData} />
 					<SortSection swrData={swrData} setSortOrder={setSortOrder} />
 					<ReviewList
