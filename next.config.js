@@ -1,5 +1,8 @@
 module.exports = {
 	reactStrictMode: true,
+	experimental: {
+		appDir: true,
+	},
 	images: {
 		domains: [
 			'<random_string>.supabase.in',
