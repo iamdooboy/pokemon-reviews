@@ -3,7 +3,7 @@ import Layout from '../components/layout'
 import Sidebar from '../components/sidebar/sidebar'
 import { Box, Flex } from '@chakra-ui/react'
 import { unstable_getServerSession } from 'next-auth/next'
-import { authOptions } from '../pages/api/auth/[...nextauth]'
+import { authOptions } from './api/auth/[...nextauth]'
 
 const Favorites = () => {
 	return (
