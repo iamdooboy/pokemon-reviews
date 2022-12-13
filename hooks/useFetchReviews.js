@@ -4,7 +4,7 @@ import { useToast } from '@chakra-ui/react'
 import { useAsyncToast } from './useAsyncToast'
 
 export const useFetchReviews = (key, fetcher) => {
-	const { data: reviews, mutate } = useSWR(key, fetcher)
+	const { data: reviews, mutate, isLoading } = useSWR(key, fetcher)
 
 	const toast = useToast()
 	const [_, setIsLoading] = useAsyncToast(false, {
@@ -176,7 +176,7 @@ export const useFetchReviews = (key, fetcher) => {
 
 	return {
 		reviews,
-		isLoading: !reviews,
+		isLoading,
 		calcRatings,
 		like,
 		create,

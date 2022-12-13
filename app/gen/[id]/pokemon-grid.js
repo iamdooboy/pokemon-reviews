@@ -19,9 +19,9 @@ const PokemonGrid = ({ gen }) => {
 	if (isLoading) return <div>loading</div>
 	return (
 		<SimpleGrid columns={[2, 3, 3, 6]} spacing={6} py={4}>
-			{data.map(name => (
-				<Link href={`/gen/${gen}/${name}`}>
-					<PokemonGridItem pokemonName={name} />
+			{data.map(({ id, name, image }) => (
+				<Link href={`/gen/${gen}/${name}`} key={id}>
+					<PokemonGridItem id={id} name={name} image={image} />
 				</Link>
 			))}
 		</SimpleGrid>

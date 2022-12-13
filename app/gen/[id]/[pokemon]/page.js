@@ -1,4 +1,5 @@
 import Card from './card'
+import Test from './test'
 
 const fetchPokemon = async pokemon => {
 	const res = await fetch(
@@ -11,5 +12,10 @@ const fetchPokemon = async pokemon => {
 export default async function Page({ params }) {
 	const data = await fetchPokemon(params.pokemon)
 
-	return <Card data={data} />
+	return (
+		<>
+			{/* <Card data={data} /> */}
+			<Test data={data} />
+		</>
+	)
 }

@@ -53,12 +53,19 @@ export const usePokeAPI = () => {
 	}
 
 	const fetchAllPokemonFromGen = args => {
-		const { limit, offset } = getLimitAndOffset(args)
+		// const { limit, offset } = getLimitAndOffset(args)
+
+		// const fetcher = () =>
+		// 	api
+		// 		.get(`/pokemon?limit=${limit}&offset=${offset}`)
+		// 		.then(res => res.data.results.map(el => el.name))
+
+		// const { data, isLoading } = useSWRImmutable(`/gen/${args}`, fetcher)
 
 		const fetcher = () =>
-			api
-				.get(`/pokemon?limit=${limit}&offset=${offset}`)
-				.then(res => res.data.results.map(el => el.name))
+			axios
+				.get(`https://funny-elk-apron.cyclic.app/api/gen/${args}`)
+				.then(res => res.data)
 
 		const { data, isLoading } = useSWRImmutable(`/gen/${args}`, fetcher)
 
