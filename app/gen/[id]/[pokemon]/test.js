@@ -71,6 +71,7 @@ const Test = ({ data }) => {
 						maxW='100%'
 						height='auto'
 						mb={3}
+						p={3}
 					>
 						<Image
 							src={pokemonData.image}

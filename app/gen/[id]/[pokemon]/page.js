@@ -1,5 +1,6 @@
 import Card from './card'
 import Test from './test'
+import ActionButtons from './action-buttons'
 
 const fetchPokemon = async pokemon => {
 	const res = await fetch(
@@ -16,6 +17,7 @@ export default async function Page({ params }) {
 		<>
 			{/* <Card data={data} /> */}
 			<Test data={data} />
+			<ActionButtons />
 		</>
 	)
 }
