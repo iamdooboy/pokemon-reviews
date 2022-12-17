@@ -6,9 +6,9 @@ import ActionButtons from '../../../components/pokemon-page/action-buttons'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
 import SortSection from '../../../components/pokemon-page/sort-section'
-import { getAllPokemonFromGen } from '../../../utils/axios'
 import axios from 'axios'
 import { useState } from 'react'
+import { cyclic } from '../../../utils/axios'
 
 const Pokemon = ({ pokemonName, gen }) => {
 	const [sortOrder, setSortOrder] = useState(0)
@@ -63,9 +63,11 @@ Pokemon.getLayout = function getLayout(page) {
 }
 
 export const getServerSideProps = async context => {
-	const { id: gen, pokemon } = context.params
+	const { id, pokemon } = context.params
 
-	const names = await getAllPokemonFromGen(gen)
+	const names = await cyclic
+		.get(`/gen/${id}`)
+		.then(res => res.data.map(el => el.name))
 
 	if (!names.includes(pokemon)) {
 		return {
@@ -76,7 +78,7 @@ export const getServerSideProps = async context => {
 	return {
 		props: {
 			pokemonName: pokemon,
-			gen
+			gen: id
 		}
 	}
 }

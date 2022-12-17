@@ -3,8 +3,7 @@ import PokemonGrid from '../../../components/gen-page/pokemon-grid'
 import Layout from '../../../components/layout'
 import Sidebar from '../../../components/sidebar/sidebar'
 import { isNumber } from '../../../utils/helpers'
-import { api } from '../../../utils/axios'
-import { getLimitAndOffset } from '../../../utils/helpers'
+import { cyclic } from '../../../utils/axios'
 import { SWRConfig } from 'swr'
 
 const GenerationPage = ({ fallback, gen }) => {
@@ -49,12 +48,7 @@ export const getServerSideProps = async context => {
 		}
 	}
 
-	const { limit, offset } = getLimitAndOffset(id)
-
-	const data = await api
-		.get(`/pokemon?limit=${limit}&offset=${offset}`)
-		.then(res => res.data.results.map(el => el.name))
-
+	const data = await cyclic.get(`/gen/${id}`).then(res => res.data)
 	return {
 		props: {
 			fallback: {

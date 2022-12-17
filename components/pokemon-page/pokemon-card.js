@@ -23,15 +23,15 @@ const PokemonCard = ({ swrData }) => {
 		calcRatings
 	} = useFetchReviews(key, fetcher)
 
-	const [fetchOnePokemon] = usePokeAPI()
+	const { fetchOnePokemon } = usePokeAPI()
 
-	const { data, isLoading, formatData } = fetchOnePokemon(pokemon)
+	const { data, isLoading } = fetchOnePokemon(pokemon)
 
 	if (reviewsAreLoading || isLoading) return <PokemonCardSkeleton />
 
 	const { count, rating } = calcRatings(reviews)
 
-	const { url, alt, name, id, types } = formatData(data)
+	const { id, name, types, image } = data
 
 	return (
 		<Box
@@ -62,11 +62,11 @@ const PokemonCard = ({ swrData }) => {
 							h='auto'
 							width={600}
 							height={600}
-							src={url}
-							alt={alt}
+							src={image}
+							alt={name}
 							fallback='/bug.svg'
 							placeholder='blur'
-							blurDataURL={url}
+							blurDataURL={image}
 						/>
 					</Box>
 				</Box>

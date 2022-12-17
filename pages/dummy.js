@@ -1,26 +1,30 @@
-//import React from 'react'
-// import CreateDummyData from '../components/create-dummy-data'
+// import React from 'react'
 // import { prisma } from '../lib/prisma'
-//import { getDummyPokemon } from '../utils/axios'
-//import Sidebar from '../components/sidebar'
+// import { getDummyPokemon } from '../utils/axios'
+// import axios from 'axios'
 
 const Dummy = () => {
 	return <div>hello</div>
 }
 
 // export const getServerSideProps = async () => {
-// 	const allPokemon = await getDummyPokemon(105, 800)
+// 	// const allPokemon = await getDummyPokemon(0, 151)
 
-// 	allPokemon.map(async pokemon => {
+// 	const pokemon = await axios
+// 		.get('https://funny-elk-apron.cyclic.app/api/pokemon')
+// 		.then(res => res.data.map(d => d.name))
+
+// 	pokemon.map(async p => {
 // 		await prisma.pokemon.create({
 // 			data: {
-// 				pokemon: pokemon
+// 				pokemon: p
 // 			}
 // 		})
+// 		console.log(`done creating ${p}`)
 // 	})
 // 	return {
 // 		props: {
-// 			allPokemon
+// 			pokemon
 // 		}
 // 	}
 // }

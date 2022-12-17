@@ -37,11 +37,11 @@ const ReviewGridItem = ({ review, like, remove, onOpen, setSelected }) => {
 		favoritedByCurrentUser
 	} = review
 
-	const [_, fetchAllPokemon] = usePokeAPI()
+	const { fetchAllPokemon } = usePokeAPI()
 
-	const { data: allPokemon } = fetchAllPokemon('all')
+	const { data } = fetchAllPokemon()
 
-	const index = allPokemon?.indexOf(pokemon) + 1
+	const index = data?.indexOf(pokemon) + 1
 	const gen = getPokemonGeneration(index)
 	const href = `gen/${gen}/${pokemon}`
 	const src = getPokemonImageUrl(index)

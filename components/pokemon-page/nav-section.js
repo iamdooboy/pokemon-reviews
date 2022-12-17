@@ -15,11 +15,11 @@ import { PulseLoader } from 'react-spinners'
 const NavSection = ({ pokemonName }) => {
 	const router = useRouter()
 
-	const [fetchOnePokemon, fetchAllPokemon] = usePokeAPI()
+	const { fetchOnePokemon, fetchAllPokemon } = usePokeAPI()
 
 	const { data: one, isLoading: oneIsLoading } = fetchOnePokemon(pokemonName)
 
-	const { data: allPokemon, isLoading: allIsLoading } = fetchAllPokemon('all')
+	const { data: allPokemon, isLoading: allIsLoading } = fetchAllPokemon()
 
 	const onClickHandler = () => {
 		const random = getRandomPokemonNum()

@@ -1,15 +1,12 @@
 import { useState } from 'react'
 import { getPokemonGeneration, isNumber } from '../utils/helpers'
 import { useRouter } from 'next/router'
-import useSWR from 'swr'
-import { api } from '../utils/axios'
+import { usePokeAPI } from './usePokeAPI'
 
 export const useInput = closeModal => {
-	const { data: pokemon } = useSWR('/pokemon?limit=905', () =>
-		api
-			.get('/pokemon?limit=905&offset=0')
-			.then(res => res.data.results.map(el => el.name))
-	)
+	const { fetchAllPokemon } = usePokeAPI()
+
+	const { data: pokemon } = fetchAllPokemon()
 
 	const [filteredList, setFilteredList] = useState([])
 	const [activeIndex, setActiveIndex] = useState(0)
