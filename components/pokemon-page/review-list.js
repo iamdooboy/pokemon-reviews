@@ -3,25 +3,24 @@ import ReviewModal from './review-modal'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
 import { useState, useRef } from 'react'
 import { ReviewBoxSkeleton } from '../loading/review-box-skeleton'
-import { Box } from '@chakra-ui/react'
+import { VStack, Flex } from '@chakra-ui/react'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 
 const Empty = ({ pokemon }) => {
 	const name = capitalFirstLetter(formatNames(pokemon))
 	return (
-		<Box
-			fontWeight='600'
-			maxW='xs'
+		<Flex
+			maxW='sm'
 			rounded={8}
 			borderWidth={1}
 			align='center'
-			mt={3}
-			mx='auto'
-			p={3}
+			justify='center'
 			bg='rgba(17, 25, 40, 0.75)'
+			w='full'
+			h={20}
 		>
 			Be the first to review {name}!
-		</Box>
+		</Flex>
 	)
 }
 
@@ -39,7 +38,7 @@ const ReviewList = ({ swrData, isOpen, onOpen, onClose, sortOrder }) => {
 	sortReviews(sortOrder)
 
 	return (
-		<>
+		<VStack mb={3}>
 			{reviews.length === 0 && <Empty pokemon={pokemon} />}
 			{reviews.map((review, index) => (
 				<ReviewBox
@@ -60,7 +59,7 @@ const ReviewList = ({ swrData, isOpen, onOpen, onClose, sortOrder }) => {
 					update
 				}}
 			/>
-		</>
+		</VStack>
 	)
 }
 

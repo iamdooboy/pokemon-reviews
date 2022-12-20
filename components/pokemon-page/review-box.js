@@ -13,14 +13,14 @@ const ReviewBox = ({ review, setSelected, onOpen, remove, like }) => {
 
 	return (
 		<Box
-			maxW='xs'
+			maxW='sm'
 			rounded={8}
 			borderWidth={1}
 			align='center'
-			mt={3}
 			mx='auto'
 			p={3}
 			bg='rgba(17, 25, 40, 0.75)'
+			w='full'
 		>
 			<Flex>
 				<Avatar size='xs' name={author.name} src={author.image} />

@@ -79,7 +79,8 @@ const Page = () => {
 	const onClickHandler = () => {
 		//setPokemonPageLoading(true)
 		if (!randomId) {
-			randomId = getRandomPokemonNum()
+			const random = getRandomPokemonNum()
+			setRandomId(random)
 		}
 		const gen = getPokemonGeneration(randomId)
 		const name = pokemon[randomId - 1]

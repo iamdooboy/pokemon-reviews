@@ -1,7 +1,6 @@
 import { Flex, Box } from '@chakra-ui/react'
 import PokemonGrid from '../../../components/gen-page/pokemon-grid'
 import Layout from '../../../components/layout'
-import Sidebar from '../../../components/sidebar/sidebar'
 import { isNumber } from '../../../utils/helpers'
 import { cyclic } from '../../../utils/axios'
 import { SWRConfig } from 'swr'
@@ -11,7 +10,7 @@ const GenerationPage = ({ fallback, gen }) => {
 		<SWRConfig value={{ fallback }}>
 			<Layout>
 				<Flex pt={16}>
-					<Sidebar />
+					{/* <Sidebar /> */}
 					<Box
 						flex={1}
 						px='5'

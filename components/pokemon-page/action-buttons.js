@@ -55,7 +55,7 @@ const ActionButtons = ({ onOpen, swrData }) => {
 
 	return (
 		<>
-			<HStack align='center' justify='center' mt={3} maxW='xs'>
+			<HStack align='center' justify='center' maxW='sm' mt={3} h={12}>
 				<Button
 					isLoading={isLoading}
 					leftIcon={favoriteIcon}

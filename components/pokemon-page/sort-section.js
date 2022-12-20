@@ -7,14 +7,12 @@ const SortSection = ({ swrData, setSortOrder }) => {
 	const { reviews } = useFetchReviews(key, fetcher)
 	return (
 		<>
-			{reviews?.length > 0 && (
-				<HStack align='center' justify='space-between' mt={3} maxW='xs'>
-					<Heading as='h5' size='md'>
-						{reviews?.length} Reviews
-					</Heading>
-					<SortButtons setSortOrder={setSortOrder} />
-				</HStack>
-			)}
+			<HStack align='center' justify='space-between' maxW='sm' h={12} mb={3}>
+				<Heading as='h5' size='sm'>
+					{reviews?.length} Reviews
+				</Heading>
+				<SortButtons setSortOrder={setSortOrder} />
+			</HStack>
 		</>
 	)
 }

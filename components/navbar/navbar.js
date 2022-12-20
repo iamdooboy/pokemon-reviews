@@ -3,9 +3,6 @@ import {
 	chakra,
 	Flex,
 	VStack,
-	Tag,
-	TagLabel,
-	TagLeftIcon,
 	Icon,
 	Menu,
 	MenuButton,
@@ -18,8 +15,10 @@ import {
 	IconButton,
 	Drawer,
 	DrawerContent,
-	Box,
-	DrawerOverlay
+	DrawerOverlay,
+	HStack,
+	Image,
+	Heading
 } from '@chakra-ui/react'
 import {
 	MdCatchingPokemon,
@@ -38,6 +37,7 @@ import { SidebarContent } from '../sidebar/sidebar-content'
 import { LinkOverlay } from '../link-overlay'
 import { splitEmail } from '../../utils/helpers'
 import { useRouter } from 'next/router'
+import NextLink from 'next/link'
 
 const LoadingButton = (
 	<Button isLoading colorScheme='gray' variant='solid'>
@@ -59,7 +59,6 @@ const Navbar = () => {
 	const user = session?.user
 	const isLoadingUser = status === 'loading'
 	const finalRef = useRef(null)
-	const ref = useRef(null)
 
 	const signOutHandler = () => {
 		if (/settings|favorites|reviews/.test(router.asPath)) {
@@ -78,14 +77,44 @@ const Navbar = () => {
 		onOpen()
 	}
 
+	const GEN = [
+		{ title: 'Gen 1', href: '/gen/1' },
+		{ title: 'Gen 2', href: '/gen/2' },
+		{ title: 'Gen 3', href: '/gen/3' },
+		{ title: 'Gen 4', href: '/gen/4' },
+		{ title: 'Gen 5', href: '/gen/5' },
+		{ title: 'Gen 6', href: '/gen/6' },
+		{ title: 'Gen 7', href: '/gen/7' },
+		{ title: 'Gen 8', href: '/gen/8' }
+	]
+
+	const ITEMS = [
+		{
+			icon: <MdOutlineRateReview fontSize={21} />,
+			title: 'My Reviews',
+			href: '/reviews'
+		},
+		{
+			icon: <MdFavoriteBorder fontSize={21} />,
+			title: 'Favorites',
+			href: '/favorites'
+		},
+		{
+			icon: <MdOutlineSettings fontSize={21} />,
+			title: 'Settings',
+			href: '/settings'
+		}
+	]
+
+	const ref = useRef(null)
+
 	return (
-		<Box
+		<Flex
 			as='nav'
 			pos='fixed'
 			w='full'
 			ref={ref}
 			h={16}
-			display='flex'
 			alignItems='center'
 			justifyContent='space-between'
 			px={5}
@@ -99,16 +128,30 @@ const Navbar = () => {
 			borderColor='whiteAlpha.100'
 			zIndex={2}
 		>
-			<Flex display={{ base: 'none', md: 'inline' }}>
-				<LinkOverlay href='/'>
-					<Tag px={0} size='lg' variant='ghost' colorScheme='blue'>
-						<TagLeftIcon boxSize='30px' as={MdCatchingPokemon} />
-						<TagLabel display={{ base: 'inline-flex' }}>
-							Pokemon Reviews
-						</TagLabel>
-					</Tag>
-				</LinkOverlay>
-			</Flex>
+			<NextLink href='/'>
+				<HStack display={{ base: 'none', md: 'flex' }} cursor='pointer'>
+					<Image alt='dev logo' w={'auto'} h={10} src='/logo.png' />
+					<Heading size='md'>Pokemon Reviews</Heading>
+				</HStack>
+			</NextLink>
+
+			<Menu id='gen' isLazy initialFocusRef={ref}>
+				<MenuButton as={Button} variant='ghost' size='sm'>
+					<Flex align='center'>
+						Generations
+						<Icon as={ChevronDownIcon} w={6} h={6} mr={-1} />
+					</Flex>
+				</MenuButton>
+				<MenuList>
+					{GEN.map(g => (
+						<NextLink href={g.href} key={g.title}>
+							<MenuItem>
+								<Text fontWeight='500'>{g.title}</Text>
+							</MenuItem>
+						</NextLink>
+					))}
+				</MenuList>
+			</Menu>
 
 			<Flex justify={{ base: 'left', md: 'right' }}>
 				<IconButton
@@ -158,7 +201,7 @@ const Navbar = () => {
 							</Flex>
 						</MenuButton>
 						<MenuList>
-							<MenuItem cursor='default'>
+							<MenuItem cursor='default' hover={{ bg: 'transparent' }}>
 								<VStack justify='start' alignItems='left'>
 									<Text fontWeight='500'>
 										{user.name ? user.name : splitEmail(user.email)}
@@ -169,23 +212,16 @@ const Navbar = () => {
 								</VStack>
 							</MenuItem>
 							<MenuDivider />
-							<LinkOverlay href='/reviews'>
-								<MenuItem icon={<MdOutlineRateReview fontSize={21} />}>
-									<Text fontWeight='500'>My Reviews</Text>
-								</MenuItem>
-							</LinkOverlay>
-							<LinkOverlay href='/favorites'>
-								<MenuItem icon={<MdFavoriteBorder fontSize={21} />}>
-									<Text fontWeight='500'>Favorites</Text>
-								</MenuItem>
-							</LinkOverlay>
-							<LinkOverlay href='/settings'>
-								<MenuItem icon={<MdOutlineSettings fontSize={21} />}>
-									<Text fontWeight='500'>Settings</Text>
-								</MenuItem>
-							</LinkOverlay>
+							{ITEMS.map(item => (
+								<LinkOverlay href={item.href} key={item.title}>
+									<MenuItem _hover={{ bg: 'whiteAlpha.200' }} icon={item.icon}>
+										<Text fontWeight='500'>{item.title}</Text>
+									</MenuItem>
+								</LinkOverlay>
+							))}
 							<MenuDivider />
 							<MenuItem
+								_hover={{ bg: 'whiteAlpha.200' }}
 								onClick={signOutHandler}
 								icon={<MdLogout fontSize={21} />}
 							>
@@ -198,7 +234,7 @@ const Navbar = () => {
 						<Button
 							colorScheme='blue'
 							onClick={onClickHandler}
-							variant='outline'
+							variant='ghost'
 							mr={3}
 						>
 							Log in
@@ -243,7 +279,7 @@ const Navbar = () => {
 					<SidebarContent w='full' borderRight='none' />
 				</DrawerContent>
 			</Drawer>
-		</Box>
+		</Flex>
 	)
 }
 

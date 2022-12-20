@@ -34,7 +34,7 @@ export const useAsyncToast = (loading, options) => {
 		} else if (toastRef.current) {
 			toast.close(toastRef.current)
 		}
-	}, [isLoading, toast, options])
+	}, [isLoading])
 
 	return [isLoading, setIsLoading]
 }

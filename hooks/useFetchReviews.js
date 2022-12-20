@@ -9,7 +9,8 @@ export const useFetchReviews = (key, fetcher) => {
 	const toast = useToast()
 	const [_, setIsLoading] = useAsyncToast(false, {
 		title: 'Loading...',
-		position: 'bottom-right'
+		position: 'bottom-right',
+		isClosable: true
 	})
 
 	let options = {

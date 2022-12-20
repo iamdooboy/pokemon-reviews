@@ -11,58 +11,51 @@ import {
 import { useRouter } from 'next/router'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
 import { PulseLoader } from 'react-spinners'
+import { RepeatIcon } from '@chakra-ui/icons'
 
-const NavSection = ({ pokemonName }) => {
+const NavSection = ({ id }) => {
 	const router = useRouter()
 
-	const { fetchOnePokemon, fetchAllPokemon } = usePokeAPI()
+	const { fetchAllPokemon } = usePokeAPI()
 
-	const { data: one, isLoading: oneIsLoading } = fetchOnePokemon(pokemonName)
-
-	const { data: allPokemon, isLoading: allIsLoading } = fetchAllPokemon()
+	const { data, isLoading } = fetchAllPokemon()
 
 	const onClickHandler = () => {
 		const random = getRandomPokemonNum()
 		const gen = getPokemonGeneration(random)
-		const name = allPokemon[random - 1]
+		const name = data[random - 1]
 		router.push(`/gen/${gen}/${name}`)
 	}
 
-	const id = parseInt(one?.id)
-
 	const prev = {
 		id: id === 1 ? 905 : id - 1,
-		name: id === 1 ? allPokemon?.[904] : allPokemon?.[id - 2],
-		leftIcon: <ArrowBackIcon />
+		name: id === 1 ? data?.[904] : data?.[id - 2],
+		leftIcon: <ArrowBackIcon />,
+		p: 0
 	}
 
 	const next = {
 		id: id === 905 ? 1 : id + 1,
-		name: id === 905 ? allPokemon?.[0] : allPokemon?.[id],
-		rightIcon: <ArrowForwardIcon />
+		name: id === 905 ? data?.[0] : data?.[id],
+		rightIcon: <ArrowForwardIcon />,
+		p: 0
 	}
 
 	return (
-		<HStack
-			align='center'
-			justify='space-between'
-			mt={5}
-			mb={3}
-			maxW='xs'
-			w='full'
-		>
+		<HStack align='center' justify='space-between' maxW='sm' w='full' h={12}>
 			<NavButton
 				{...prev}
-				isLoading={allIsLoading || oneIsLoading}
+				isLoading={isLoading}
 				spinner={<PulseLoader color='#36d7b7' speedMultiplier={0.4} size={5} />}
 			>
 				{capitalFirstLetter(formatNames(prev.name))}
 			</NavButton>
 			<RandomButton
+				leftIcon={<RepeatIcon />}
 				w='full'
-				size='sm'
+				size='md'
 				onClick={onClickHandler}
-				isLoading={allIsLoading || oneIsLoading}
+				isLoading={isLoading}
 				loadingText='Loading...'
 				spinner={null}
 			>
@@ -70,7 +63,7 @@ const NavSection = ({ pokemonName }) => {
 			</RandomButton>
 			<NavButton
 				{...next}
-				isLoading={allIsLoading || oneIsLoading}
+				isLoading={isLoading}
 				spinner={<PulseLoader color='#36d7b7' speedMultiplier={0.4} size={5} />}
 			>
 				{capitalFirstLetter(formatNames(next.name))}

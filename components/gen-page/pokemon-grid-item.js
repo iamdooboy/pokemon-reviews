@@ -98,6 +98,7 @@ import { FallBackImage } from '../../utils/fallback-image'
 import { CustomRating } from '../rating'
 import { GridItemSkeleton } from '../loading/gen-page-skeleton'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
+import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 
 const PokemonGridItem = ({ id, pokemonName, url }) => {
 	const fetcher = url =>
@@ -114,6 +115,8 @@ const PokemonGridItem = ({ id, pokemonName, url }) => {
 	if (reviewsAreLoading) return <GridItemSkeleton />
 
 	const { count, rating } = calcRatings(reviews)
+
+	const formattedName = capitalFirstLetter(formatNames(pokemonName))
 
 	return (
 		<GridItem>
@@ -150,7 +153,7 @@ const PokemonGridItem = ({ id, pokemonName, url }) => {
 						noOfLines={1}
 						align='center'
 					>
-						{pokemonName}
+						{formattedName}
 					</Text>
 					<Box justifyContent='center' align='center'>
 						<chakra.div my={1} maxW={100}>
