@@ -9,8 +9,7 @@
 		"prettier": "prettier -write .",
 		"lint": "next lint",
 		"start": "next start",
-		"vercel-build": "prisma generate && prisma migrate deploy && next build",
-		"prisma:generate": "prisma generate"
+		"vercel-build": "prisma generate && prisma db push && next build"
 	},
 	"keywords": [],
 	"author": "",
