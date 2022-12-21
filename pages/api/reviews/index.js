@@ -2,7 +2,35 @@ import { getSession } from 'next-auth/react'
 import { prisma } from '../../../lib/prisma'
 
 export default async function handler(req, res) {
+	if (req.method === 'GET') {
+		let reviews = await prisma.review.findMany({
+			//return all reviews for current user
+			where: {
+				authorId: user.id
+			},
+			include: {
+				favoritedBy: true
+			},
+			orderBy: {
+				createdAt: 'asc'
+			}
+		})
+
+		reviews = reviews.map(review => {
+			const favoritedByCurrentUser = review.favoritedBy.some(
+				el => el.id === user.id
+			)
+
+			delete review.favoritedBy
+
+			return { ...review, favoritedByCurrentUser }
+		})
+
+		res.status(200).json(reviews)
+	}
+
 	const session = await getSession({ req })
+
 	if (!session) {
 		return res.status(401).json({ message: 'Unauthorized.' })
 	}
@@ -60,32 +88,5 @@ export default async function handler(req, res) {
 		} catch (e) {
 			throw e
 		}
-	}
-
-	if (req.method === 'GET') {
-		let reviews = await prisma.review.findMany({
-			//return all reviews for current user
-			where: {
-				authorId: user.id
-			},
-			include: {
-				favoritedBy: true
-			},
-			orderBy: {
-				createdAt: 'asc'
-			}
-		})
-
-		reviews = reviews.map(review => {
-			const favoritedByCurrentUser = review.favoritedBy.some(
-				el => el.id === user.id
-			)
-
-			delete review.favoritedBy
-
-			return { ...review, favoritedByCurrentUser }
-		})
-
-		res.status(200).json(reviews)
 	}
 }

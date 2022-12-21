@@ -1,6 +1,5 @@
 // import React from 'react'
 // import { prisma } from '../lib/prisma'
-// import { getDummyPokemon } from '../utils/axios'
 // import axios from 'axios'
 
 const Dummy = () => {
@@ -8,23 +7,31 @@ const Dummy = () => {
 }
 
 // export const getServerSideProps = async () => {
-// 	// const allPokemon = await getDummyPokemon(0, 151)
-
-// 	const pokemon = await axios
-// 		.get('https://funny-elk-apron.cyclic.app/api/pokemon')
-// 		.then(res => res.data.map(d => d.name))
-
-// 	pokemon.map(async p => {
-// 		await prisma.pokemon.create({
-// 			data: {
-// 				pokemon: p
-// 			}
+// 	let timesRun = 0
+// 	let interval = setInterval(async () => {
+// 		timesRun += 1
+// 		const pokemon = await axios
+// 			.get(`https://funny-elk-apron.cyclic.app/api/gen/${timesRun}`)
+// 			.then(res => res.data)
+// 		pokemon.map(async p => {
+// 			await prisma.pokemon.create({
+// 				data: {
+// 					pokemon: p.name,
+// 					dexId: parseInt(p.id),
+// 					gen: timesRun
+// 				}
+// 			})
+// 			console.log(`done creating ${p.name}`)
 // 		})
-// 		console.log(`done creating ${p}`)
-// 	})
+// 		if (timesRun === 8) {
+// 			console.log('complete')
+// 			clearInterval(interval)
+// 		}
+// 	}, 5000)
+
 // 	return {
 // 		props: {
-// 			pokemon
+// 			pokemon: null
 // 		}
 // 	}
 // }
