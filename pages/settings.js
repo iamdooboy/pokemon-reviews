@@ -15,7 +15,6 @@ import {
 	useToast
 } from '@chakra-ui/react'
 import Layout from '../components/layout'
-import Sidebar from '../components/sidebar/sidebar'
 import { unstable_getServerSession } from 'next-auth/next'
 import { useAsyncToast } from '../hooks/useAsyncToast'
 import { FallBackImage } from '../utils/fallback-image'
