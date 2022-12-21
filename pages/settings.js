@@ -72,7 +72,6 @@ const Settings = ({ user }) => {
 	return (
 		<Layout>
 			<Flex pt={16}>
-				<Sidebar />
 				<Container
 					pt={8}
 					color='white'
@@ -104,7 +103,12 @@ const Settings = ({ user }) => {
 							<FormLabel mt={5}>Avatar</FormLabel>
 							<SimpleGrid columns={[2, 3, 3, 6]} spacing={6} py={4}>
 								{avatars.map(a => (
-									<Box align='center' justify='center' key={a.type}>
+									<Box
+										align='center'
+										justify='center'
+										key={a.type}
+										_hover={{ opacity: 0.5 }}
+									>
 										<FallBackImage
 											onClick={() => setAvatar(a)}
 											opacity={avatar.src === a.src ? 0.3 : 1}

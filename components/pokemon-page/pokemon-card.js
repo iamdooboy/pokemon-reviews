@@ -136,7 +136,7 @@ const PokemonCard = ({ data, count, rating }) => {
 						<Divider />
 						<CardFooter py={1} px={3}>
 							<Menu matchWidth zIndex={1}>
-								<MenuButton as={MenuBtn} my={2}>
+								<MenuButton as={MenuBtn} my={2} textTransform='capitalize'>
 									{name}
 								</MenuButton>
 								<MenuList w='100%'>

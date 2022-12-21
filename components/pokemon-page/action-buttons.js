@@ -15,8 +15,7 @@ const ActionButtons = ({ onOpen, swrData }) => {
 		message: 'Please sign up or log in to review this pokemon.'
 	})
 	const { pokemon: pokemonName } = swrData
-	const fetcher = url =>
-		axios.get(url, { params: { pokemon: pokemonName } }).then(res => res.data)
+	const fetcher = url => axios.get(url).then(res => res.data)
 
 	const key = `/api/pokemon/${pokemonName}`
 

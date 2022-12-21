@@ -2,9 +2,6 @@ import { getSession } from 'next-auth/react'
 import { prisma } from '../../../lib/prisma'
 
 export default async function handler(req, res) {
-	// Check if user is authenticated
-	const session = await getSession({ req })
-
 	let reviews = await prisma.review.findMany({
 		where: {
 			pokemon: req.query.pokemon
@@ -17,6 +14,8 @@ export default async function handler(req, res) {
 			createdAt: 'desc'
 		}
 	})
+
+	const session = await getSession({ req })
 
 	if (!session) {
 		reviews = reviews.map(review => {
