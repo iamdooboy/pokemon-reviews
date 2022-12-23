@@ -70,7 +70,7 @@ model Review {
   favoritedBy User[]
   updatedAt   DateTime @default(now())
   gen         Int?
-  dexId       Int?     @unique
+  dexId       Int?
 
   @@unique([authorId, pokemon])
 }
