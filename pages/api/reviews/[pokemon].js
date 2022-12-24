@@ -15,6 +15,15 @@ export default async function handler(req, res) {
 		}
 	})
 
+	let sum = 0
+	let average = 0
+	let duplicate = false
+
+	if (reviews.length > 0) {
+		sum = reviews.reduce((acc, review) => acc + review.rating, 0)
+		average = Math.round((sum / reviews.length) * 10) / 10
+	}
+
 	const session = await getSession({ req })
 
 	if (!session) {
@@ -27,7 +36,9 @@ export default async function handler(req, res) {
 			return { ...review, favoritedByCurrentUser, reviewedThisPokemon }
 		})
 
-		return res.status(200).json(reviews)
+		return res
+			.status(200)
+			.json({ reviews, average, count: reviews.length, duplicate })
 	}
 	////////////////////////////////////////////////////////////////
 
@@ -40,12 +51,14 @@ export default async function handler(req, res) {
 			el => el.id === user.id
 		)
 
-		const reviewedThisPokemon = review.authorId === user.id
+		duplicate = review.authorId === user.id
 
 		delete review.favoritedBy
 
-		return { ...review, favoritedByCurrentUser, reviewedThisPokemon }
+		return { ...review, favoritedByCurrentUser }
 	})
 
-	return res.status(200).json(reviews)
+	return res
+		.status(200)
+		.json({ reviews, average, count: reviews.length, duplicate })
 }

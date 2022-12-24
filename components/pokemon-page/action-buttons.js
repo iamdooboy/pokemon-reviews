@@ -3,30 +3,24 @@ import { MdFavoriteBorder, MdOutlineEdit, MdFavorite } from 'react-icons/md'
 import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import { useFetchPokemon } from '../../hooks/useFetchPokemon'
-import { useFetchReviews } from '../../hooks/useFetchReviews'
 import ErrorModal from './error-modal'
 import { useState } from 'react'
 
-const ActionButtons = ({ onOpen, swrData }) => {
+const ActionButtons = ({ onOpen, pokemon, duplicate }) => {
 	const session = useSession()
 	const errorModal = useDisclosure()
 	const [error, setError] = useState({
 		title: 'Authorization Error',
 		message: 'Please sign up or log in to review this pokemon.'
 	})
-	const { pokemon: pokemonName } = swrData
 	const fetcher = url => axios.get(url).then(res => res.data)
-
-	const key = `/api/pokemon/${pokemonName}`
+	const key = `/api/pokemon/${pokemon}`
 
 	const options = {
 		revalidateIfStale: true,
 		revalidateOnFocus: true
 	}
 	const { data, isLoading, onFavorite } = useFetchPokemon(key, fetcher, options)
-	const { reviews } = useFetchReviews(swrData.key, swrData.fetcher)
-
-	const posted = reviews?.some(review => review.reviewedThisPokemon === true)
 
 	const { favorite, favoritedByCurrentUser } = data || {}
 
@@ -37,7 +31,7 @@ const ActionButtons = ({ onOpen, swrData }) => {
 	)
 
 	const onClickHandler = () => {
-		if (posted) {
+		if (duplicate) {
 			setError({
 				title: 'Duplicate Error',
 				message: 'You already posted a review for this Pokemon.'

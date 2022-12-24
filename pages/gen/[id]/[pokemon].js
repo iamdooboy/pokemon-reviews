@@ -41,15 +41,12 @@ const Pokemon = ({ pokemonName }) => {
 	const { fetchOnePokemon } = usePokeAPI()
 	const { data, isLoading } = fetchOnePokemon(pokemonName)
 
-	const {
-		reviews,
-		isLoading: reviewsAreLoading,
-		calcRatings
-	} = useFetchReviews(key, fetcher)
+	const { reviews: reviewsData, isLoading: reviewsAreLoading } =
+		useFetchReviews(key, fetcher)
 
 	if (isLoading || reviewsAreLoading) return <div>loading</div>
 
-	const { count, rating } = calcRatings(reviews)
+	const { reviews, average, count, duplicate } = reviewsData
 
 	return (
 		<Container
@@ -67,11 +64,15 @@ const Pokemon = ({ pokemonName }) => {
 			>
 				<Box align='center' mt={3}>
 					<NavSection id={parseInt(data.id)} />
-					<PokemonCard data={data} count={count} rating={rating} />
-					<ActionButtons onOpen={onOpen} swrData={swrData} />
+					<PokemonCard data={data} count={count} rating={average} />
+					<ActionButtons
+						onOpen={onOpen}
+						pokemon={pokemonName}
+						duplicate={duplicate}
+					/>
 				</Box>
 				<Box align='center' mt={3}>
-					<SortSection swrData={swrData} setSortOrder={setSortOrder} />
+					<SortSection reviews={reviews} setSortOrder={setSortOrder} />
 					<ReviewList
 						swrData={swrData}
 						isOpen={isOpen}
@@ -104,8 +105,7 @@ export const getServerSideProps = async context => {
 
 	return {
 		props: {
-			pokemonName: pokemon,
-			gen: id
+			pokemonName: pokemon
 		}
 	}
 }

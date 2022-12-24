@@ -4,7 +4,7 @@ import { useToast } from '@chakra-ui/react'
 import { useAsyncToast } from './useAsyncToast'
 
 export const useFetchReviews = (key, fetcher) => {
-	const { data: reviews, mutate } = useSWR(key, fetcher)
+	const { data: initialData, mutate } = useSWR(key, fetcher)
 
 	const toast = useToast()
 	const [_, setIsLoading] = useAsyncToast(false, {
@@ -19,32 +19,15 @@ export const useFetchReviews = (key, fetcher) => {
 		revalidate: true
 	}
 
-	const sortReviews = sortOrder => {
+	const sort = sortOrder => {
 		if (sortOrder === 1) {
-			reviews.sort((a, b) => {
+			initialData.reviews.sort((a, b) => {
 				return b.favorite - a.favorite
 			})
 		} else {
-			reviews.sort((a, b) => {
+			initialData.reviews.sort((a, b) => {
 				return new Date(b.createdAt) - new Date(a.createdAt)
 			})
-		}
-	}
-
-	const calcRatings = review => {
-		const reviewCount = review.length
-
-		const totalRating = review
-			? review.reduce((sum, obj) => sum + obj.rating, 0)
-			: 0
-
-		let averageRating = totalRating ? totalRating / reviewCount : 0
-
-		averageRating = Math.round(averageRating * 10) / 10
-
-		return {
-			count: reviewCount,
-			rating: averageRating
 		}
 	}
 
@@ -52,7 +35,7 @@ export const useFetchReviews = (key, fetcher) => {
 		try {
 			setIsLoading(true)
 			const res = await axios.post('/api/reviews', data).then(res => res.data)
-			const newData = [...reviews, res]
+			const newData = [...initialData.reviews, res]
 			displayConfirmationToast('Review created')
 			return newData
 		} catch (error) {
@@ -73,7 +56,7 @@ export const useFetchReviews = (key, fetcher) => {
 			.put(`/api/reviews/${path}`, data)
 			.then(res => res.data)
 
-		const updatedData = reviews.map(review => {
+		const updatedData = initialData.reviews.map(review => {
 			if (review.id !== res.id) {
 				return review
 			}
@@ -96,7 +79,7 @@ export const useFetchReviews = (key, fetcher) => {
 			.then(res => res.data)
 		displayConfirmationToast('Review deleted')
 
-		return reviews.filter(review => review.id !== res.id)
+		return initialData.reviews.filter(review => review.id !== res.id)
 	}
 
 	const like = selected => {
@@ -130,7 +113,7 @@ export const useFetchReviews = (key, fetcher) => {
 	const update = data => {
 		const { id, description, rating } = data
 
-		const optimisticData = reviews.map(review => {
+		const optimisticData = initialData.reviews.map(review => {
 			if (id !== review.id) {
 				return review
 			}
@@ -150,7 +133,9 @@ export const useFetchReviews = (key, fetcher) => {
 	}
 
 	const remove = data => {
-		const optimisticData = reviews.filter(review => review.id !== data.id)
+		const optimisticData = initialData.reviews.filter(
+			review => review.id !== data.id
+		)
 
 		options = {
 			optimisticData,
@@ -176,13 +161,12 @@ export const useFetchReviews = (key, fetcher) => {
 	}
 
 	return {
-		reviews,
-		isLoading: !reviews,
-		calcRatings,
+		reviews: initialData,
+		isLoading: !initialData,
 		like,
 		create,
 		update,
 		remove,
-		sortReviews
+		sort
 	}
 }

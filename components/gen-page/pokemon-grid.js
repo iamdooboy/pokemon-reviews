@@ -21,13 +21,9 @@ const PokemonGrid = ({ gen }) => {
 
 	if (apiLoading || isLoading) return <div>loading</div>
 
-	// console.log(data)
-	//console.log(reviews)
-	// return <div>hello</div>
-
 	return (
 		<SimpleGrid columns={[2, 3, 3, 6]} spacing={6} py={4}>
-			{data.map(({ id, name, image }, index) => {
+			{data.map(({ id, name, image }) => {
 				return (
 					<LinkOverlay key={id} href={`/gen/${gen}/${name}`}>
 						<PokemonGridItem

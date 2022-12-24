@@ -30,12 +30,21 @@ const ReviewList = ({ swrData, isOpen, onOpen, onClose, sortOrder }) => {
 	const [selected, setSelected] = useState({ description: '', rating: 0 })
 	const initialRef = useRef()
 
-	const { reviews, isLoading, create, update, remove, like, sortReviews } =
-		useFetchReviews(key, fetcher)
+	const {
+		reviews: reviewsData,
+		isLoading,
+		create,
+		update,
+		remove,
+		like,
+		sort
+	} = useFetchReviews(key, fetcher)
+
+	const { reviews } = reviewsData
 
 	if (isLoading) return <ReviewBoxSkeleton />
 
-	sortReviews(sortOrder)
+	sort(sortOrder)
 
 	return (
 		<VStack mb={3}>
