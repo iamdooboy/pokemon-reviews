@@ -10,51 +10,51 @@ import {
 } from '@chakra-ui/react'
 import { FallBackImage } from '../../utils/fallback-image'
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
-import { getPokemonGeneration } from '../../utils/helpers'
+import {
+	getPokemonGeneration,
+	capitalFirstLetter,
+	formatNames
+} from '../../utils/helpers'
 import { LinkOverlay } from '../link-overlay'
-import { motion } from 'framer-motion'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
 import { FavoritePokemonGridItemSkeleton } from '../loading/favorite-pokemon-skeleton'
+import { m } from 'framer-motion'
 
 const FavoritesGridItem = ({
-	id,
+	id: cuid,
 	pokemon,
 	favorite,
 	favoritedByCurrentUser,
 	onFav
 }) => {
-	const [fetchOnePokemon] = usePokeAPI()
-	const { data, isLoading, formatData } = fetchOnePokemon(pokemon)
+	const { fetchOnePokemon } = usePokeAPI()
+	const { data, isLoading } = fetchOnePokemon(pokemon)
 
 	if (isLoading) return <FavoritePokemonGridItemSkeleton />
 
-	const favoriteIcon = favoritedByCurrentUser ? (
+	const formattedName = capitalFirstLetter(formatNames(pokemon))
+
+	const favoriteIcon = (
 		<Icon
-			onClick={() => onFav({ id, pokemon, favorite, favoritedByCurrentUser })}
-			as={MdFavorite}
+			onClick={() =>
+				onFav({ id: cuid, pokemon, favorite, favoritedByCurrentUser })
+			}
+			as={favoritedByCurrentUser ? MdFavorite : MdFavoriteBorder}
 			w={8}
 			h={8}
-			color='red.500'
-			cursor='pointer'
-		/>
-	) : (
-		<Icon
-			onClick={() => onFav({ id, pokemon, favorite, favoritedByCurrentUser })}
-			as={MdFavoriteBorder}
-			w={8}
-			h={8}
+			color={favoritedByCurrentUser ? 'red.500' : ''}
 			cursor='pointer'
 		/>
 	)
 
-	const { types, url, alt, name, id: pokemonId } = formatData(data)
+	const { id, name, image, types } = data
 
-	const gen = getPokemonGeneration(data.id)
+	const gen = getPokemonGeneration(id)
 
 	return (
 		<GridItem>
 			<Box
-				as={motion.div}
+				as={m.div}
 				p='2px'
 				rounded={8}
 				maxW='xs'
@@ -92,11 +92,11 @@ const FavoritesGridItem = ({
 									h='auto'
 									width={300}
 									height={300}
-									src={url}
-									alt={alt}
+									src={image}
+									alt={name}
 									fallbackSrc='/fallback.png'
 									placeholder='blur'
-									blurDataURL={url}
+									blurDataURL={image}
 								/>
 							</Box>
 						</LinkOverlay>
@@ -111,10 +111,10 @@ const FavoritesGridItem = ({
 											fontWeight='800'
 											letterSpacing={1}
 										>
-											{name}
+											{formattedName}
 										</Heading>
 										<Text opacity={0.4} align='end' zIndex={1}>
-											{pokemonId}
+											{id}
 										</Text>
 									</Flex>
 								</LinkOverlay>

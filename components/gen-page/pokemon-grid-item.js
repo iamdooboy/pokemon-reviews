@@ -1,33 +1,16 @@
 import { chakra, Box, GridItem, Text } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
-import axios from 'axios'
 import { FallBackImage } from '../../utils/fallback-image'
 import { CustomRating } from '../rating'
-import { GridItemSkeleton } from '../loading/gen-page-skeleton'
-import { useFetchReviews } from '../../hooks/useFetchReviews'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
+import { m } from 'framer-motion'
 
-const PokemonGridItem = ({ id, pokemonName, url }) => {
-	const fetcher = url => axios.get(url).then(res => res.data)
-
-	const key = `/api/reviews/${pokemonName}`
-
-	const {
-		reviews,
-		isLoading: reviewsAreLoading,
-		calcRatings
-	} = useFetchReviews(key, fetcher)
-
-	if (reviewsAreLoading) return <GridItemSkeleton />
-
-	const { count, rating } = calcRatings(reviews)
-
+const PokemonGridItem = ({ id, pokemonName, url, rating, count }) => {
 	const formattedName = capitalFirstLetter(formatNames(pokemonName))
-
+	const average = Math.round((rating / count) * 10) / 10
 	return (
 		<GridItem>
 			<Box
-				as={motion.div}
+				as={m.div}
 				rounded={8}
 				borderWidth='1px'
 				shadow='lg'
@@ -63,7 +46,7 @@ const PokemonGridItem = ({ id, pokemonName, url }) => {
 					</Text>
 					<Box justifyContent='center' align='center'>
 						<chakra.div my={1} maxW={100}>
-							<CustomRating value={rating} readOnly />
+							<CustomRating value={count === 0 ? 0 : average} readOnly />
 						</chakra.div>
 						<Box color='gray.600' fontSize='sm' align='center' mb={2}>
 							{count} ratings

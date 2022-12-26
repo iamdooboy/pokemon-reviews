@@ -69,6 +69,8 @@ model Review {
   favorite    Int?     @default(0)
   favoritedBy User[]
   updatedAt   DateTime @default(now())
+  gen         Int?
+  dexId       Int?
 
   @@unique([authorId, pokemon])
 }
@@ -79,4 +81,6 @@ model Pokemon {
   favorite    Int?     @default(0)
   favoritedBy User[]
   updatedAt   DateTime @default(now())
+  gen         Int?
+  dexId       Int?     @unique
 }

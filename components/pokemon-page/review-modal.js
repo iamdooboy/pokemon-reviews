@@ -14,7 +14,8 @@ import {
 	FormHelperText,
 	Spacer,
 	Heading,
-	Text
+	Text,
+	Tooltip
 } from '@chakra-ui/react'
 import ResizeTextarea from 'react-textarea-autosize'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
@@ -38,6 +39,10 @@ const AutoResizeTextarea = forwardRef((props, ref) => {
 AutoResizeTextarea.displayName = 'AutoResizeTextarea'
 
 const ReviewModal = ({
+	count,
+	average,
+	id,
+	gen,
 	pokemon,
 	isOpen,
 	onClose,
@@ -48,11 +53,13 @@ const ReviewModal = ({
 	update
 }) => {
 	const [rating, setRating] = useState(0)
+	const [oldRating, setOldRating] = useState(0)
 	const [description, setDescription] = useState('')
 
 	useEffect(() => {
 		if (selected.description) {
 			setRating(selected.rating)
+			setOldRating(selected.rating)
 			setDescription(selected.description)
 		}
 	}, [selected])
@@ -60,10 +67,26 @@ const ReviewModal = ({
 	const onSubmitHandler = async e => {
 		e.preventDefault()
 		if (selected.description) {
-			const data = { ...selected, description, rating }
+			setOldRating(rating)
+			const data = {
+				...selected,
+				description,
+				rating,
+				count,
+				average,
+				oldRating
+			}
 			update(data)
 		} else {
-			const data = { description, rating, pokemon }
+			const data = {
+				description,
+				rating,
+				pokemon,
+				gen,
+				dexId: id,
+				count,
+				average
+			}
 			create(data)
 		}
 		onCloseHandler()
@@ -80,6 +103,9 @@ const ReviewModal = ({
 		selected.description ? selected.pokemon : pokemon
 	)
 	formattedName = capitalFirstLetter(formattedName)
+
+	const ratingErrorMessage = 'Please select a start rating'
+	const descriptionErrorMessage = 'Please fill out the text field'
 
 	return (
 		<Modal
@@ -100,6 +126,7 @@ const ReviewModal = ({
 					<ModalBody>
 						<FormControl isRequired={true}>
 							<AutoResizeTextarea
+								autoFocus
 								onChange={e => setDescription(e.target.value)}
 								value={description}
 								placeholder='Share your thoughts on this Pokemon'
@@ -127,14 +154,22 @@ const ReviewModal = ({
 							/>
 						</Flex>
 						<Spacer />
-						<Button
-							align='right'
-							type='submit'
-							colorScheme='blue'
-							isDisabled={rating > 0 && description.length >= 10 ? false : true}
+						<Tooltip
+							label={
+								rating === 0 ? ratingErrorMessage : descriptionErrorMessage
+							}
+							isDisabled={rating > 0 && description.length >= 10}
+							bg='red.100'
 						>
-							{selected.description ? 'Update' : 'Submit'}
-						</Button>
+							<Button
+								align='right'
+								type='submit'
+								colorScheme='blue'
+								isDisabled={rating === 0 || description.length < 10}
+							>
+								{selected.description ? 'Update' : 'Submit'}
+							</Button>
+						</Tooltip>
 					</ModalFooter>
 				</ModalContent>
 			</form>

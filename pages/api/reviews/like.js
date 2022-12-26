@@ -1,9 +1,10 @@
-import { getSession } from 'next-auth/react'
+import { unstable_getServerSession } from 'next-auth/next'
+import { authOptions } from '../auth/[...nextauth]'
 import { prisma } from '../../../lib/prisma'
 
 export default async function handler(req, res) {
 	// Check if user is authenticated
-	const session = await getSession({ req })
+	const session = await unstable_getServerSession(req, res, authOptions)
 	if (!session) {
 		return res.status(401).json({ message: 'Unauthorized.' })
 	}
@@ -12,7 +13,8 @@ export default async function handler(req, res) {
 		where: { email: session.user.email }
 	})
 
-	const { favorite, id, favoritedByCurrentUser } = req.body
+	const { favorite, id, favoritedByCurrentUser, count, average, duplicate } =
+		req.body
 	const toggleFunction = {
 		[favoritedByCurrentUser ? 'connect' : 'disconnect']: {
 			id: user.id
@@ -40,5 +42,5 @@ export default async function handler(req, res) {
 		favoritedByCurrentUser
 	}
 
-	res.status(200).json(updatedData)
+	res.status(200).json({ updatedData, newAverage: average, duplicate, count })
 }

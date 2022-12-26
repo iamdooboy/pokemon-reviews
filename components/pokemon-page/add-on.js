@@ -3,7 +3,7 @@ import { FaThumbsUp, FaRegThumbsUp } from 'react-icons/fa'
 import { StarIcon } from '@chakra-ui/icons'
 import { useSession } from 'next-auth/react'
 
-const AddOn = ({ like, review }) => {
+const AddOn = ({ like, review, count, average, duplicate }) => {
 	const session = useSession()
 	const { favorite, rating, favoritedByCurrentUser } = review
 
@@ -31,7 +31,7 @@ const AddOn = ({ like, review }) => {
 			<Flex gap={1}>
 				<chakra.button
 					cursor={session.data ? 'pointer' : 'not-allowed'}
-					onClick={() => like(review)}
+					onClick={() => like({ review, count, average, duplicate })}
 				>
 					{favoriteIcon}
 				</chakra.button>

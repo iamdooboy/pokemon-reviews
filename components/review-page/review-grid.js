@@ -17,11 +17,13 @@ const ReviewGrid = () => {
 	const key = '/api/reviews/'
 	const fetcher = url => axios.get(url).then(res => res.data)
 
-	const { reviews, isLoading, update, like, remove, sortReviews } =
-		useFetchReviews(key, fetcher)
+	const { reviews, isLoading, update, like, remove, sort } = useFetchReviews(
+		key,
+		fetcher
+	)
 
 	if (isLoading) return <ReviewGridSkeleton />
-	sortReviews(sortOrder)
+	sort(sortOrder)
 
 	return (
 		<>
