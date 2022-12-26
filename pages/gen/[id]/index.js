@@ -1,4 +1,4 @@
-import { Flex, Box } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import PokemonGrid from '../../../components/gen-page/pokemon-grid'
 import Layout from '../../../components/layout'
 import { isNumber } from '../../../utils/helpers'

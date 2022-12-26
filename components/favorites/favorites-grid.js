@@ -1,4 +1,3 @@
-import React from 'react'
 import { SimpleGrid } from '@chakra-ui/react'
 import FavoritesGridItem from './favorites-grid-item'
 import { useFetchPokemon } from '../../hooks/useFetchPokemon'

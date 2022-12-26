@@ -10,11 +10,15 @@ import {
 } from '@chakra-ui/react'
 import { FallBackImage } from '../../utils/fallback-image'
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
-import { getPokemonGeneration } from '../../utils/helpers'
+import {
+	getPokemonGeneration,
+	capitalFirstLetter,
+	formatNames
+} from '../../utils/helpers'
 import { LinkOverlay } from '../link-overlay'
-import { motion } from 'framer-motion'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
 import { FavoritePokemonGridItemSkeleton } from '../loading/favorite-pokemon-skeleton'
+import { m } from 'framer-motion'
 
 const FavoritesGridItem = ({
 	id: cuid,
@@ -28,37 +32,29 @@ const FavoritesGridItem = ({
 
 	if (isLoading) return <FavoritePokemonGridItemSkeleton />
 
-	const favoriteIcon = favoritedByCurrentUser ? (
+	const formattedName = capitalFirstLetter(formatNames(pokemon))
+
+	const favoriteIcon = (
 		<Icon
 			onClick={() =>
 				onFav({ id: cuid, pokemon, favorite, favoritedByCurrentUser })
 			}
-			as={MdFavorite}
+			as={favoritedByCurrentUser ? MdFavorite : MdFavoriteBorder}
 			w={8}
 			h={8}
-			color='red.500'
-			cursor='pointer'
-		/>
-	) : (
-		<Icon
-			onClick={() =>
-				onFav({ id: cuid, pokemon, favorite, favoritedByCurrentUser })
-			}
-			as={MdFavoriteBorder}
-			w={8}
-			h={8}
+			color={favoritedByCurrentUser ? 'red.500' : ''}
 			cursor='pointer'
 		/>
 	)
 
-	const { id, name, image, types, mega, variants, forms } = data
+	const { id, name, image, types } = data
 
 	const gen = getPokemonGeneration(id)
 
 	return (
 		<GridItem>
 			<Box
-				as={motion.div}
+				as={m.div}
 				p='2px'
 				rounded={8}
 				maxW='xs'
@@ -115,7 +111,7 @@ const FavoritesGridItem = ({
 											fontWeight='800'
 											letterSpacing={1}
 										>
-											{name}
+											{formattedName}
 										</Heading>
 										<Text opacity={0.4} align='end' zIndex={1}>
 											{id}
