@@ -15,7 +15,7 @@ export const useFetchReviews = (key, fetcher) => {
 
 	let options = {
 		rollbackOnError: true,
-		populateCache: true,
+		populateCache: false,
 		revalidate: true
 	}
 
@@ -35,7 +35,13 @@ export const useFetchReviews = (key, fetcher) => {
 		try {
 			setIsLoading(true)
 			const res = await axios.post('/api/reviews', data).then(res => res.data)
-			const newData = [...initialData.reviews, res]
+			const { savedReview, newAverage, newCount, duplicate } = res
+			const newData = {
+				reviews: [...initialData.reviews, savedReview],
+				average: newAverage,
+				count: newCount,
+				duplicate
+			}
 			displayConfirmationToast('Review created')
 			return newData
 		} catch (error) {
@@ -56,12 +62,14 @@ export const useFetchReviews = (key, fetcher) => {
 			.put(`/api/reviews/${path}`, data)
 			.then(res => res.data)
 
-		const updatedData = initialData.reviews.map(review => {
+		const { updatedData, newAverage, duplicate, count } = res
+
+		const updatedReviews = initialData.reviews.map(review => {
 			if (review.id !== res.id) {
 				return review
 			}
 			return {
-				...res
+				...updatedData
 			}
 		})
 
@@ -69,7 +77,7 @@ export const useFetchReviews = (key, fetcher) => {
 			displayConfirmationToast('Review updated')
 		}
 
-		return updatedData
+		return { reviews: updatedReviews, average: newAverage, count, duplicate }
 	}
 
 	const deleteFn = async data => {
@@ -77,21 +85,30 @@ export const useFetchReviews = (key, fetcher) => {
 		const res = await axios
 			.delete('/api/reviews', { data })
 			.then(res => res.data)
+
+		const { updatedData, average, count, duplicate } = res
 		displayConfirmationToast('Review deleted')
 
-		return initialData.reviews.filter(review => review.id !== res.id)
+		const updatedReviews = initialData.reviews.filter(
+			review => review.id !== updatedData.id
+		)
+
+		return { reviews: updatedReviews, average, count, duplicate }
 	}
 
-	const like = selected => {
+	const like = ({ review: selected, count, average, duplicate }) => {
 		const { id, favorite, favoritedByCurrentUser } = selected
 
 		const newData = {
 			id,
 			favorite: favoritedByCurrentUser ? favorite - 1 : favorite + 1,
-			favoritedByCurrentUser: !favoritedByCurrentUser
+			favoritedByCurrentUser: !favoritedByCurrentUser,
+			count,
+			average,
+			duplicate
 		}
 
-		const optimisticData = reviews.map(review => {
+		const updatedReviews = initialData.reviews.map(review => {
 			if (id !== review.id) {
 				return review
 			}
@@ -102,6 +119,13 @@ export const useFetchReviews = (key, fetcher) => {
 			}
 		})
 
+		const optimisticData = {
+			reviews: updatedReviews,
+			count,
+			average,
+			duplicate
+		}
+
 		options = {
 			optimisticData,
 			...options
@@ -111,14 +135,23 @@ export const useFetchReviews = (key, fetcher) => {
 	}
 
 	const update = data => {
-		const { id, description, rating } = data
-
-		const optimisticData = initialData.reviews.map(review => {
+		const { id, description, rating, count, average, oldRating } = data
+		const sum = average * count - oldRating + rating
+		console.log(sum)
+		const newAverage = Math.round((sum / count) * 10) / 10
+		const updatedReviews = initialData.reviews.map(review => {
 			if (id !== review.id) {
 				return review
 			}
 			return { ...review, description, rating }
 		})
+
+		const optimisticData = {
+			reviews: updatedReviews,
+			average: newAverage,
+			count,
+			duplicate: true
+		}
 
 		options = {
 			optimisticData,
@@ -133,9 +166,24 @@ export const useFetchReviews = (key, fetcher) => {
 	}
 
 	const remove = data => {
-		const optimisticData = initialData.reviews.filter(
-			review => review.id !== data.id
+		const { review: currentReview, count, average } = data
+
+		const { id, rating } = currentReview
+		const newCount = count - 1
+
+		const sum = average * count - rating
+		const newAverage = Math.round((sum / newCount) * 10) / 10
+
+		const updatedReviews = initialData.reviews.filter(
+			review => review.id !== id
 		)
+
+		const optimisticData = {
+			reviews: updatedReviews,
+			count: newCount,
+			average: newAverage,
+			duplicate: false
+		}
 
 		options = {
 			optimisticData,

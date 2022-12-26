@@ -1,4 +1,5 @@
-import { getSession } from 'next-auth/react'
+import { unstable_getServerSession } from 'next-auth/next'
+import { authOptions } from '../auth/[...nextauth]'
 import { prisma } from '../../../lib/prisma'
 
 export default async function handler(req, res) {
@@ -24,16 +25,15 @@ export default async function handler(req, res) {
 		average = Math.round((sum / reviews.length) * 10) / 10
 	}
 
-	const session = await getSession({ req })
+	const session = await unstable_getServerSession(req, res, authOptions)
 
 	if (!session) {
 		reviews = reviews.map(review => {
 			const favoritedByCurrentUser = false
-			const reviewedThisPokemon = false
 
 			delete review.favoritedBy
 
-			return { ...review, favoritedByCurrentUser, reviewedThisPokemon }
+			return { ...review, favoritedByCurrentUser }
 		})
 
 		return res
@@ -51,7 +51,9 @@ export default async function handler(req, res) {
 			el => el.id === user.id
 		)
 
-		duplicate = review.authorId === user.id
+		if (!duplicate) {
+			duplicate = review.authorId === user.id
+		}
 
 		delete review.favoritedBy
 

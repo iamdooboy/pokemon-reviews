@@ -3,7 +3,7 @@ import { Box, Skeleton, Stack, SimpleGrid, GridItem } from '@chakra-ui/react'
 export const ReviewBoxSkeleton = () => {
 	return (
 		<Box
-			maxW='xs'
+			maxW='sm'
 			rounded={8}
 			borderWidth={1}
 			align='center'

@@ -10,20 +10,14 @@ import { cyclic } from '../../../utils/axios'
 import PokemonCard from '../../../components/pokemon-page/pokemon-card'
 import { usePokeAPI } from '../../../hooks/usePokeAPI'
 import { useFetchReviews } from '../../../hooks/useFetchReviews'
+import { PokemonPageSkeleton } from '../../../components/loading/pokemon-page-skeleton'
 
-const Pokemon = ({ pokemonName }) => {
+const Pokemon = ({ pokemonName, gen }) => {
 	const [sortOrder, setSortOrder] = useState(0)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
 	const key = `/api/reviews/${pokemonName}`
-	const fetcher = url =>
-		axios
-			.get(url, {
-				params: {
-					pokemon: pokemonName
-				}
-			})
-			.then(res => res.data)
+	const fetcher = url => axios.get(url).then(res => res.data)
 
 	const swrData = {
 		pokemon: pokemonName,
@@ -44,7 +38,7 @@ const Pokemon = ({ pokemonName }) => {
 	const { reviews: reviewsData, isLoading: reviewsAreLoading } =
 		useFetchReviews(key, fetcher)
 
-	if (isLoading || reviewsAreLoading) return <div>loading</div>
+	if (isLoading || reviewsAreLoading) return <PokemonPageSkeleton />
 
 	const { reviews, average, count, duplicate } = reviewsData
 
@@ -74,6 +68,8 @@ const Pokemon = ({ pokemonName }) => {
 				<Box align='center' mt={3}>
 					<SortSection reviews={reviews} setSortOrder={setSortOrder} />
 					<ReviewList
+						id={parseInt(data.id)}
+						gen={gen}
 						swrData={swrData}
 						isOpen={isOpen}
 						onOpen={onOpen}
@@ -105,7 +101,8 @@ export const getServerSideProps = async context => {
 
 	return {
 		props: {
-			pokemonName: pokemon
+			pokemonName: pokemon,
+			gen: parseInt(id)
 		}
 	}
 }

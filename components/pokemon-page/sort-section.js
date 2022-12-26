@@ -1,5 +1,4 @@
 import { HStack, Heading } from '@chakra-ui/react'
-import { useFetchReviews } from '../../hooks/useFetchReviews'
 import SortButtons from '../sort-buttons'
 
 const SortSection = ({ reviews, setSortOrder }) => {

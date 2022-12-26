@@ -24,7 +24,15 @@ const Empty = ({ pokemon }) => {
 	)
 }
 
-const ReviewList = ({ swrData, isOpen, onOpen, onClose, sortOrder }) => {
+const ReviewList = ({
+	id,
+	swrData,
+	isOpen,
+	onOpen,
+	onClose,
+	sortOrder,
+	gen
+}) => {
 	const { pokemon, key, fetcher } = swrData
 
 	const [selected, setSelected] = useState({ description: '', rating: 0 })
@@ -40,24 +48,36 @@ const ReviewList = ({ swrData, isOpen, onOpen, onClose, sortOrder }) => {
 		sort
 	} = useFetchReviews(key, fetcher)
 
-	const { reviews } = reviewsData
-
 	if (isLoading) return <ReviewBoxSkeleton />
 
+	const { count, average, duplicate } = reviewsData
 	sort(sortOrder)
 
 	return (
 		<VStack mb={3}>
-			{reviews.length === 0 && <Empty pokemon={pokemon} />}
-			{reviews.map((review, index) => (
+			{reviewsData.reviews.length === 0 && <Empty pokemon={pokemon} />}
+			{reviewsData.reviews.map((review, index) => (
 				<ReviewBox
 					key={index}
-					{...{ review, setSelected, onOpen, remove, like }}
+					{...{
+						review,
+						setSelected,
+						onOpen,
+						remove,
+						like,
+						count,
+						average,
+						duplicate
+					}}
 				/>
 			))}
 
 			<ReviewModal
 				{...{
+					count,
+					average,
+					id,
+					gen,
 					pokemon,
 					isOpen,
 					onClose,

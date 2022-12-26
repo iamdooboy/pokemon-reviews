@@ -1,9 +1,8 @@
 import { chakra, Box, GridItem, Text } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
 import { FallBackImage } from '../../utils/fallback-image'
 import { CustomRating } from '../rating'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
-// import { GridItemSkeleton } from '../loading/gen-page-skeleton'
+import { m } from 'framer-motion'
 
 const PokemonGridItem = ({ id, pokemonName, url, rating, count }) => {
 	const formattedName = capitalFirstLetter(formatNames(pokemonName))
@@ -11,7 +10,7 @@ const PokemonGridItem = ({ id, pokemonName, url, rating, count }) => {
 	return (
 		<GridItem>
 			<Box
-				as={motion.div}
+				as={m.div}
 				rounded={8}
 				borderWidth='1px'
 				shadow='lg'

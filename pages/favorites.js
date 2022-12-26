@@ -1,6 +1,5 @@
 import FavoritesGrid from '../components/favorites/favorites-grid'
 import Layout from '../components/layout'
-import Sidebar from '../components/sidebar/sidebar'
 import { Box, Flex } from '@chakra-ui/react'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from '../pages/api/auth/[...nextauth]'
@@ -9,7 +8,6 @@ const Favorites = () => {
 	return (
 		<Layout>
 			<Flex pt={16}>
-				<Sidebar />
 				<Box
 					flex={1}
 					px='5'

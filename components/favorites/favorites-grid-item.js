@@ -17,20 +17,22 @@ import { usePokeAPI } from '../../hooks/usePokeAPI'
 import { FavoritePokemonGridItemSkeleton } from '../loading/favorite-pokemon-skeleton'
 
 const FavoritesGridItem = ({
-	id,
+	id: cuid,
 	pokemon,
 	favorite,
 	favoritedByCurrentUser,
 	onFav
 }) => {
-	const [fetchOnePokemon] = usePokeAPI()
-	const { data, isLoading, formatData } = fetchOnePokemon(pokemon)
+	const { fetchOnePokemon } = usePokeAPI()
+	const { data, isLoading } = fetchOnePokemon(pokemon)
 
 	if (isLoading) return <FavoritePokemonGridItemSkeleton />
 
 	const favoriteIcon = favoritedByCurrentUser ? (
 		<Icon
-			onClick={() => onFav({ id, pokemon, favorite, favoritedByCurrentUser })}
+			onClick={() =>
+				onFav({ id: cuid, pokemon, favorite, favoritedByCurrentUser })
+			}
 			as={MdFavorite}
 			w={8}
 			h={8}
@@ -39,7 +41,9 @@ const FavoritesGridItem = ({
 		/>
 	) : (
 		<Icon
-			onClick={() => onFav({ id, pokemon, favorite, favoritedByCurrentUser })}
+			onClick={() =>
+				onFav({ id: cuid, pokemon, favorite, favoritedByCurrentUser })
+			}
 			as={MdFavoriteBorder}
 			w={8}
 			h={8}
@@ -47,9 +51,9 @@ const FavoritesGridItem = ({
 		/>
 	)
 
-	const { types, url, alt, name, id: pokemonId } = formatData(data)
+	const { id, name, image, types, mega, variants, forms } = data
 
-	const gen = getPokemonGeneration(data.id)
+	const gen = getPokemonGeneration(id)
 
 	return (
 		<GridItem>
@@ -92,11 +96,11 @@ const FavoritesGridItem = ({
 									h='auto'
 									width={300}
 									height={300}
-									src={url}
-									alt={alt}
+									src={image}
+									alt={name}
 									fallbackSrc='/fallback.png'
 									placeholder='blur'
-									blurDataURL={url}
+									blurDataURL={image}
 								/>
 							</Box>
 						</LinkOverlay>
@@ -114,7 +118,7 @@ const FavoritesGridItem = ({
 											{name}
 										</Heading>
 										<Text opacity={0.4} align='end' zIndex={1}>
-											{pokemonId}
+											{id}
 										</Text>
 									</Flex>
 								</LinkOverlay>

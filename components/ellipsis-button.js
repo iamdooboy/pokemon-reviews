@@ -13,7 +13,15 @@ import { AiOutlineEllipsis } from 'react-icons/ai'
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import { useRef } from 'react'
 
-export const EllipsisButton = ({ setSelected, review, onOpen, remove }) => {
+export const EllipsisButton = ({
+	setSelected,
+	review,
+	onOpen,
+	remove,
+	count,
+	average,
+	duplicate
+}) => {
 	const initRef = useRef()
 	return (
 		<Popover initialFocusRef={initRef}>
@@ -45,7 +53,7 @@ export const EllipsisButton = ({ setSelected, review, onOpen, remove }) => {
 									ref={initRef}
 									onClick={() => {
 										onClose()
-										remove({ id: review.id })
+										remove({ review, count, average, duplicate })
 									}}
 									leftIcon={<DeleteIcon />}
 									variant='ghost'

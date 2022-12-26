@@ -9,8 +9,7 @@ const GenerationPage = ({ fallback, gen }) => {
 	return (
 		<SWRConfig value={{ fallback }}>
 			<Layout>
-				<Flex pt={16}>
-					{/* <Sidebar /> */}
+				<Box pt={16}>
 					<Box
 						flex={1}
 						px='5'
@@ -26,7 +25,7 @@ const GenerationPage = ({ fallback, gen }) => {
 					</Heading> */}
 						<PokemonGrid gen={gen} />
 					</Box>
-				</Flex>
+				</Box>
 			</Layout>
 		</SWRConfig>
 	)

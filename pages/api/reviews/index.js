@@ -1,4 +1,5 @@
-import { getSession } from 'next-auth/react'
+import { unstable_getServerSession } from 'next-auth/next'
+import { authOptions } from '../auth/[...nextauth]'
 import { prisma } from '../../../lib/prisma'
 
 export default async function handler(req, res) {
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
 		res.status(200).json(reviews)
 	}
 
-	const session = await getSession({ req })
+	const session = await unstable_getServerSession(req, res, authOptions)
 
 	if (!session) {
 		return res.status(401).json({ message: 'Unauthorized.' })
@@ -40,17 +41,29 @@ export default async function handler(req, res) {
 	})
 
 	if (req.method === 'DELETE') {
+		const { review, count, average } = req.body
+
 		const updatedData = await prisma.review.delete({
 			where: {
-				id: req.body.id
+				id: review.id
 			}
 		})
 
-		res.status(200).json(updatedData)
+		const newCount = count - 1
+		const sum = average * count - review.rating
+		const newAverage = Math.round((sum / newCount) * 10) / 10
+
+		res.status(200).json({
+			updatedData,
+			average: newAverage,
+			count: newCount,
+			duplicate: false
+		})
 	}
 
 	if (req.method === 'PUT') {
-		const { id, description, rating, favoritedByCurrentUser } = req.body
+		const { id, description, rating, favoritedByCurrentUser, count, average } =
+			req.body
 		let updatedData = await prisma.review.update({
 			where: {
 				id
@@ -70,21 +83,31 @@ export default async function handler(req, res) {
 			favoritedByCurrentUser
 		}
 
-		res.status(200).json(updatedData)
+		const sum = average + updatedData.rating
+		const newAverage = Math.round((sum / count) * 10) / 10
+
+		res.status(200).json({ updatedData, newAverage, duplicate: true, count })
 	}
 
 	if (req.method === 'POST') {
 		try {
-			const { description, rating, pokemon } = req.body
+			const { description, rating, pokemon, dexId, gen, count, average } =
+				req.body
 
 			const savedReview = await prisma.review.create({
-				data: { description, rating, pokemon, authorId: user.id },
+				data: { description, rating, pokemon, authorId: user.id, dexId, gen },
 				include: {
 					//return all fields from user model
 					author: true
 				}
 			})
-			res.status(200).json(savedReview)
+			const newCount = count + 1
+			const sum = average + savedReview.rating
+			const newAverage = Math.round((sum / newCount) * 10) / 10
+
+			res
+				.status(200)
+				.json({ savedReview, newAverage, newCount, duplicate: true })
 		} catch (e) {
 			throw e
 		}

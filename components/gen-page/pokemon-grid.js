@@ -11,15 +11,13 @@ const PokemonGrid = ({ gen }) => {
 
 	const { data, isLoading: apiLoading } = fetchAllPokemonFromGen(gen)
 
-	//if (apiLoading) return <GenPageSkeleton />
-
 	const fetcher = url => axios.get(url).then(res => res.data)
 
 	const key = `/api/reviews/gen/${gen}`
 
 	const { reviews, isLoading } = useFetchReviews(key, fetcher)
 
-	if (apiLoading || isLoading) return <div>loading</div>
+	if (apiLoading || isLoading) return <GenPageSkeleton />
 
 	return (
 		<SimpleGrid columns={[2, 3, 3, 6]} spacing={6} py={4}>
