@@ -6,6 +6,7 @@ import axios from 'axios'
 import { useFetchReviews } from '../../hooks/useFetchReviews'
 import { ReviewGridSkeleton } from '../loading/review-box-skeleton'
 import SortButtons from '../sort-buttons'
+import Empty from '../empty'
 
 const ReviewGrid = () => {
 	const [sortOrder, setSortOrder] = useState(0)
@@ -24,6 +25,14 @@ const ReviewGrid = () => {
 
 	if (isLoading) return <ReviewGridSkeleton />
 	sort(sortOrder)
+
+	if (reviews.length === 0)
+		return (
+			<Empty
+				heading='You do not have any reviews posted'
+				text='Leave a review and it will show up here'
+			/>
+		)
 
 	return (
 		<>

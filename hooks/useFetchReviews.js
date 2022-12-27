@@ -20,14 +20,26 @@ export const useFetchReviews = (key, fetcher) => {
 	}
 
 	const sort = sortOrder => {
-		if (sortOrder === 1) {
-			initialData.reviews.sort((a, b) => {
-				return b.favorite - a.favorite
-			})
+		if (initialData.reviews) {
+			if (sortOrder === 1) {
+				initialData.reviews.sort((a, b) => {
+					return b.favorite - a.favorite
+				})
+			} else {
+				initialData.reviews.sort((a, b) => {
+					return new Date(b.createdAt) - new Date(a.createdAt)
+				})
+			}
 		} else {
-			initialData.reviews.sort((a, b) => {
-				return new Date(b.createdAt) - new Date(a.createdAt)
-			})
+			if (sortOrder === 1) {
+				initialData.sort((a, b) => {
+					return b.favorite - a.favorite
+				})
+			} else {
+				initialData.sort((a, b) => {
+					return new Date(b.createdAt) - new Date(a.createdAt)
+				})
+			}
 		}
 	}
 

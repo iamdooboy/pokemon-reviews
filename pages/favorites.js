@@ -1,4 +1,4 @@
-import FavoritesGrid from '../components/favorites/favorites-grid'
+import FavoritesGrid from '../components/favorites-page/favorites-grid'
 import Layout from '../components/layout'
 import { Box, Flex } from '@chakra-ui/react'
 import { unstable_getServerSession } from 'next-auth/next'
@@ -35,9 +35,7 @@ export const getServerSideProps = async context => {
 	}
 
 	return {
-		props: {
-			session
-		}
+		props: {}
 	}
 }
 
