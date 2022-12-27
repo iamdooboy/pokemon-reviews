@@ -1,6 +1,5 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import Layout from '../components/layout'
-import Sidebar from '../components/sidebar/sidebar'
 import ReviewGrid from '../components/review-page/review-grid'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from '../pages/api/auth/[...nextauth]'
@@ -8,8 +7,7 @@ import { authOptions } from '../pages/api/auth/[...nextauth]'
 const MyReviews = () => {
 	return (
 		<Layout>
-			<Flex pt={16}>
-				<Sidebar />
+			<Box pt={16}>
 				<Box
 					flex={1}
 					px='5'
@@ -18,7 +16,7 @@ const MyReviews = () => {
 				>
 					<ReviewGrid />
 				</Box>
-			</Flex>
+			</Box>
 		</Layout>
 	)
 }

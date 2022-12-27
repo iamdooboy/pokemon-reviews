@@ -3,6 +3,16 @@ import { authOptions } from '../auth/[...nextauth]'
 import { prisma } from '../../../lib/prisma'
 
 export default async function handler(req, res) {
+	const session = await unstable_getServerSession(req, res, authOptions)
+
+	if (!session) {
+		return res.status(401).json({ message: 'Unauthorized.' })
+	}
+
+	const user = await prisma.user.findUnique({
+		where: { email: session.user.email }
+	})
+
 	if (req.method === 'GET') {
 		let reviews = await prisma.review.findMany({
 			//return all reviews for current user
@@ -13,7 +23,7 @@ export default async function handler(req, res) {
 				favoritedBy: true
 			},
 			orderBy: {
-				createdAt: 'asc'
+				createdAt: 'desc'
 			}
 		})
 
@@ -29,16 +39,6 @@ export default async function handler(req, res) {
 
 		res.status(200).json(reviews)
 	}
-
-	const session = await unstable_getServerSession(req, res, authOptions)
-
-	if (!session) {
-		return res.status(401).json({ message: 'Unauthorized.' })
-	}
-
-	const user = await prisma.user.findUnique({
-		where: { email: session.user.email }
-	})
 
 	if (req.method === 'DELETE') {
 		const { review, count, average } = req.body

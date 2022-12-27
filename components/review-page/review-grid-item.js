@@ -21,7 +21,7 @@ import ReadMore from '../read-more'
 import { FaThumbsUp, FaRegThumbsUp } from 'react-icons/fa'
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import { LinkOverlay } from '../link-overlay'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { EllipsisButton } from '../ellipsis-button'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
 import { CustomRating } from '../rating'
@@ -60,7 +60,7 @@ const ReviewGridItem = ({ review, like, remove, onOpen, setSelected }) => {
 	return (
 		<GridItem>
 			<Box
-				as={motion.div}
+				as={m.div}
 				rounded={8}
 				borderWidth='1px'
 				shadow='lg'
