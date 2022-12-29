@@ -18,6 +18,7 @@ import Layout from '../components/layout'
 import { unstable_getServerSession } from 'next-auth/next'
 import { useAsyncToast } from '../hooks/useAsyncToast'
 import { FallBackImage } from '../utils/fallback-image'
+import { FileUpload } from '../components/file-upload'
 
 const avatars = [
 	{ type: 'bug', src: '/avatar/bug.svg' },
@@ -120,6 +121,7 @@ const Settings = ({ user }) => {
 									</Box>
 								))}
 							</SimpleGrid>
+							<FileUpload />
 							<Button
 								isLoading={isLoading}
 								type='submit'

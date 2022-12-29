@@ -1,9 +1,10 @@
 // import React from 'react'
 // import { prisma } from '../lib/prisma'
 // import axios from 'axios'
+import { FileUpload } from '../components/file-upload'
 
 const Dummy = () => {
-	return <div>hello</div>
+	return <FileUpload />
 }
 
 // export const getServerSideProps = async () => {

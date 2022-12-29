@@ -6,7 +6,8 @@ module.exports = {
 			'lh3.googleusercontent.com',
 			'bit.ly',
 			'assets.pokemon.com',
-			'raw.githubusercontent.com'
+			'raw.githubusercontent.com',
+			'iujygbqbuyshodtuogut.supabase.co'
 		]
 	}
 }
