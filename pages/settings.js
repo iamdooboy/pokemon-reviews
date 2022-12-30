@@ -19,27 +19,8 @@ import { unstable_getServerSession } from 'next-auth/next'
 import { useAsyncToast } from '../hooks/useAsyncToast'
 import { FallBackImage } from '../utils/fallback-image'
 import { FileUpload } from '../components/file-upload'
-
-const avatars = [
-	{ type: 'bug', src: '/avatar/bug.svg' },
-	{ type: 'dark', src: '/avatar/dark.svg' },
-	{ type: 'dragon', src: '/avatar/dragon.svg' },
-	{ type: 'electric', src: '/avatar/electric.svg' },
-	{ type: 'fairy', src: '/avatar/fairy.svg' },
-	{ type: 'fighting', src: '/avatar/fighting.svg' },
-	{ type: 'fire', src: '/avatar/fire.svg' },
-	{ type: 'flying', src: '/avatar/flying.svg' },
-	{ type: 'ghost', src: '/avatar/ghost.svg' },
-	{ type: 'grass', src: '/avatar/grass.svg' },
-	{ type: 'ground', src: '/avatar/ground.svg' },
-	{ type: 'ice', src: '/avatar/ice.svg' },
-	{ type: 'normal', src: '/avatar/normal.svg' },
-	{ type: 'poison', src: '/avatar/poison.svg' },
-	{ type: 'psychic', src: '/avatar/psychic.svg' },
-	{ type: 'rock', src: '/avatar/rock.svg' },
-	{ type: 'steel', src: '/avatar/steel.svg' },
-	{ type: 'water', src: '/avatar/water.svg' }
-]
+import AvatarSelection from '../components/settings-page/avatar-selection'
+import Username from '../components/settings-page/username'
 
 const Settings = ({ user }) => {
 	const [avatar, setAvatar] = useState({ src: user.image })
@@ -52,21 +33,30 @@ const Settings = ({ user }) => {
 	})
 
 	const onSubmitHandler = async e => {
-		setIsLoading(true)
+		//setIsLoading(true)
 		e.preventDefault()
-		const res = await axios.put('/api/user', { avatar, name })
-		if (res) {
-			setIsLoading(false)
-			toast({
-				title: 'Profile updated.',
-				position: 'bottom-right',
-				status: 'success',
-				duration: 1500,
-				isClosable: true
-			})
-			const event = new Event('visibilitychange') //refresh session
-			document.dispatchEvent(event)
-		}
+		console.log(avatar)
+		let formData = new FormData()
+		formData.append('image', avatar)
+		const { data } = await axios.post('/api/upload', formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		})
+		//console.log(data)
+		// const res = await axios.put('/api/user', { avatar, name })
+		// if (res) {
+		// 	setIsLoading(false)
+		// 	toast({
+		// 		title: 'Profile updated.',
+		// 		position: 'bottom-right',
+		// 		status: 'success',
+		// 		duration: 1500,
+		// 		isClosable: true
+		// 	})
+		// 	const event = new Event('visibilitychange') //refresh session
+		// 	document.dispatchEvent(event)
+		// }
 	}
 
 	return (
@@ -88,40 +78,9 @@ const Settings = ({ user }) => {
 						as='form'
 						onSubmit={onSubmitHandler}
 					>
-						<Avatar size='xl' name='test' src={avatar.src} my={10} />
 						<FormControl>
-							<FormLabel>Name</FormLabel>
-							<Input
-								type='text'
-								value={name}
-								onChange={e => setName(e.target.value)}
-							/>
-							<FormHelperText align='left'>
-								This is your public display name when leaving reviews
-							</FormHelperText>
-
-							<FormLabel mt={5}>Avatar</FormLabel>
-							<SimpleGrid columns={[2, 3, 3, 6]} spacing={6} py={4}>
-								{avatars.map(a => (
-									<Box
-										align='center'
-										justify='center'
-										key={a.type}
-										_hover={{ opacity: 0.5 }}
-									>
-										<FallBackImage
-											onClick={() => setAvatar(a)}
-											opacity={avatar.src === a.src ? 0.3 : 1}
-											alt={a.type}
-											src={a.src}
-											width={40}
-											height={40}
-											cursor='pointer'
-										/>
-									</Box>
-								))}
-							</SimpleGrid>
-							<FileUpload />
+							<Username setName={setName} name={name} />
+							<AvatarSelection avatar={avatar} setAvatar={setAvatar} />
 							<Button
 								isLoading={isLoading}
 								type='submit'

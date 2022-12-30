@@ -69,26 +69,79 @@ import {
 	FormLabel,
 	FormHelperText
 } from '@chakra-ui/react'
+import { useRef } from 'react'
+import { AiOutlineCloudUpload } from 'react-icons/ai'
+import { CheckCircleIcon } from '@chakra-ui/icons'
 
-export const FileUpload = props => {
-	const styles = useMultiStyleConfig('Button', { variant: 'outline' })
+export const FileUpload = ({ setAvatar }) => {
+	const sizeLimit = 10 * 1024 * 1024 // 10MB
+	const handleClick = () => {
+		hiddenFileInput.current.click()
+	}
+
+	const handleChange = e => {
+		const file = e.target.files[0]
+		const reader = new FileReader()
+		reader.addEventListener(
+			'load',
+			async function () {
+				try {
+					setAvatar({ src: reader.result, alt: fileName })
+					if (typeof onChangePicture === 'function') {
+						await handleChange(reader.result)
+					}
+				} catch (err) {
+					console.log(err)
+				} finally {
+					console.log('done')
+				}
+			},
+			false
+		)
+
+		if (file) {
+			if (file.size <= sizeLimit) {
+				reader.readAsDataURL(file)
+				console.log('read')
+			} else {
+				setPictureError('File size is exceeding 10MB.')
+			}
+		}
+		// const fileExt = file.name.split('.').pop()
+		// const fileName = `${Math.random()}.${fileExt}`
+		// const filePath = `${fileName}`
+		// setAvatar(file)
+	}
+
+	const hiddenFileInput = useRef(null)
 
 	return (
-		<>
-			<FormLabel>Files</FormLabel>
+		// <Button
+		// 	//isLoading
+		// 	loadingText='Uploading...'
+		// 	leftIcon={<CheckCircleIcon color='green.300' />}
+		// 	onClick={handleClick}
+		// >
+		// 	<Input
+		// 		type='file'
+		// 		ref={hiddenFileInput}
+		// 		onChange={handleChange}
+		// 		display='none'
+		// 	/>
+		// 	Successfully uploaded
+		// </Button>
+		<Button
+			leftIcon={<AiOutlineCloudUpload />}
+			onClick={handleClick}
+			variant='ghost'
+		>
 			<Input
 				type='file'
-				sx={{
-					'::file-selector-button': {
-						height: 10,
-						padding: 0,
-						mr: 4,
-						background: 'none',
-						border: 'none',
-						fontWeight: 'bold'
-					}
-				}}
+				ref={hiddenFileInput}
+				onChange={handleChange}
+				display='none'
 			/>
-		</>
+			Upload avatar
+		</Button>
 	)
 }
