@@ -13,9 +13,9 @@ export default async function handler(req, res) {
 		where: { email: session.user.email }
 	})
 
-	if (req.method === 'GET') {
-		return res.status(200).json(user)
-	} else {
+	if (req.method === 'GET') return res.status(200).json(user)
+
+	if (req.method === 'PUT') {
 		await prisma.user.update({
 			where: {
 				id: user.id

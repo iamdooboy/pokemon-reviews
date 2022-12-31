@@ -1,19 +1,5 @@
-import {
-	Container,
-	Box,
-	FormControl,
-	FormLabel,
-	FormHelperText,
-	Input,
-	Avatar,
-	SimpleGrid,
-	Button,
-	Flex,
-	useToast,
-	Text
-} from '@chakra-ui/react'
+import { Box, FormLabel, SimpleGrid, Flex, Text, Image } from '@chakra-ui/react'
 import { FallBackImage } from '../../utils/fallback-image'
-import { useState } from 'react'
 import { FileUpload } from '../file-upload'
 
 const AVATARS = [
@@ -37,14 +23,20 @@ const AVATARS = [
 	{ type: 'water', src: '/avatar/water.svg' }
 ]
 
-const AvatarSelection = ({ avatar, setAvatar, setFile }) => {
+const AvatarSelection = ({ avatar, setAvatar }) => {
 	return (
 		<>
 			<FormLabel mt={5}>Avatar</FormLabel>
-			<Box>
-				<Avatar size='xl' name='test' src={avatar.src} my={3} />
-			</Box>
-			<FileUpload setAvatar={setAvatar} />
+			<Flex align='center' justify='center'>
+				<Image
+					borderRadius='full'
+					boxSize='90px'
+					alt='avatar'
+					src={avatar.src}
+					my={3}
+				/>
+			</Flex>
+			<FileUpload avatar={avatar} setAvatar={setAvatar} />
 			<Text my={3} fontSize='xs' color='gray.400'>
 				Or try these:
 			</Text>

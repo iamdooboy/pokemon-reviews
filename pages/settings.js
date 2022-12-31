@@ -5,11 +5,6 @@ import {
 	Container,
 	Box,
 	FormControl,
-	FormLabel,
-	FormHelperText,
-	Input,
-	Avatar,
-	SimpleGrid,
 	Button,
 	Flex,
 	useToast
@@ -17,14 +12,12 @@ import {
 import Layout from '../components/layout'
 import { unstable_getServerSession } from 'next-auth/next'
 import { useAsyncToast } from '../hooks/useAsyncToast'
-import { FallBackImage } from '../utils/fallback-image'
-import { FileUpload } from '../components/file-upload'
 import AvatarSelection from '../components/settings-page/avatar-selection'
 import Username from '../components/settings-page/username'
 import { supabase } from '../lib/supabase'
 
 const Settings = ({ user }) => {
-	const [avatar, setAvatar] = useState({ src: user.image })
+	const [avatar, setAvatar] = useState({ src: user.image, isLoading: false })
 	const [name, setName] = useState(user.name)
 
 	const toast = useToast()
@@ -33,11 +26,9 @@ const Settings = ({ user }) => {
 		position: 'bottom-right'
 	})
 
-	const onSubmitHandler = async e => {
-		//setIsLoading(true)
-		e.preventDefault()
+	const uploadCustomAvatar = async () => {
 		try {
-			const { error } = await supabase.storage
+			const { data, error } = await supabase.storage
 				.from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET)
 				.upload(avatar.fileName, avatar.file)
 
@@ -45,25 +36,32 @@ const Settings = ({ user }) => {
 				throw new Error('Unable to upload image to storage')
 			}
 
-			const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}/${avatar.fileName}}`
-			console.log(imageUrl)
+			const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${data.Key}`
+			setAvatar({ src: imageUrl, isLoading: false })
 		} catch (e) {
 			console.log(e)
 		}
+	}
 
-		// const res = await axios.put('/api/user', { avatar, name })
-		// if (res) {
-		// 	setIsLoading(false)
-		// 	toast({
-		// 		title: 'Profile updated.',
-		// 		position: 'bottom-right',
-		// 		status: 'success',
-		// 		duration: 1500,
-		// 		isClosable: true
-		// 	})
-		// 	const event = new Event('visibilitychange') //refresh session
-		// 	document.dispatchEvent(event)
-		// }
+	const onSubmitHandler = async e => {
+		setIsLoading(true)
+		e.preventDefault()
+		setAvatar(prev => ({ ...prev, isLoading: true }))
+		if (avatar.file) uploadCustomAvatar()
+
+		const res = await axios.put('/api/user', { avatar, name })
+		if (res) {
+			setIsLoading(false)
+			toast({
+				title: 'Profile updated.',
+				position: 'bottom-right',
+				status: 'success',
+				duration: 1500,
+				isClosable: true
+			})
+			const event = new Event('visibilitychange') //refresh session
+			document.dispatchEvent(event)
+		}
 	}
 
 	return (
