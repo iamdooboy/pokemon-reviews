@@ -21,6 +21,7 @@ import { FallBackImage } from '../utils/fallback-image'
 import { FileUpload } from '../components/file-upload'
 import AvatarSelection from '../components/settings-page/avatar-selection'
 import Username from '../components/settings-page/username'
+import { supabase } from '../lib/supabase'
 
 const Settings = ({ user }) => {
 	const [avatar, setAvatar] = useState({ src: user.image })
@@ -35,15 +36,21 @@ const Settings = ({ user }) => {
 	const onSubmitHandler = async e => {
 		//setIsLoading(true)
 		e.preventDefault()
-		console.log(avatar)
-		let formData = new FormData()
-		formData.append('image', avatar)
-		const { data } = await axios.post('/api/upload', formData, {
-			headers: {
-				'Content-Type': 'multipart/form-data'
+		try {
+			const { error } = await supabase.storage
+				.from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET)
+				.upload(avatar.fileName, avatar.file)
+
+			if (error) {
+				throw new Error('Unable to upload image to storage')
 			}
-		})
-		//console.log(data)
+
+			const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${process.env.NEXT_PUBLIC_SUPABASE_BUCKET}/${avatar.fileName}}`
+			console.log(imageUrl)
+		} catch (e) {
+			console.log(e)
+		}
+
 		// const res = await axios.put('/api/user', { avatar, name })
 		// if (res) {
 		// 	setIsLoading(false)

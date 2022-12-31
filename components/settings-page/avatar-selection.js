@@ -37,7 +37,7 @@ const AVATARS = [
 	{ type: 'water', src: '/avatar/water.svg' }
 ]
 
-const AvatarSelection = ({ avatar, setAvatar }) => {
+const AvatarSelection = ({ avatar, setAvatar, setFile }) => {
 	return (
 		<>
 			<FormLabel mt={5}>Avatar</FormLabel>

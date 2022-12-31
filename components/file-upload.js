@@ -72,6 +72,7 @@ import {
 import { useRef } from 'react'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { CheckCircleIcon } from '@chakra-ui/icons'
+import { nanoid } from 'nanoid'
 
 export const FileUpload = ({ setAvatar }) => {
 	const sizeLimit = 10 * 1024 * 1024 // 10MB
@@ -81,36 +82,16 @@ export const FileUpload = ({ setAvatar }) => {
 
 	const handleChange = e => {
 		const file = e.target.files[0]
-		const reader = new FileReader()
-		reader.addEventListener(
-			'load',
-			async function () {
-				try {
-					setAvatar({ src: reader.result, alt: fileName })
-					if (typeof onChangePicture === 'function') {
-						await handleChange(reader.result)
-					}
-				} catch (err) {
-					console.log(err)
-				} finally {
-					console.log('done')
-				}
-			},
-			false
-		)
 
-		if (file) {
-			if (file.size <= sizeLimit) {
-				reader.readAsDataURL(file)
-				console.log('read')
-			} else {
-				setPictureError('File size is exceeding 10MB.')
-			}
-		}
-		// const fileExt = file.name.split('.').pop()
-		// const fileName = `${Math.random()}.${fileExt}`
-		// const filePath = `${fileName}`
-		// setAvatar(file)
+		if (!file) return
+
+		if (file.size > sizeLimit)
+			return console.log('File size is exceeding 10MB.')
+
+		const fileExt = file.name.split('.').pop()
+		const fileName = `${nanoid()}.${fileExt}`
+
+		setAvatar({ src: URL.createObjectURL(file), file, fileName })
 	}
 
 	const hiddenFileInput = useRef(null)
