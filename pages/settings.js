@@ -37,19 +37,14 @@ const Settings = ({ user }) => {
 			}
 
 			const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${data.Key}`
-			setAvatar({ src: imageUrl, isLoading: false })
+			return imageUrl
 		} catch (e) {
 			console.log(e)
 		}
 	}
 
-	const onSubmitHandler = async e => {
-		setIsLoading(true)
-		e.preventDefault()
-		setAvatar(prev => ({ ...prev, isLoading: true }))
-		if (avatar.file) uploadCustomAvatar()
-
-		const res = await axios.put('/api/user', { avatar, name })
+	const updateUser = async (src, username) => {
+		const res = await axios.put('/api/user', { avatar: src, name: username })
 		if (res) {
 			setIsLoading(false)
 			toast({
@@ -62,6 +57,19 @@ const Settings = ({ user }) => {
 			const event = new Event('visibilitychange') //refresh session
 			document.dispatchEvent(event)
 		}
+	}
+
+	const onSubmitHandler = async e => {
+		setIsLoading(true)
+		e.preventDefault()
+		setAvatar(prev => ({ ...prev, isLoading: true }))
+		if (avatar.file) {
+			const src = await uploadCustomAvatar()
+			updateUser({ src }, name)
+			setAvatar({ src, isLoading: false })
+			return
+		}
+		updateUser(avatar, name)
 	}
 
 	return (
