@@ -28,7 +28,6 @@ import { CustomRating } from '../rating'
 
 const ReviewGridItem = ({ review, like, remove, onOpen, setSelected }) => {
 	const {
-		id,
 		description,
 		rating,
 		createdAt,
@@ -93,7 +92,7 @@ const ReviewGridItem = ({ review, like, remove, onOpen, setSelected }) => {
 						>
 							<Flex gap={3}>
 								<Flex gap={1}>
-									<chakra.button onClick={() => like(review)}>
+									<chakra.button onClick={() => like({ review })}>
 										{favoriteIcon}
 									</chakra.button>
 									<Text fontSize='md'>{favorite}</Text>
@@ -112,7 +111,7 @@ const ReviewGridItem = ({ review, like, remove, onOpen, setSelected }) => {
 									leftIcon={<DeleteIcon />}
 									colorScheme='red'
 									variant='outline'
-									onClick={() => remove({ id })}
+									onClick={() => remove({ review })}
 								>
 									Delete
 								</Button>

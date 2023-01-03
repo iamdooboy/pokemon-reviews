@@ -259,12 +259,16 @@ const Navbar = () => {
 						<Button
 							colorScheme='blue'
 							onClick={onClickHandler}
-							variant='ghost'
-							mr={3}
+							variant={{ base: 'solid', md: 'ghost' }}
+							mr={{ base: 0, md: 3 }}
 						>
 							Log in
 						</Button>
-						<Button colorScheme='blue' onClick={onClickHandler}>
+						<Button
+							colorScheme='blue'
+							onClick={onClickHandler}
+							display={{ base: 'none', md: 'inline-flex' }}
+						>
 							Sign up
 						</Button>
 					</>

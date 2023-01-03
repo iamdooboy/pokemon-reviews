@@ -26,7 +26,7 @@ const ReviewGrid = () => {
 	if (isLoading) return <ReviewGridSkeleton />
 	sort(sortOrder)
 
-	if (reviews.length === 0)
+	if (reviews.reviews.length === 0)
 		return (
 			<Empty
 				heading='You do not have any reviews posted'
@@ -36,16 +36,15 @@ const ReviewGrid = () => {
 
 	return (
 		<>
-			{reviews.length > 0 && (
-				<HStack align='center' justify='space-between' mt={3} w='full'>
-					<Heading as='h5' size='md'>
-						{reviews?.length} Reviews
-					</Heading>
-					<SortButtons setSortOrder={setSortOrder} />
-				</HStack>
-			)}
+			<HStack align='center' justify='space-between' mt={3} w='full'>
+				<Heading as='h5' size='md'>
+					{reviews.reviews?.length} Reviews
+				</Heading>
+				<SortButtons setSortOrder={setSortOrder} />
+			</HStack>
+
 			<SimpleGrid columns={[1, 2, 2, 3]} spacing={4} py={4}>
-				{reviews.map((review, index) => (
+				{reviews.reviews.map((review, index) => (
 					<ReviewGridItem
 						key={index}
 						review={review}

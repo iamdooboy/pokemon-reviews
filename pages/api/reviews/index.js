@@ -37,7 +37,7 @@ export default async function handler(req, res) {
 			return { ...review, favoritedByCurrentUser }
 		})
 
-		res.status(200).json(reviews)
+		res.status(200).json({ reviews })
 	}
 
 	if (req.method === 'DELETE') {
