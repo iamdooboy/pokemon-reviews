@@ -136,7 +136,12 @@ const Navbar = () => {
 			</NextLink>
 
 			<Menu id='gen' isLazy initialFocusRef={ref}>
-				<MenuButton as={Button} variant='ghost' size='sm'>
+				<MenuButton
+					as={Button}
+					variant='ghost'
+					size='sm'
+					display={{ base: 'none', md: 'flex' }}
+				>
 					<Flex align='center'>
 						Generations
 						<Icon as={ChevronDownIcon} w={6} h={6} mr={-1} />
@@ -154,14 +159,34 @@ const Navbar = () => {
 			</Menu>
 
 			<Flex justify={{ base: 'left', md: 'right' }}>
-				<IconButton
-					onClick={sidebar.onOpen}
-					aria-label='Menu'
-					display={{ base: 'inline-flex', md: 'none' }}
-					icon={<FiMenu />}
-					size='md'
-					mr={3}
-				/>
+				<Menu isLazy>
+					<MenuButton
+						display={{ base: 'inline-flex', md: 'none' }}
+						as={IconButton}
+						aria-label='Options'
+						icon={<FiMenu />}
+						variant='outline'
+						mr={3}
+					/>
+					<MenuList>
+						<MenuItem cursor='default' hover={{ bg: 'transparent' }}>
+							<NextLink href='/'>
+								<HStack cursor='pointer'>
+									<Image alt='dev logo' w={'auto'} h={7} src='/logo.png' />
+									<Heading size='xs'>Pokemon Reviews</Heading>
+								</HStack>
+							</NextLink>
+						</MenuItem>
+						<MenuDivider />
+						{GEN.map(g => (
+							<NextLink href={g.href} key={g.title}>
+								<MenuItem>
+									<Text fontWeight='500'>{g.title}</Text>
+								</MenuItem>
+							</NextLink>
+						))}
+					</MenuList>
+				</Menu>
 				<chakra.button
 					w={{ base: 'full', md: '50%', lg: '32%' }}
 					mr={3}
