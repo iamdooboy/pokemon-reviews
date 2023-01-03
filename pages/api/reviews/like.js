@@ -13,8 +13,7 @@ export default async function handler(req, res) {
 		where: { email: session.user.email }
 	})
 
-	const { favorite, id, favoritedByCurrentUser, count, average, duplicate } =
-		req.body
+	const { favorite, id, favoritedByCurrentUser } = req.body
 	const toggleFunction = {
 		[favoritedByCurrentUser ? 'connect' : 'disconnect']: {
 			id: user.id
@@ -42,5 +41,5 @@ export default async function handler(req, res) {
 		favoritedByCurrentUser
 	}
 
-	res.status(200).json({ updatedData, newAverage: average, duplicate, count })
+	res.status(200).json({ updatedData })
 }

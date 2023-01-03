@@ -67,6 +67,7 @@ export const useFetchReviews = (key, fetcher) => {
 	}
 
 	const updateFn = async (data, path = '') => {
+		const { count, average, duplicate } = data
 		if (!path) {
 			setIsLoading(true)
 		}
@@ -74,14 +75,12 @@ export const useFetchReviews = (key, fetcher) => {
 			.put(`/api/reviews/${path}`, data)
 			.then(res => res.data)
 
-		const { updatedData, newAverage, duplicate, count } = res
-
 		const updatedReviews = initialData.reviews.map(review => {
 			if (review.id !== res.id) {
 				return review
 			}
 			return {
-				...updatedData
+				...res
 			}
 		})
 
@@ -89,7 +88,7 @@ export const useFetchReviews = (key, fetcher) => {
 			displayConfirmationToast('Review updated')
 		}
 
-		return { reviews: updatedReviews, average: newAverage, count, duplicate }
+		return { reviews: updatedReviews, count, average, duplicate }
 	}
 
 	const deleteFn = async data => {
