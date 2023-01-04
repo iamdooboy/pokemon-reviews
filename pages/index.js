@@ -78,12 +78,11 @@ const Page = () => {
 
 	const onClickHandler = () => {
 		//setPokemonPageLoading(true)
-		if (!randomId) {
-			const random = getRandomPokemonNum()
-			setRandomId(random)
-		}
-		const gen = getPokemonGeneration(randomId)
-		const name = pokemon[randomId - 1]
+		const rand = randomId ? randomId : getRandomPokemonNum()
+
+		const gen = getPokemonGeneration(rand)
+		const name = pokemon[rand - 1]
+		console.log({ rand, gen, name })
 
 		router.push(`/gen/${gen}/${name}`)
 	}

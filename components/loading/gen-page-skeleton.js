@@ -19,7 +19,7 @@ export const GridItemSkeleton = () => {
 export const GenPageSkeleton = () => {
 	return (
 		<SimpleGrid columns={[2, 3, 3, 6]} spacing={6} py={4}>
-			{[...Array(18)].map((_, index) => (
+			{[...Array(24)].map((_, index) => (
 				<GridItem key={index}>
 					<GridItemSkeleton />
 				</GridItem>
