@@ -3,18 +3,8 @@ import AddOn from './add-on'
 import ReadMore from '../read-more'
 import { EllipsisButton } from '../ellipsis-button'
 
-const ReviewBox = ({
-	review,
-	setSelected,
-	onOpen,
-	remove,
-	like,
-	count,
-	average,
-	duplicate
-}) => {
-	const { description, author } = review
-
+const ReviewBox = props => {
+	const { authz, description, author } = props.review
 	return (
 		<Box
 			maxW='sm'
@@ -32,28 +22,10 @@ const ReviewBox = ({
 					<Flex mt={-2}>
 						<Text color='gray.500'>{author.name}</Text>
 						<Spacer />
-						{duplicate && (
-							<EllipsisButton
-								{...{
-									setSelected,
-									review,
-									onOpen,
-									remove,
-									count,
-									average,
-									duplicate
-								}}
-							/>
-						)}
+						{authz && <EllipsisButton {...props} />}
 					</Flex>
 					<ReadMore noOfLines={4}>{description}</ReadMore>
-					<AddOn
-						like={like}
-						review={review}
-						count={count}
-						average={average}
-						duplicate={duplicate}
-					/>
+					<AddOn {...props} />
 				</Box>
 			</Flex>
 		</Box>

@@ -10,7 +10,6 @@ import {
 	Container,
 	Button,
 	Image
-	//Spinner
 } from '@chakra-ui/react'
 import { useInput } from '../hooks/useInput'
 import {
@@ -25,11 +24,6 @@ import { LinkOverlay } from '../components/link-overlay'
 import RandomButton from '../components/random-button'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-// import { GenPageSkeleton } from '../components/loading/gen-page-skeleton'
-// import { ReviewBoxSkeleton } from '../components/loading/review-box-skeleton'
-// import { PokemonCardSkeleton } from '../components/loading/pokemon-card-skeleton'
-// import { MdOutlineEdit } from 'react-icons/md'
-// import NavSection from '../components/pokemon-page/nav-section'
 
 const generations = [
 	{ num: 1, color1: '#F2844B', color2: '#61CCEF' },
@@ -59,8 +53,6 @@ const Page = () => {
 	const [image, setImage] = useState(down)
 	const [randomId, setRandomId] = useState('')
 	const [imageUrl, setImageUrl] = useState('')
-	// const [genPageLoading, setGenPageLoading] = useState(false)
-	// const [pokemonPageLoading, setPokemonPageLoading] = useState(false)
 
 	const onMouseEnterHandler = () => {
 		setImage(up)
@@ -77,72 +69,13 @@ const Page = () => {
 	}
 
 	const onClickHandler = () => {
-		//setPokemonPageLoading(true)
 		const rand = randomId ? randomId : getRandomPokemonNum()
 
 		const gen = getPokemonGeneration(rand)
 		const name = pokemon[rand - 1]
-		console.log({ rand, gen, name })
 
 		router.push(`/gen/${gen}/${name}`)
 	}
-
-	// if (genPageLoading) {
-	// 	return (
-	// 		<Layout>
-	// 			<Flex pt={16}>
-	// 				<Box
-	// 					flex={1}
-	// 					px='5'
-	// 					overflow='auto'
-	// 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-	// 				>
-	// 					<GenPageSkeleton />
-	// 				</Box>
-	// 			</Flex>
-	// 		</Layout>
-	// 	)
-	// }
-
-	// if (pokemonPageLoading) {
-	// 	return (
-	// 		<Layout>
-	// 			<Flex pt={16}>
-	// 				<chakra.div
-	// 					flex={1}
-	// 					px='5'
-	// 					overflow='auto'
-	// 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-	// 				>
-	// 					<Container
-	// 						maxW='container.xl'
-	// 						px={{ base: 5, md: 12 }}
-	// 						margin='0 auto'
-	// 						align='center'
-	// 						justify='center'
-	// 					>
-	// 						<NavSection id={randomId} pokemon={pokemon} />
-	// 						<PokemonCardSkeleton />
-	// 						<HStack align='center' justify='center' mt={3} maxW='xs'>
-	// 							<Button
-	// 								isLoading
-	// 								variant='outline'
-	// 								w='20%'
-	// 								colorScheme='blue'
-	// 								spinner={<Spinner size='xs' />}
-	// 							/>
-
-	// 							<Button leftIcon={<MdOutlineEdit />} colorScheme='blue' w='80%'>
-	// 								Leave a review
-	// 							</Button>
-	// 						</HStack>
-	// 						<ReviewBoxSkeleton />
-	// 					</Container>
-	// 				</chakra.div>
-	// 			</Flex>
-	// 		</Layout>
-	// 	)
-	// }
 
 	return (
 		<Layout>
@@ -158,10 +91,10 @@ const Page = () => {
 							mb={6}
 						>
 							<chakra.span display='block' color='gray.500'>
-								Ready to leave a review?
+								Where every Pokemon is critiqued and appreciated!
 							</chakra.span>
 							<chakra.span display='inline'>
-								Find your{' '}
+								Share your{' '}
 								<Text
 									display={{
 										base: 'inline',
@@ -172,7 +105,7 @@ const Page = () => {
 									bgGradient='linear(to-r, green.400,purple.500)'
 									fontWeight='extrabold'
 								>
-									favorite Pokemon
+									feedback!
 								</Text>{' '}
 							</chakra.span>
 						</chakra.span>
@@ -222,7 +155,6 @@ const Page = () => {
 												py={2}
 												colorScheme='gray'
 												_hover={{ bg: '#6A7DB3' }}
-												//onClick={() => setGenPageLoading(true)}
 											>
 												Gen {gen.num}
 											</Button>

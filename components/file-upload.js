@@ -1,9 +1,10 @@
-import { Input, Button } from '@chakra-ui/react'
+import { Input, Button, useToast } from '@chakra-ui/react'
 import { useRef } from 'react'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { nanoid } from 'nanoid'
 
 export const FileUpload = ({ avatar, setAvatar }) => {
+	const toast = useToast()
 	const sizeLimit = 10 * 1024 * 1024 // 10MB
 	const handleClick = () => {
 		hiddenFileInput.current.click()
@@ -14,8 +15,17 @@ export const FileUpload = ({ avatar, setAvatar }) => {
 
 		if (!file) return
 
-		if (file.size > sizeLimit)
-			return console.log('File size is exceeding 10MB.')
+		if (file.size > sizeLimit) {
+			toast({
+				title: 'File size cannot exceed 10MB.',
+				description: 'Please upload a different file.',
+				status: 'error',
+				duration: 3000,
+				isClosable: true,
+				position: 'top'
+			})
+			return
+		}
 
 		const fileExt = file.name.split('.').pop()
 		const fileName = `${nanoid()}.${fileExt}`

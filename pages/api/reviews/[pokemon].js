@@ -51,13 +51,13 @@ export default async function handler(req, res) {
 			el => el.id === user.id
 		)
 
-		if (!duplicate) {
-			duplicate = review.authorId === user.id
-		}
+		const authz = review.authorId === user.id
+
+		duplicate = authz && !duplicate
 
 		delete review.favoritedBy
 
-		return { ...review, favoritedByCurrentUser }
+		return { ...review, favoritedByCurrentUser, authz }
 	})
 
 	return res

@@ -23,6 +23,7 @@ const Website = ({
 									color='#38B2AC'
 									options={{ showSpinner: false }}
 								/>
+
 								<Component key={router.asPath} {...pageProps} />
 							</>
 						)}

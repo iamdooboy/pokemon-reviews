@@ -39,7 +39,14 @@ const Settings = ({ user }) => {
 			const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${data.Key}`
 			return imageUrl
 		} catch (e) {
-			console.log(e)
+			toast({
+				title: 'Something went wrong',
+				description: 'Please try again',
+				position: 'bottom-right',
+				status: 'error',
+				duration: 3000,
+				isClosable: true
+			})
 		}
 	}
 
@@ -51,7 +58,7 @@ const Settings = ({ user }) => {
 				title: 'Profile updated.',
 				position: 'bottom-right',
 				status: 'success',
-				duration: 1500,
+				duration: 3000,
 				isClosable: true
 			})
 			const event = new Event('visibilitychange') //refresh session

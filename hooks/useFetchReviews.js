@@ -148,7 +148,7 @@ export const useFetchReviews = (key, fetcher) => {
 	const update = data => {
 		const { id, description, rating, count, average, oldRating } = data
 		const sum = average * count - oldRating + rating
-		console.log(sum)
+
 		const newAverage = Math.round((sum / count) * 10) / 10
 		const updatedReviews = initialData.reviews.map(review => {
 			if (id !== review.id) {
