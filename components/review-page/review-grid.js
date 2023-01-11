@@ -55,14 +55,12 @@ const ReviewGrid = () => {
 					/>
 				))}
 				<ReviewModal
-					{...{
-						isOpen,
-						onClose,
-						initialRef,
-						selected,
-						setSelected,
-						update
-					}}
+					isOpen={isOpen}
+					onClose={onClose}
+					initialRef={initialRef}
+					selected={selected}
+					setSelected={setSelected}
+					update={update}
 				/>
 			</SimpleGrid>
 		</>

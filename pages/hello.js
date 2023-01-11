@@ -1,24 +1,21 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { authOptions } from './api/auth/[...nextauth]'
 import {
 	Container,
 	Box,
 	FormControl,
-	FormLabel,
-	FormHelperText,
-	Input,
-	SimpleGrid,
-	Avatar,
 	Button,
 	Heading,
 	useToast
 } from '@chakra-ui/react'
 import { unstable_getServerSession } from 'next-auth/next'
-import { useSession } from 'next-auth/react'
 import { splitEmail } from '../utils/helpers'
 import { useRouter } from 'next/router'
 import { useAsyncToast } from '../hooks/useAsyncToast'
+import AvatarSelection from '../components/settings-page/avatar-selection'
+import Username from '../components/settings-page/username'
+import { supabase } from '../lib/supabase'
 
 const avatars = [
 	{ type: 'bug', src: '/avatar/bug.svg' },
@@ -41,8 +38,15 @@ const avatars = [
 	{ type: 'water', src: '/avatar/water.svg' }
 ]
 
-const Hello = () => {
-	const { data: session } = useSession()
+const Hello = ({ email, randomNumber }) => {
+	const username = splitEmail(email)
+	const randomAvatar = avatars[randomNumber]
+
+	const [avatar, setAvatar] = useState({
+		src: randomAvatar.src,
+		isLoading: false
+	})
+	const [name, setName] = useState(username)
 
 	const toast = useToast()
 	const router = useRouter()
@@ -52,34 +56,69 @@ const Hello = () => {
 		position: 'bottom-right'
 	})
 
-	const username = splitEmail(session.user.email)
+	const uploadCustomAvatar = async () => {
+		try {
+			const { data, error } = await supabase.storage
+				.from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET)
+				.upload(avatar.fileName, avatar.file)
 
-	const [avatar, setAvatar] = useState(
-		avatars[Math.floor(Math.random() * 18) + 1]
-	)
-	const [name, setName] = useState(username)
+			if (error) {
+				throw new Error('Unable to upload image to storage')
+			}
 
-	const onSubmitHandler = async e => {
-		setIsLoading(true)
-		e.preventDefault()
-		const res = await axios.put('/api/user', { avatar, name })
+			const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${data.Key}`
+			return imageUrl
+		} catch (e) {
+			toast({
+				title: 'Something went wrong',
+				description: 'Please try again',
+				position: 'bottom-right',
+				status: 'error',
+				duration: 3000,
+				isClosable: true
+			})
+		}
+	}
+
+	const updateUser = async (src, username) => {
+		const res = await axios.put('/api/user', { avatar: src, name: username })
 		if (res) {
 			setIsLoading(false)
 			toast({
 				title: 'Profile created.',
 				position: 'bottom-right',
 				status: 'success',
-				duration: 1500,
+				duration: 2000,
 				isClosable: true
 			})
-			router.push('/')
 			const event = new Event('visibilitychange') //refresh session
 			document.dispatchEvent(event)
 		}
 	}
 
+	const refresh = () => {
+		router.push('/')
+		const event = new Event('visibilitychange') //refresh session
+		document.dispatchEvent(event)
+	}
+
+	const onSubmitHandler = async e => {
+		setIsLoading(true)
+		e.preventDefault()
+		setAvatar(prev => ({ ...prev, isLoading: true }))
+		if (avatar.file) {
+			const src = await uploadCustomAvatar()
+			updateUser({ src }, name)
+			setAvatar({ src, isLoading: false })
+			refresh()
+			return
+		}
+		updateUser(avatar, name)
+		refresh()
+	}
+
 	return (
-		<Box py={20}>
+		<Box py={14}>
 			<Container color='white'>
 				<Heading fontSize='2xl' mb={5}>
 					Setup your profile
@@ -92,38 +131,16 @@ const Hello = () => {
 					as='form'
 					onSubmit={onSubmitHandler}
 				>
-					<Avatar size='2xl' name={username} src={avatar.src} my={10} />
 					<FormControl>
-						<FormLabel>Name</FormLabel>
-						<Input
-							type='text'
-							value={name}
-							onChange={e => setName(e.target.value)}
-						/>
-						<FormHelperText align='left'>
-							This is a your public display name when leaving reviews
-						</FormHelperText>
-
-						<FormLabel mt={5}>Avatar</FormLabel>
-						<SimpleGrid columns={[2, 3, 6]} spacing={6} py={4}>
-							{avatars.map(a => (
-								<Avatar
-									key={a.type}
-									onClick={() => setAvatar(a)}
-									opacity={avatar.type === a.type ? 0.3 : 1}
-									size='md'
-									name={a.type}
-									src={a.src}
-									cursor='pointer'
-								/>
-							))}
-						</SimpleGrid>
+						<Username setName={setName} name={name} />
+						<AvatarSelection avatar={avatar} setAvatar={setAvatar} />
 						<Button
+							isLoading={isLoading}
 							type='submit'
 							colorScheme='teal'
-							mt={5}
 							w='full'
-							isLoading={isLoading}
+							mt={5}
+							mb={2}
 						>
 							Save
 						</Button>
@@ -160,9 +177,12 @@ export const getServerSideProps = async context => {
 		}
 	}
 
+	const randomNumber = Math.floor(Math.random() * 18) + 1
+
 	return {
 		props: {
-			session: session
+			email: user.email,
+			randomNumber
 		}
 	}
 }
