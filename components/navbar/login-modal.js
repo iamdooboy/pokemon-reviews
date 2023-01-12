@@ -57,13 +57,23 @@ const LoginModal = ({ isOpen, onClose, finalRef, signIn, login, setLogin }) => {
 		}
 		try {
 			setIsLoading(true)
-			const { error } = await signIn('email', {
+			const { error, ok } = await signIn('email', {
 				email: input,
 				redirect: false,
 				callbackUrl: window.location.href
 			})
 			if (error) {
 				throw new Error(error)
+			}
+			console.log(ok)
+			if (!ok) {
+				toast({
+					title: 'Something went wrong',
+					status: 'error',
+					duration: 2000,
+					isClosable: true,
+					position: 'top'
+				})
 			}
 			setIsLoading(false)
 			setConfirm(true)
