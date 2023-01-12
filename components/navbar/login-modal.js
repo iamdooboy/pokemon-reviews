@@ -65,7 +65,6 @@ const LoginModal = ({ isOpen, onClose, finalRef, signIn, login, setLogin }) => {
 			if (error) {
 				throw new Error(error)
 			}
-			console.log(ok)
 			if (!ok) {
 				toast({
 					title: 'Something went wrong',

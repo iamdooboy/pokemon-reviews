@@ -97,6 +97,7 @@ const Hello = ({ email, randomNumber }) => {
 	}
 
 	const refresh = () => {
+		setIsLoading(false)
 		router.push('/')
 		const event = new Event('visibilitychange') //refresh session
 		document.dispatchEvent(event)

@@ -19,20 +19,33 @@ const transporter = nodemailer.createTransport({
 
 const emailsDir = path.resolve(process.cwd(), 'emails')
 
-const sendVerificationRequest = ({ identifier, url }) => {
+const sendVerificationRequest = async ({ identifier, url }) => {
 	const emailFile = readFileSync(path.join(emailsDir, 'confirm-email.html'), {
 		encoding: 'utf8'
 	})
 	const emailTemplate = Handlebars.compile(emailFile)
-	transporter.sendMail({
-		from: `"⭐️ Pokemon Reviews" ${process.env.EMAIL_FROM}`,
-		to: identifier,
-		subject: 'Your sign-in link for Pokemon Reviews',
-		html: emailTemplate({
-			base_url: process.env.NEXTAUTH_URL,
-			signin_url: url,
-			email: identifier
-		})
+	await new Promise((resolve, reject) => {
+		transporter.sendMail(
+			{
+				from: `"⭐️ Pokemon Reviews" ${process.env.EMAIL_FROM}`,
+				to: identifier,
+				subject: 'Your sign-in link for Pokemon Reviews',
+				html: emailTemplate({
+					base_url: process.env.NEXTAUTH_URL,
+					signin_url: url,
+					email: identifier
+				})
+			},
+			(err, info) => {
+				if (err) {
+					console.error(err)
+					reject(err)
+				} else {
+					console.log(info)
+					resolve(info)
+				}
+			}
+		)
 	})
 }
 
