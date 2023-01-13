@@ -124,6 +124,7 @@ const Navbar = () => {
 					flex: 1
 				}
 			}}
+			css={{ backdropFilter: 'blur(10px)' }}
 			borderBottomWidth={1}
 			borderColor='whiteAlpha.100'
 			zIndex={2}
