@@ -32,7 +32,6 @@ import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import LoginModal from './login-modal'
 import SearchModal from './search-modal'
-import { FallBackImage } from '../../utils/fallback-image'
 import { SidebarContent } from '../sidebar/sidebar-content'
 import { LinkOverlay } from '../link-overlay'
 import { splitEmail } from '../../utils/helpers'
@@ -212,19 +211,20 @@ const Navbar = () => {
 				) : user ? (
 					<Menu isLazy>
 						<MenuButton>
-							<Flex align='center' pos='relative'>
-								<FallBackImage
-									borderRadius={9999}
-									width={36}
-									height={36}
+							<Flex align='center'>
+								<Image
+									borderRadius='full'
+									boxSize='36px'
 									name={user.name}
 									src={user.image}
 									alt={user.name}
-									fallback='/bug.svg'
-									layout='fixed'
 								/>
-
-								<Icon as={ChevronDownIcon} w={6} h={6} mr={-1} />
+								<Icon
+									as={ChevronDownIcon}
+									w={6}
+									h={6}
+									mr={{ base: 5, md: 2, lg: 2 }}
+								/>
 							</Flex>
 						</MenuButton>
 						<MenuList>

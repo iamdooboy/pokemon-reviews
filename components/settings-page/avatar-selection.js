@@ -1,5 +1,4 @@
 import { Box, FormLabel, SimpleGrid, Flex, Text, Image } from '@chakra-ui/react'
-import { FallBackImage } from '../../utils/fallback-image'
 import { FileUpload } from '../file-upload'
 
 const AVATARS = [
@@ -48,13 +47,13 @@ const AvatarSelection = ({ avatar, setAvatar }) => {
 						key={a.type}
 						_hover={{ opacity: 0.5 }}
 					>
-						<FallBackImage
+						<Image
 							onClick={() => setAvatar(a)}
 							opacity={avatar.src === a.src ? 0.3 : 1}
 							alt={a.type}
 							src={a.src}
-							width={40}
-							height={40}
+							width='40px'
+							height='40px'
 							cursor='pointer'
 						/>
 					</Box>

@@ -1,8 +1,8 @@
 import { chakra, Box, GridItem, Text } from '@chakra-ui/react'
-import { FallBackImage } from '../../utils/fallback-image'
 import { CustomRating } from '../rating'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
 import { m } from 'framer-motion'
+import { ProgressImage } from '../progressive-image'
 
 const PokemonGridItem = ({ id, pokemonName, url, rating, count }) => {
 	const formattedName = capitalFirstLetter(formatNames(pokemonName))
@@ -22,16 +22,11 @@ const PokemonGridItem = ({ id, pokemonName, url, rating, count }) => {
 					{id}
 				</Text>
 				<Box align='center' pos='relative' zIndex={1}>
-					<FallBackImage
-						w='auto'
-						h='auto'
-						width='100px'
-						height='100px'
-						src={url}
-						alt={pokemonName}
-						fallbackSrc='/fallback.png'
-						placeholder='blur'
-						blurDataURL={url}
+					<ProgressImage
+						lowQuality={`/low-quality/${id}`}
+						highQuality={url}
+						boxSize='100px'
+						alt={formattedName}
 					/>
 				</Box>
 				<Box>
