@@ -7,7 +7,7 @@ const CustomInputResults = ({ id, gen, pokemon, onClose, bgColor }) => {
 	let formattedName = formatNames(pokemon)
 	formattedName = capitalFirstLetter(formattedName)
 
-	let paddedId = id?.toString().padStart(3, '0')
+	let paddedId = id?.toString().padStart(4, '0')
 	return (
 		<LinkOverlay href={`/gen/${gen}/${pokemon}`}>
 			<Flex

@@ -20,6 +20,7 @@ import {
 import { CustomRating } from '../rating'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { capitalFirstLetter, formatNames } from '../../utils/helpers'
+import { ProgressImage } from '../progressive-image'
 
 const MenuBtn = forwardRef((props, ref) => {
 	return (
@@ -89,7 +90,11 @@ const PokemonCard = ({ data, count, rating }) => {
 						height='auto'
 						p={2}
 					>
-						<Image src={image} alt={name} borderRadius='lg' />
+						<ProgressImage
+							lowQuality={`/low-quality/${id}`}
+							highQuality={image}
+							alt={name}
+						/>
 					</Box>
 					<Box>
 						<Flex justify='space-between' w='full' align='center'>

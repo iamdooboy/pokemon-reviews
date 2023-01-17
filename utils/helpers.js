@@ -74,8 +74,8 @@ export const getPokemonImageUrl = id => {
 	if (id === 0) {
 		return
 	}
-	const paddedId = id.toString().padStart(3, '0')
-	return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${paddedId}.png`
+	const paddedId = id.toString().padStart(4, '0')
+	return `https://raw.githubusercontent.com/iamdooboy/pokemon-images/main/assets/images/${paddedId}.png`
 }
 export const timeOffset = time => {
 	const createdAt = new Date(time)
@@ -142,7 +142,7 @@ export const timeOffset = time => {
 
 export const getRandomPokemonNum = () => {
 	const min = Math.ceil(1)
-	const max = Math.floor(905)
+	const max = Math.floor(1008)
 
 	const random = Math.floor(Math.random() * (max - min + 1) + min) //inclusive min and max
 

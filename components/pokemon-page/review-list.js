@@ -62,6 +62,7 @@ const ReviewList = props => {
 			))}
 			<ReviewModal
 				{...props}
+				pokemon={pokemon}
 				count={count}
 				average={average}
 				initialRef={initialRef}
