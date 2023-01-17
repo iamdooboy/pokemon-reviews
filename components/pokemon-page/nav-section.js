@@ -28,15 +28,15 @@ const NavSection = ({ id }) => {
 	}
 
 	const prev = {
-		id: id === 1 ? 905 : id - 1,
-		name: id === 1 ? data?.[904] : data?.[id - 2],
+		id: id === 1 ? 1008 : id - 1,
+		name: id === 1 ? data?.[1007] : data?.[id - 2],
 		leftIcon: <ArrowBackIcon />,
 		p: 0
 	}
 
 	const next = {
-		id: id === 905 ? 1 : id + 1,
-		name: id === 905 ? data?.[0] : data?.[id],
+		id: id === 1008 ? 1 : id + 1,
+		name: id === 1008 ? data?.[0] : data?.[id],
 		rightIcon: <ArrowForwardIcon />,
 		p: 0
 	}
