@@ -23,7 +23,7 @@ const PokemonGridItem = ({ id, pokemonName, url, rating, count }) => {
 				</Text>
 				<Box align='center' pos='relative' zIndex={1}>
 					<ProgressImage
-						lowQuality={`/low-quality/${id}`}
+						lowQuality={`/low-quality/${id}.png`}
 						highQuality={url}
 						boxSize='100px'
 						alt={formattedName}

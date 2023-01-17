@@ -89,7 +89,7 @@ const FavoritesGridItem = ({
 								align='center'
 							>
 								<ProgressImage
-									lowQuality={`/low-quality/${id}`}
+									lowQuality={`/low-quality/${id}.png`}
 									highQuality={image}
 									boxSize='auto'
 									alt={formattedName}

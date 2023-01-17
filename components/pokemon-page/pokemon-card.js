@@ -91,7 +91,7 @@ const PokemonCard = ({ data, count, rating }) => {
 						p={2}
 					>
 						<ProgressImage
-							lowQuality={`/low-quality/${id}`}
+							lowQuality={`/low-quality/${id}.png`}
 							highQuality={image}
 							alt={name}
 						/>
