@@ -29,7 +29,7 @@ export const FavoritePokemonGridItemSkeleton = () => {
 export const FavoritePokemonGridSkeleton = () => {
 	return (
 		<SimpleGrid columns={[2, 4, 4, 6]} spacing={4} py={4}>
-			{[...Array(12)].map((_, index) => (
+			{[...Array(18)].map((_, index) => (
 				<GridItem key={index}>
 					<FavoritePokemonGridItemSkeleton />
 				</GridItem>

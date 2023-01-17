@@ -8,7 +8,6 @@ import {
 	Flex,
 	Icon
 } from '@chakra-ui/react'
-import { FallBackImage } from '../../utils/fallback-image'
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
 import {
 	getPokemonGeneration,
@@ -19,6 +18,7 @@ import { LinkOverlay } from '../link-overlay'
 import { usePokeAPI } from '../../hooks/usePokeAPI'
 import { FavoritePokemonGridItemSkeleton } from '../loading/favorite-pokemon-skeleton'
 import { m } from 'framer-motion'
+import { ProgressImage } from '../progressive-image'
 
 const FavoritesGridItem = ({
 	id: cuid,
@@ -47,7 +47,7 @@ const FavoritesGridItem = ({
 		/>
 	)
 
-	const { id, name, image, types } = data
+	const { id, image, types } = data
 
 	const gen = getPokemonGeneration(id)
 
@@ -66,7 +66,7 @@ const FavoritesGridItem = ({
 						types[1] ? types[1] + '.default' : types[0] + '.light'
 					})`
 				}}
-				whileHover={{ scale: 1.1 }}
+				whileHover={{ scale: 1.05 }}
 				transition='0.08s linear'
 				opacity={favoritedByCurrentUser ? 1 : 0.4}
 			>
@@ -86,17 +86,13 @@ const FavoritesGridItem = ({
 								borderColor='whiteAlpha.600'
 								maxW='100%'
 								height='auto'
+								align='center'
 							>
-								<FallBackImage
-									w='auto'
-									h='auto'
-									width={300}
-									height={300}
-									src={image}
-									alt={name}
-									fallbackSrc='/fallback.png'
-									placeholder='blur'
-									blurDataURL={image}
+								<ProgressImage
+									lowQuality={`/low-quality/${id}`}
+									highQuality={image}
+									boxSize='auto'
+									alt={formattedName}
 								/>
 							</Box>
 						</LinkOverlay>
@@ -107,7 +103,7 @@ const FavoritesGridItem = ({
 									<Flex justify='space-between' mt={1} align='center'>
 										<Heading
 											as='h1'
-											size='md'
+											size='lg'
 											fontWeight='800'
 											letterSpacing={1}
 										>
@@ -124,7 +120,7 @@ const FavoritesGridItem = ({
 										{types.map((type, index) => (
 											<Image
 												key={index}
-												boxSize='30%'
+												boxSize='25%'
 												src={`/type/${type}.png`}
 												alt={`${type}`}
 											/>
