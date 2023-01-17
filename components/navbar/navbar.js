@@ -85,7 +85,8 @@ const Navbar = () => {
 		{ title: 'Gen 5', href: '/gen/5' },
 		{ title: 'Gen 6', href: '/gen/6' },
 		{ title: 'Gen 7', href: '/gen/7' },
-		{ title: 'Gen 8', href: '/gen/8' }
+		{ title: 'Gen 8', href: '/gen/8' },
+		{ title: 'Gen 9', href: '/gen/9' }
 	]
 
 	const ITEMS = [

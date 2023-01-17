@@ -33,7 +33,7 @@ export const getServerSideProps = async context => {
 
 	const id = parseInt(context.query.id)
 
-	if (id <= 0 || id >= 9) {
+	if (id <= 0 || id >= 10) {
 		return {
 			notFound: true
 		}

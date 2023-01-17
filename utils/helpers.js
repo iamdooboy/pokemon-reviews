@@ -1,21 +1,21 @@
 export const getPokemonGeneration = id => {
-	if (id <= 151) {
-		return 1
-	} else if (id > 151 && id <= 251) {
-		return 2
-	} else if (id > 251 && id <= 386) {
-		return 3
-	} else if (id > 386 && id <= 493) {
-		return 4
-	} else if (id > 493 && id <= 649) {
-		return 5
-	} else if (id > 649 && id <= 721) {
-		return 6
-	} else if (id > 721 && id <= 809) {
-		return 7
-	} else if (id > 809 && id <= 905) {
-		return 8
-	}
+	if (id <= 151) return 1
+
+	if (id > 151 && id <= 251) return 2
+
+	if (id > 251 && id <= 386) return 3
+
+	if (id > 386 && id <= 493) return 4
+
+	if (id > 493 && id <= 649) return 5
+
+	if (id > 649 && id <= 721) return 6
+
+	if (id > 721 && id <= 809) return 7
+
+	if (id > 809 && id <= 905) return 8
+
+	return 9
 }
 
 export const isNumber = input => {
@@ -27,43 +27,41 @@ export const isNumber = input => {
 }
 
 export const formatNames = name => {
-	if (!name?.includes('-')) {
-		return name
-	}
-	switch (name) {
-		case 'nidoran-f':
-			return 'nidoran♀'
-		case 'nidoran-m':
-			return 'nidoran♂'
-		case 'mr-mime':
-			return 'mr. Mime'
-		case 'ho-oh':
-			return 'ho-Oh'
-		case 'mime-jr':
-			return 'mime Jr.'
-		case 'porygon-z':
-			return 'Porygon-Z'
-		case 'type-null':
-			return 'type: Null'
-		case 'jangmo-o':
-			return 'jangmo-o'
-		case 'hakamo-o':
-			return 'hakamo-o'
-		case 'kommo-o':
-			return 'kommo-o'
-		case 'tapu-koko':
-			return 'tapu Koko'
-		case 'tapu-lele':
-			return 'tapu Lele'
-		case 'tapu-bulu':
-			return 'tapu Bulu'
-		case 'tapu-fini':
-			return 'tapu Fini'
-		case 'mr-rime':
-			return 'mr. Rime'
-		default:
-			return name.substring(0, name.indexOf('-'))
-	}
+	if (name === 'nidoran-f') return 'nidoran♀'
+	if (name === 'nidoran-m') return 'nidoran♂'
+	if (name === 'farfetchd') return 'farfetch&apos;d'
+	if (name === 'mr-mime') return 'mr. Mime'
+	if (name === 'ho-oh') return 'ho-Oh'
+	if (name === 'mime-jr') return 'mime Jr.'
+	if (name === 'porygon-z') return 'porygon-Z'
+	if (name === 'flabebe') return 'flabébé'
+	if (name === 'type-null') return 'type: Null'
+	if (name === 'tapu-koko') return 'tapu Koko'
+	if (name === 'tapu-lele') return 'tapu Lele'
+	if (name === 'tapu-bulu') return 'tapu Bulu'
+	if (name === 'tapu-fini') return 'tapu Fini'
+	if (name === 'mr-rime') return 'mr. Rime'
+	if (name === 'sirfetchd') return 'sirfetch&apos;d'
+	if (name === 'tapu-bulu') return 'tapu Bulu'
+	if (name === 'wo-chien') return 'wo-Chien'
+	if (name === 'chien-pao') return 'chien-Pao'
+	if (name === 'ting-lu') return 'ting-Lu'
+	if (name === 'chi-yu') return 'chi-Yu'
+	if (name === 'great-tusk') return 'great Tusk'
+	if (name === 'scream-tail') return 'scream Tail'
+	if (name === 'brute-bonnet') return 'brute Bonnet'
+	if (name === 'flutter-mane') return 'flutter Mane'
+	if (name === 'slither-wing') return 'slither Wing'
+	if (name === 'sandy-shocks') return 'sandy Shocks'
+	if (name === 'iron-treads') return 'iron Treads'
+	if (name === 'iron-bundle') return 'iron Bundle'
+	if (name === 'iron-hands') return 'iron Hands'
+	if (name === 'iron-jugulis') return 'iron Jugulis'
+	if (name === 'iron-moth') return 'iron Moth'
+	if (name === 'iron-thorns') return 'iron Thorns'
+	if (name === 'roaring-moon') return 'roaring Moon'
+	if (name === 'iron-valiant') return 'iron Valiant'
+	return name
 }
 
 export const capitalFirstLetter = str => {

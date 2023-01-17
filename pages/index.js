@@ -33,7 +33,8 @@ const generations = [
 	{ num: 5, color1: '#C8D4E6', color2: '#434343' },
 	{ num: 6, color1: '#06598F', color2: '#CF2C46' },
 	{ num: 7, color1: '#F99C1D', color2: '#1DB1E7' },
-	{ num: 8, color1: '#00A1E9', color2: '#E50C5C' }
+	{ num: 8, color1: '#00A1E9', color2: '#E50C5C' },
+	{ num: 9, color1: '#00A1E9', color2: '#E50C5C' }
 ]
 
 const Page = () => {
@@ -145,13 +146,13 @@ const Page = () => {
 						})}
 						<Divider my={10} />
 						<Flex as='section' justify='center' w='full' h='full'>
-							<SimpleGrid columns={[2, 4, 4]} spacing={10}>
+							<SimpleGrid columns={3} spacing={10} w='full'>
 								{generations.map((gen, index) => (
 									<GridItem key={gen.num}>
 										<LinkOverlay href={`/gen/${index + 1}/`}>
 											<Button
 												rounded='md'
-												px={5}
+												w='full'
 												py={2}
 												colorScheme='gray'
 												_hover={{ bg: '#6A7DB3' }}
