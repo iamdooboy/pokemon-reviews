@@ -40,8 +40,8 @@ const FavoritesGridItem = ({
 				onFav({ id: cuid, pokemon, favorite, favoritedByCurrentUser })
 			}
 			as={favoritedByCurrentUser ? MdFavorite : MdFavoriteBorder}
-			w={8}
-			h={8}
+			w={10}
+			h={10}
 			color={favoritedByCurrentUser ? 'red.500' : ''}
 			cursor='pointer'
 		/>
@@ -103,29 +103,36 @@ const FavoritesGridItem = ({
 									<Flex justify='space-between' mt={1} align='center'>
 										<Heading
 											as='h1'
-											size='lg'
-											fontWeight='800'
+											size='auto'
+											fontWeight='700'
 											letterSpacing={1}
 										>
 											{formattedName}
 										</Heading>
-										<Text opacity={0.4} align='end' zIndex={1}>
-											{id}
-										</Text>
 									</Flex>
 								</LinkOverlay>
 
-								<HStack my={2} justify='space-between'>
-									<HStack>
-										{types.map((type, index) => (
-											<Image
-												key={index}
-												boxSize='25%'
-												src={`/type/${type}.png`}
-												alt={`${type}`}
-											/>
-										))}
-									</HStack>
+								<HStack justify='space-between'>
+									<Box>
+										<Text
+											fontSize='auto'
+											opacity={0.4}
+											align='start'
+											zIndex={1}
+										>
+											{id}
+										</Text>
+										<HStack mt={1}>
+											{types.map((type, index) => (
+												<Image
+													key={index}
+													boxSize='35%'
+													src={`/type/${type}.png`}
+													alt={`${type}`}
+												/>
+											))}
+										</HStack>
+									</Box>
 									{favoriteIcon}
 								</HStack>
 							</Box>

@@ -69,8 +69,9 @@ const Settings = ({ user }) => {
 	const onSubmitHandler = async e => {
 		setIsLoading(true)
 		e.preventDefault()
-		setAvatar(prev => ({ ...prev, isLoading: true }))
+
 		if (avatar.file) {
+			setAvatar(prev => ({ ...prev, isLoading: true }))
 			const src = await uploadCustomAvatar()
 			updateUser({ src }, name)
 			setAvatar({ src, isLoading: false })
@@ -83,36 +84,36 @@ const Settings = ({ user }) => {
 		<Layout>
 			<Flex pt={16}>
 				<Container
-					pt={8}
+					pt={16}
+					py={8}
 					color='white'
 					flex={1}
 					px='5'
 					overflow='auto'
 					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
 				>
-					<Box
+					<FormControl
 						borderWidth={1}
-						p={4}
-						align='center'
+						color='white'
+						p='5'
 						rounded='md'
 						as='form'
 						onSubmit={onSubmitHandler}
+						align='center'
 					>
-						<FormControl>
-							<Username setName={setName} name={name} />
-							<AvatarSelection avatar={avatar} setAvatar={setAvatar} />
-							<Button
-								isLoading={isLoading}
-								type='submit'
-								colorScheme='teal'
-								w='full'
-								mt={5}
-								mb={2}
-							>
-								Save
-							</Button>
-						</FormControl>
-					</Box>
+						<Username setName={setName} name={name} />
+						<AvatarSelection avatar={avatar} setAvatar={setAvatar} />
+						<Button
+							isLoading={isLoading}
+							type='submit'
+							colorScheme='teal'
+							w='full'
+							mt={5}
+							mb={2}
+						>
+							Save
+						</Button>
+					</FormControl>
 				</Container>
 			</Flex>
 		</Layout>

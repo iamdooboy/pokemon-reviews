@@ -48,7 +48,6 @@ const Pokemon = ({ pokemonName, gen }) => {
 			px={{ base: 5, md: 12 }}
 			margin='0 auto'
 			pt={16}
-			maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
 		>
 			<SimpleGrid
 				columns={[1, null, 2]}

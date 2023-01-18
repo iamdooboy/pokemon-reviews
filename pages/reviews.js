@@ -7,15 +7,8 @@ import { authOptions } from '../pages/api/auth/[...nextauth]'
 const MyReviews = () => {
 	return (
 		<Layout>
-			<Box pt={16}>
-				<Box
-					flex={1}
-					px='5'
-					overflow='auto'
-					maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-				>
-					<ReviewGrid />
-				</Box>
+			<Box pt={16} flex={1} px='5' overflow='auto'>
+				<ReviewGrid />
 			</Box>
 		</Layout>
 	)

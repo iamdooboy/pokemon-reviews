@@ -9,15 +9,8 @@ const GenerationPage = ({ fallback, gen }) => {
 	return (
 		<SWRConfig value={{ fallback }}>
 			<Layout>
-				<Box pt={16}>
-					<Box
-						flex={1}
-						px='5'
-						overflow='auto'
-						maxH='calc(100vh - var(--chakra-sizes-16))' //viewheight - navbar height
-					>
-						<PokemonGrid gen={gen} />
-					</Box>
+				<Box pt={16} flex={1} px='5' overflow='auto'>
+					<PokemonGrid gen={gen} />
 				</Box>
 			</Layout>
 		</SWRConfig>
