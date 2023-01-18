@@ -103,7 +103,7 @@ const FavoritesGridItem = ({
 									<Flex justify='space-between' mt={1} align='center'>
 										<Heading
 											as='h1'
-											size='auto'
+											size={{ base: 'auto', md: 'md' }}
 											fontWeight='700'
 											letterSpacing={1}
 										>
@@ -126,7 +126,7 @@ const FavoritesGridItem = ({
 											{types.map((type, index) => (
 												<Image
 													key={index}
-													boxSize='35%'
+													boxSize={{ base: '35%', md: '20%' }}
 													src={`/type/${type}.png`}
 													alt={`${type}`}
 												/>
